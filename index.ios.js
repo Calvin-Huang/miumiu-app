@@ -1,32 +1,107 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
+  StatusBar,
+  Navigator,
+  View,
   Text,
-  View
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
+import Drawer from 'react-native-drawer';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import WayBills from './App/Views/WayBills';
+import Menu from './App/Components/Menu';
+
 export default class miumiu extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      menuIcon: null,
+      addIcon: null,
+    };
+  }
+
+  async componentWillMount() {
+    const menuIcon = await Icon.getImageSource('menu', 24, 'white');
+    const addIcon = await Icon.getImageSource('add', 24, 'white');
+
+    this.setState({
+      menuIcon: menuIcon,
+      addIcon: addIcon,
+    });
+  }
+
   render() {
+    const routes = [
+      { index: 0, component: WayBills },
+    ]
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+      <Drawer
+        type="overlay"
+        content={<Menu />}
+        tapToClose={true}
+        openDrawerOffset={304}
+      >
+        <StatusBar barStyle='light-content' />
+        <Navigator
+          style={styles.container}
+          initialRoute={routes[0]}
+          initialRouteStack={routes}
+          renderScene={(route, navigator) => {
+            return <route.component index={route.index} navigator={navigator} />;
+          }}
+          navigationBar={
+            <Navigator.NavigationBar
+              style={{ flex: 1 }}
+              routeMapper={{
+                LeftButton: (route, navigator, index, nextState) => {
+                  if (route.component.navLeftButton) {
+                    return (
+                      <View style={styles.navBarContentContainer}>
+                        {route.component.navLeftButton(index, nextState)}
+                      </View>
+                    );
+                  }
+
+                  return (
+                    <View style={styles.navBarContentContainer}>
+                      <TouchableOpacity onPress={() => { navigator.pop(); }}>
+                        <Icon style={styles.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                },
+                RightButton: (route, navigator, index, nextState) => {
+                  if (route.component.navRightButton) {
+                    return (
+                      <View style={styles.navBarContentContainer}>
+                        {route.component.navRightButton(index, nextState)}
+                      </View>
+                    );
+                  }
+                },
+                Title: (route, navigator, index, nextState) => {
+                  if (route.component.title) {
+                    return (
+                      <View style={styles.navBarContentContainer}>
+                        {route.component.title(index, nextState)}
+                      </View>
+                    );
+                  }
+
+                  return false;
+                },
+              }}
+            />
+          }
+        />
+      </Drawer>
     );
   }
 }
@@ -34,20 +109,18 @@ export default class miumiu extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  navBarContentContainer: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  navBackButton: {
+    marginTop: 9,
+    marginRight: 80,
+    marginLeft: 9,
+    marginBottom: 9,
+  }
 });
 
 AppRegistry.registerComponent('miumiu', () => miumiu);

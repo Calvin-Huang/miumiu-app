@@ -2944,6 +2944,10 @@ react-native-drawer@^2.3.0:
   dependencies:
     tween-functions "^1.0.1"
 
+react-native-linear-gradient@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.0.0.tgz#7442c00e1fcd9fca329119dcbaf744d12bcd1b5a"
+
 react-native-material-kit@0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-material-kit/-/react-native-material-kit-0.4.0.tgz#3b7df20014a9d008d7d086882ba1c8c2e20c85d3"

@@ -23,6 +23,7 @@ export default class miumiu extends Component {
     this.state = {
       menuIcon: null,
       addIcon: null,
+      hideNavigator: false,
     };
   }
 
@@ -57,48 +58,50 @@ export default class miumiu extends Component {
             return <route.component rootComponent={this} index={route.index} navigator={navigator} />;
           }}
           navigationBar={
-            <Navigator.NavigationBar
-              style={{ flex: 1 }}
-              routeMapper={{
-                LeftButton: (route, navigator, index, nextState) => {
-                  if (route.component.navLeftButton) {
-                    return (
-                      <View style={styles.navBarContentContainer}>
-                        {route.component.navLeftButton(index, nextState)}
-                      </View>
-                    );
-                  }
+            (!this.state.hideNavigator &&
+              <Navigator.NavigationBar
+                style={{ flex: 1 }}
+                routeMapper={{
+                  LeftButton: (route, navigator, index, nextState) => {
+                    if (route.component.navLeftButton) {
+                      return (
+                        <View style={styles.navBarContentContainer}>
+                          {route.component.navLeftButton(index, nextState)}
+                        </View>
+                      );
+                    }
 
-                  return (
-                    <View style={styles.navBarContentContainer}>
-                      <TouchableOpacity onPress={() => { navigator.pop(); }}>
-                        <Icon style={styles.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
-                      </TouchableOpacity>
-                    </View>
-                  );
-                },
-                RightButton: (route, navigator, index, nextState) => {
-                  if (route.component.navRightButton) {
                     return (
                       <View style={styles.navBarContentContainer}>
-                        {route.component.navRightButton(index, nextState)}
+                        <TouchableOpacity onPress={() => { navigator.pop(); }}>
+                          <Icon style={styles.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
+                        </TouchableOpacity>
                       </View>
                     );
-                  }
-                },
-                Title: (route, navigator, index, nextState) => {
-                  if (route.component.title) {
-                    return (
-                      <View style={styles.navBarContentContainer}>
-                        {route.component.title(index, nextState)}
-                      </View>
-                    );
-                  }
+                  },
+                  RightButton: (route, navigator, index, nextState) => {
+                    if (route.component.navRightButton) {
+                      return (
+                        <View style={styles.navBarContentContainer}>
+                          {route.component.navRightButton(index, nextState)}
+                        </View>
+                      );
+                    }
+                  },
+                  Title: (route, navigator, index, nextState) => {
+                    if (route.component.title) {
+                      return (
+                        <View style={styles.navBarContentContainer}>
+                          {route.component.title(index, nextState)}
+                        </View>
+                      );
+                    }
 
-                  return false;
-                },
-              }}
-            />
+                    return false;
+                  },
+                }}
+              />
+            )
           }
         />
       </Drawer>

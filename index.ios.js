@@ -54,7 +54,7 @@ export default class miumiu extends Component {
           initialRoute={routes[0]}
           initialRouteStack={routes}
           renderScene={(route, navigator) => {
-            return <route.component index={route.index} navigator={navigator} />;
+            return <route.component rootComponent={this} index={route.index} navigator={navigator} />;
           }}
           navigationBar={
             <Navigator.NavigationBar

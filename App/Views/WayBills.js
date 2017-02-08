@@ -19,6 +19,7 @@ import WayBill from './WayBill';
 
 export default class WayBills extends Component {
   static propTypes = {
+    rootComponent: PropTypes.object.isRequired,
     navigator: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
   }

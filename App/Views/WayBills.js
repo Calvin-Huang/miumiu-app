@@ -62,7 +62,7 @@ export default class WayBills extends Component {
       navBarStretchValue: new Animated.Value(104),
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
-      searchTerm: '',
+      isSearching: false,
     }
   }
 
@@ -95,6 +95,8 @@ export default class WayBills extends Component {
         }
       )
     ]).start();
+
+    this.setState({ isSearching: true });
   }
 
   hideSearchBar() {
@@ -129,6 +131,8 @@ export default class WayBills extends Component {
         }
       )
     ]).start();
+
+    this.setState({ isSearching: false });
   }
 
   searchBarTextChanged(text) {
@@ -199,6 +203,47 @@ export default class WayBills extends Component {
           </LinearGradient>
         </Animated.View>
 
+        { !this.state.isSearching &&
+          <View
+            style={{
+                flex: 0,
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#F5C163',
+              }}
+          >
+            <Text
+              style={{
+                ...styles.textInLightBackground,
+                flex: 0,
+                marginLeft: 15,
+              }}
+            >
+              嗨！Michael Guan，你可以先
+            </Text>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                paddingVertical: 14,
+                paddingLeft: 17,
+              }}
+              onPress={() => {}}
+            >
+              <Text
+                style={{
+                  ...styles.textInLightBackground,
+                  fontWeight: 'bold',
+                  textDecorationLine: 'underline',
+                  textDecorationColor: 'white',
+                  textDecorationStyle: 'solid',
+                }}
+              >
+                試算運費
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
+
         <TouchableOpacity style={styles.text} onPress={() => {
           this.hideSearchBar();
           this.props.navigator.push({ index: 1, component: WayBill },)
@@ -212,7 +257,7 @@ export default class WayBills extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -242,4 +287,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'white',
   },
-});
+  textInLightBackground: {
+    color: 'white',
+    fontSize: 14,
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
+    textShadowOffset: {
+      width: 0,
+      height: 0.75,
+    },
+    textShadowRadius: 0.5,
+  },
+};

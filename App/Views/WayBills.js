@@ -19,19 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
-
-const WayBillState = {
-  CONFIRMING: 0,
-  SHIPPING: 1,
-  ARRIVED: 2,
-};
-
-const UrgentState = {
-  NORMAL: 0,
-  REQUESTED: 1,
-  APPROVED: 2,
-  DECLINED: 3,
-};
+import { WayBillState, UrgentState } from '../Constants/states';
 
 export default class WayBills extends Component {
   static propTypes = {

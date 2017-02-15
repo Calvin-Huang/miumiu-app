@@ -1,3 +1,7 @@
+/**
+ * Created by Calvin Huang on 2/15/17.
+ */
+
 export const WayBillState = {
   CONFIRMING: 0,
   SHIPPING: 1,

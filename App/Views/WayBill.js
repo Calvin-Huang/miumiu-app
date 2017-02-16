@@ -35,7 +35,27 @@ export default class WayBill extends NavigatorComponent {
   }
 
   render() {
-    const { icon, iconColor, title } = stateInfoMapping[this.props.route.data.state] || {};
+    const { data } = this.state;
+    const { icon, iconColor, title } = stateInfoMapping[data.state] || {};
+
+    const sectionTitle = ((data) => {
+      switch (data.state) {
+        case WayBillState.CONFIRMING:
+          return '待確認訂單，您可以申請加急服務';
+        case WayBillState.SHIPPING:
+          return (
+            <Text style={styles.sectionText}>
+              往 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.destination || '-'}</Text> 貨運中
+            </Text>
+          );
+        case WayBillState.ARRIVED:
+          return (
+            <Text style={styles.sectionText}>
+              已到 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.destination || '-'}</Text> 集貨中心，請儘速提領
+            </Text>
+          );
+      }
+    })(data);
 
     return (
       <View style={MiumiuTheme.container}>

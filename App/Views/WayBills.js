@@ -290,14 +290,6 @@ export default class WayBills extends Component {
           </View>
         }
 
-        <TouchableOpacity style={styles.text} onPress={() => {
-          this.hideSearchBar();
-          this.props.navigator.push({ index: 1, component: WayBill },)
-        }}>
-          <Text>
-            Hi
-          </Text>
-        </TouchableOpacity>
         <GiftedListView
           ref="listView"
           style={styles.wayBills}

@@ -158,6 +158,21 @@ export default class WayBills extends Component {
       </TouchableOpacity>
     );
   }
+
+  renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
+    const rowData = this.refs.listView.state.rows;
+
+    if (rowData.length - 1 == rowID) {
+      return null;
+    }
+
+    return (
+      <View key={`#seperator-${sectionID}-${rowID}`} style={styles.separatorContainer}>
+        <View style={styles.separator} />
+      </View>
+    );
+  }
+
   renderPaginationFetchingView(paginateCallback) {
     return (
       <View style={styles.paginationView}>

@@ -34,6 +34,9 @@ export default class WayBill extends NavigatorComponent {
     );
   }
 
+  fetchWayBill(id = this.state.data.id) {
+  }
+
   render() {
     const { data } = this.state;
     const { icon, iconColor, title } = stateInfoMapping[data.state] || {};

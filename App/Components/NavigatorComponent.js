@@ -14,11 +14,11 @@ export default class NavigatorComponent extends Component {
   static propTypes = {
     rootComponent: PropTypes.object.isRequired,
     navigator: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
+    route: PropTypes.object.isRequired,
   }
 
   // You can override navLeftButton/navRightButton to provide different nav button in various components.
-  static navLeftButton(route, navigator, index, nextState) {
+  static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { navigator.pop(); }}>
         <Icon style={styles.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
@@ -26,11 +26,11 @@ export default class NavigatorComponent extends Component {
     );
   }
 
-  static navRightButton(route, navigator, index, nextState) {
+  static navRightButton(route, navigator, index, navState) {
     return null;
   }
 
-  static title(route, navigator, index, nextState) {
+  static title(route, navigator, index, navState) {
     return null;
   }
 }

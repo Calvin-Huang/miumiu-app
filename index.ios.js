@@ -58,7 +58,7 @@ export default class miumiu extends Component {
           initialRouteStack={routes}
           renderScene={(route, navigator) => {
             if (route.component.prototype instanceof NavigatorComponent) {
-              return <route.component rootComponent={this} index={route.index} navigator={navigator} />;
+              return <route.component rootComponent={this} route={route} navigator={navigator} />;
             } else {
               throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');
 
@@ -70,33 +70,33 @@ export default class miumiu extends Component {
               <Navigator.NavigationBar
                 style={{ flex: 1 }}
                 routeMapper={{
-                  LeftButton: (route, navigator, index, nextState) => {
+                  LeftButton: (route, navigator, index, navState) => {
                     if (route.component.navLeftButton) {
                       return (
                         <View style={styles.navBarContentContainer}>
-                          {route.component.navLeftButton(route, navigator, index, nextState)}
+                          {route.component.navLeftButton(route, navigator, index, navState)}
                         </View>
                       );
                     } else {
                       return null;
                     }
                   },
-                  RightButton: (route, navigator, index, nextState) => {
+                  RightButton: (route, navigator, index, navState) => {
                     if (route.component.navRightButton) {
                       return (
                         <View style={styles.navBarContentContainer}>
-                          {route.component.navRightButton(route, navigator, index, nextState)}
+                          {route.component.navRightButton(route, navigator, index, navState)}
                         </View>
                       );
                     } else {
                       return null;
                     }
                   },
-                  Title: (route, navigator, index, nextState) => {
+                  Title: (route, navigator, index, navState) => {
                     if (route.component.title) {
                       return (
                         <View style={styles.navBarContentContainer}>
-                          {route.component.title(route, navigator, index, nextState)}
+                          {route.component.title(route, navigator, index, navState)}
                         </View>
                       );
                     } else {

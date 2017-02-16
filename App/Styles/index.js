@@ -3,3 +3,4 @@
  */
 
 export { default as NavigatorStyle } from './NavigatorStyle';
+export { default as MiumiuTheme } from './MiumiuTheme';

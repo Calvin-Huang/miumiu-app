@@ -366,6 +366,17 @@ const styles = {
   rowForwardIndicator: {
     marginRight: 22,
   },
+  separatorContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+  },
+  separator: {
+    flex: 1,
+    marginLeft: 72,
+    height: 1,
+    backgroundColor: '#EFF0F4',
+  },
   wayBillState: {
     marginLeft: 12,
     marginRight: 29,
@@ -374,5 +385,10 @@ const styles = {
     flex: 1,
     fontSize: 16,
     color: 'black',
+  },
+  paginationView: {
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };

@@ -271,7 +271,7 @@ export default class WayBills extends Component {
               style={{
                 flex: 1,
                 paddingVertical: 14,
-                paddingLeft: 17,
+                paddingLeft: 15,
               }}
               onPress={() => {}}
             >

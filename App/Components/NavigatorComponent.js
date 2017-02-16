@@ -33,6 +33,10 @@ export default class NavigatorComponent extends Component {
   static title(route, navigator, index, navState) {
     return null;
   }
+
+  pushToNextComponent(component, data = {}) {
+    this.props.navigator.push({ index: this.props.route.index + 1, component: component, data: data });
+  }
 }
 
 const styles = {

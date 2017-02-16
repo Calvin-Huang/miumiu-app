@@ -46,6 +46,7 @@ export default class miumiu extends Component {
 
     return (
       <Drawer
+        ref="sideDrawer"
         type="overlay"
         content={<Menu />}
         tapToClose={true}

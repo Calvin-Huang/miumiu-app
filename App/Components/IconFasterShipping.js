@@ -13,8 +13,8 @@ export default class IconFasterShipping extends Component {
   render() {
     return (
       <View style={{ ...this.props.style, ...styles.container }}>
-        <Image style={{ marginRight: -1 }} source={require('../../assets/images/faster-sign.png')} />
-        <Icon name="md-cart" size={17} color="#4A4A4A" />
+        <Image style={{ ...{ tintColor: this.props.tintColor }, marginRight: -1 }} source={require('../../assets/images/faster-sign.png')} />
+        <Icon name="md-cart" size={17} color={this.props.iconColor || '#4A4A4A'} />
       </View>
     );
   }
@@ -25,5 +25,6 @@ const styles = {
     flex: 0,
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 2,
   }
 };

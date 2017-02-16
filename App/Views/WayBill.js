@@ -45,6 +45,40 @@ export default class WayBill extends NavigatorComponent {
   }
 
   fetchWayBill(id = this.state.data.id) {
+    setTimeout(() => {
+      const mockData = ((state) => {
+        switch (state) {
+          case WayBillState.CONFIRMING:
+            return {
+              destination: null,
+              arrivedAt: null,
+              expiredAt: null,
+              amount: null,
+            };
+          case WayBillState.SHIPPING:
+            return {
+              destination: '珠海',
+              arrivedAt: '2017/02/01',
+              expiredAt: null,
+              amount: 50,
+            };
+          case WayBillState.ARRIVED:
+            return {
+              destination: '珠海',
+              arrivedAt: '2017/02/01',
+              expiredAt: '2017/02/14',
+              amount: 65,
+            };
+        }
+      })(this.state.data.state);
+
+      this.setState({
+        data: {
+          ...this.state.data,
+          ...mockData,
+        },
+      });
+    }, 500);
   }
 
   render() {

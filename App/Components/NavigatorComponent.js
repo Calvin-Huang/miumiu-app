@@ -37,9 +37,9 @@ export default class NavigatorComponent extends Component {
 
 const styles = {
   navBackButton: {
-    marginTop: 9,
+    marginTop: 10,
     marginRight: 80,
     marginLeft: 9,
-    marginBottom: 9,
+    marginBottom: 8,
   }
 };

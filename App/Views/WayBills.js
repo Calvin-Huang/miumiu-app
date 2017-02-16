@@ -22,6 +22,7 @@ import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
+import { MiumiuTheme } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
 
 export default class WayBills extends NavigatorComponent {
@@ -206,7 +207,7 @@ export default class WayBills extends NavigatorComponent {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={MiumiuTheme.container}>
         <Animated.View
           style={{
             height: this.state.navBarStretchValue,
@@ -333,11 +334,6 @@ export default class WayBills extends NavigatorComponent {
 }
 
 const styles = {
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#EFEFF4'
-  },
   navBarButton: {
     margin: 9,
     height: 24,

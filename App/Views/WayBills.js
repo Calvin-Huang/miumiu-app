@@ -316,6 +316,7 @@ const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: '#EFEFF4'
   },
   navBarButton: {
     margin: 9,

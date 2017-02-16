@@ -158,6 +158,14 @@ export default class WayBills extends Component {
       </TouchableOpacity>
     );
   }
+  renderPaginationFetchingView(paginateCallback) {
+    return (
+      <View style={styles.paginationView}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   renderPaginationAllLoadedView() {
     return null;
   }

@@ -21,8 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
-import WayBillStateView from '../Components/WayBillStateView';
-import IconFasterShipping from '../Components/IconFasterShipping';
+import { WayBillStateView, IconFasterShipping } from '../Components';
 import { WayBillState, UrgentState } from '../Constants/states';
 
 export default class WayBills extends Component {

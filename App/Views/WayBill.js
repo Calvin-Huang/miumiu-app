@@ -8,9 +8,9 @@ import {
   Text,
 } from 'react-native';
 
-import { MiumiuThemeNavigatorBackground } from '../Components';
+import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 
-export default class WayBill extends Component {
+export default class WayBill extends NavigatorComponent {
   render() {
     return (
       <View style={styles.container}>

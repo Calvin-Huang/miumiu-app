@@ -21,16 +21,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
-import { WayBillStateView, IconFasterShipping } from '../Components';
+import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
 import { WayBillState, UrgentState } from '../Constants/states';
 
-export default class WayBills extends Component {
-  static propTypes = {
-    rootComponent: PropTypes.object.isRequired,
-    navigator: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
-  }
-
+export default class WayBills extends NavigatorComponent {
   static navLeftButton(index, nextState) {
     return (
       <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => {}}>

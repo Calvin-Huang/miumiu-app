@@ -14,3 +14,21 @@ export const UrgentState = {
   APPROVED: 2,
   DECLINED: 3,
 };
+
+export const stateInfoMapping = {
+  [WayBillState.CONFIRMING]: {
+    icon: 'md-swap',
+    iconColor: '#C4C0C5',
+    title: '待確認',
+  },
+  [WayBillState.SHIPPING]: {
+    icon: 'md-time',
+    iconColor: '#757575',
+    title: '貨運中',
+  },
+  [WayBillState.ARRIVED]: {
+    icon: 'md-checkmark',
+    iconColor: '#AED581',
+    title: '已到倉',
+  },
+};

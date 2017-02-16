@@ -10,25 +10,7 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { WayBillState } from '../Constants/states';
-
-const stateInfoMapping = {
-  [WayBillState.CONFIRMING]: {
-    icon: 'md-swap',
-    iconColor: '#C4C0C5',
-    title: '待確認',
-  },
-  [WayBillState.SHIPPING]: {
-    icon: 'md-time',
-    iconColor: '#757575',
-    title: '貨運中',
-  },
-  [WayBillState.ARRIVED]: {
-    icon: 'md-checkmark',
-    iconColor: '#AED581',
-    title: '已到倉',
-  },
-};
+import { WayBillState, stateInfoMapping } from '../Constants/states';
 
 export default class WayBillStateView extends Component {
   static propTypes = {

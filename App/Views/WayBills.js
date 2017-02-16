@@ -265,6 +265,7 @@ export default class WayBills extends Component {
                   textAlign: 'center',
                   marginBottom: this.state.searchBarMarginBottom,
                   marginRight: this.state.cancelButtonMarginRight,
+                  backgroundColor: 'transparent',
                   fontSize: 17,
                   color: 'white',
                 }}

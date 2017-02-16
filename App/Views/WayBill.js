@@ -6,11 +6,31 @@ import {
   StyleSheet,
   View,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+import { NavigatorStyle } from '../Styles';
 
 export default class WayBill extends NavigatorComponent {
+  static navRightButton({ data: { id } }, navigator, index, navState) {
+    return (
+      <TouchableOpacity onPress={() => { console.log(id); }}>
+        <Text style={NavigatorStyle.itemButton}>
+          刪除
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  static title({ data: { id } }, navigator, index, navState) {
+    return (
+      <Text style={NavigatorStyle.title}>
+        單號: { id }
+      </Text>
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>

@@ -8,17 +8,21 @@ import {
   Text,
   TextInput,
   Image,
+  ActivityIndicator,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Animated,
   Easing,
 } from 'react-native';
 
+import GiftedListView from 'react-native-gifted-listview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
+import WayBillStateView from '../Components/WayBillStateView';
+import IconFasterShipping from '../Components/IconFasterShipping';
 import { WayBillState, UrgentState } from '../Constants/states';
 
 export default class WayBills extends Component {
@@ -253,6 +257,23 @@ export default class WayBills extends Component {
             Hi
           </Text>
         </TouchableOpacity>
+        <GiftedListView
+          ref="listView"
+          style={styles.wayBills}
+          rowView={this.renderRowView.bind(this)}
+          renderSeparator={this.renderSeparator.bind(this)}
+          onFetch={this.fetchWayBills.bind(this)}
+          paginationWaitingView={this.renderPaginationFetchingView.bind(this)}
+          paginationAllLoadedView={this.renderPaginationAllLoadedView.bind(this)}
+          onEndReached={() => { this.refs.listView._onPaginate(); }}
+          customStyles={{
+            paginationView: {
+              height: 60,
+            },
+          }}
+        >
+
+        </GiftedListView>
       </View>
     );
   }

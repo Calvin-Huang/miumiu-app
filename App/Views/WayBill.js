@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { stateInfoMapping } from '../Constants/states';
+import { WayBillState, stateInfoMapping } from '../Constants/states';
 
 export default class WayBill extends NavigatorComponent {
   static navRightButton({ data: { id } }, navigator, index, navState) {

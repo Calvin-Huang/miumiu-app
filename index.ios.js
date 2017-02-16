@@ -13,6 +13,8 @@ import {
 import Drawer from 'react-native-drawer';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import { NavigatorComponent } from './App/Components';
+
 import WayBills from './App/Views/WayBills';
 import Menu from './App/Components/Menu';
 
@@ -55,7 +57,13 @@ export default class miumiu extends Component {
           initialRoute={routes[0]}
           initialRouteStack={routes}
           renderScene={(route, navigator) => {
-            return <route.component rootComponent={this} index={route.index} navigator={navigator} />;
+            if (route.component.prototype instanceof NavigatorComponent) {
+              return <route.component rootComponent={this} index={route.index} navigator={navigator} />;
+            } else {
+              throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');
+
+              return null;
+            }
           }}
           navigationBar={
             (!this.state.hideNavigator &&
@@ -66,38 +74,34 @@ export default class miumiu extends Component {
                     if (route.component.navLeftButton) {
                       return (
                         <View style={styles.navBarContentContainer}>
-                          {route.component.navLeftButton(index, nextState)}
+                          {route.component.navLeftButton(route, navigator, index, nextState)}
                         </View>
                       );
+                    } else {
+                      return null;
                     }
-
-                    return (
-                      <View style={styles.navBarContentContainer}>
-                        <TouchableOpacity onPress={() => { navigator.pop(); }}>
-                          <Icon style={styles.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
-                        </TouchableOpacity>
-                      </View>
-                    );
                   },
                   RightButton: (route, navigator, index, nextState) => {
                     if (route.component.navRightButton) {
                       return (
                         <View style={styles.navBarContentContainer}>
-                          {route.component.navRightButton(index, nextState)}
+                          {route.component.navRightButton(route, navigator, index, nextState)}
                         </View>
                       );
+                    } else {
+                      return null;
                     }
                   },
                   Title: (route, navigator, index, nextState) => {
                     if (route.component.title) {
                       return (
                         <View style={styles.navBarContentContainer}>
-                          {route.component.title(index, nextState)}
+                          {route.component.title(route, navigator, index, nextState)}
                         </View>
                       );
+                    } else {
+                      return null;
                     }
-
-                    return false;
                   },
                 }}
               />
@@ -118,12 +122,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  navBackButton: {
-    marginTop: 9,
-    marginRight: 80,
-    marginLeft: 9,
-    marginBottom: 9,
-  }
 });
 
 AppRegistry.registerComponent('miumiu', () => miumiu);

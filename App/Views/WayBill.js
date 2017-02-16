@@ -11,7 +11,7 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { stateInfoMapping } from '../Constants/states';
 
@@ -40,34 +40,40 @@ export default class WayBill extends NavigatorComponent {
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground />
-        <View style={styles.sectionHeader}>
-          <Icon style={styles.sectionIcon} name={icon} size={24} color={iconColor} />
-          <Text style={styles.sectionText}>待確認訂單，您可以申請加急服務</Text>
+        <View style={styles.body}>
+          <View style={styles.sectionHeader}>
+            <Icon style={styles.sectionIcon} name={icon} size={24} color={iconColor} />
+            <Text style={styles.sectionText}>待確認訂單，您可以申請加急服務</Text>
+          </View>
+          <View style={styles.infoFieldContainer}>
+            <Text style={styles.infoFieldNameText}>
+              到貨日
+            </Text>
+            <Text style={styles.infoFieldValueText}>
+              -
+            </Text>
+          </View>
+          <View style={styles.infoFieldContainer}>
+            <Text style={styles.infoFieldNameText}>
+              到期日
+            </Text>
+            <Text style={styles.infoFieldValueText}>
+              -
+            </Text>
+          </View>
+          <View style={styles.infoFieldContainer}>
+            <Text style={styles.infoFieldNameText}>
+              金額
+            </Text>
+            <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>
+              -
+            </Text>
+          </View>
         </View>
-        <View style={styles.infoFieldContainer}>
-          <Text style={styles.infoFieldNameText}>
-            到貨日
-          </Text>
-          <Text style={styles.infoFieldValueText}>
-            -
-          </Text>
-        </View>
-        <View style={styles.infoFieldContainer}>
-          <Text style={styles.infoFieldNameText}>
-            到期日
-          </Text>
-          <Text style={styles.infoFieldValueText}>
-            -
-          </Text>
-        </View>
-        <View style={styles.infoFieldContainer}>
-          <Text style={styles.infoFieldNameText}>
-            金額
-          </Text>
-          <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>
-            -
-          </Text>
-        </View>
+        <TouchableOpacity style={styles.actionButton}>
+          <IconFasterShipping style={styles.actionButtonIcon} iconColor="white" tintColor="white" />
+          <Text style={styles.actionButtonText}>加急服務</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -105,5 +111,22 @@ const styles = {
     marginVertical: 16,
     marginRight: 17,
     textAlign: 'right',
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#4E9ACF',
+    paddingVertical: 14,
+  },
+  actionButtonIcon: {
+    marginRight: 10,
+  },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  body: {
+    flex: 1,
   },
 };

@@ -34,6 +34,16 @@ export default class WayBill extends NavigatorComponent {
     );
   }
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: this.props.route.data,
+    };
+
+    this.fetchWayBill();
+  }
+
   fetchWayBill(id = this.state.data.id) {
   }
 

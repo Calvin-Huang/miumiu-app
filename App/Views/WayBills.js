@@ -144,6 +144,32 @@ export default class WayBills extends Component {
 
   }
 
+  fetchWayBills(page = 1, callback, option) {
+    setTimeout(() => {
+      callback([
+        {
+          state: WayBillState.CONFIRMING,
+          id: '5012381293511238',
+          urgent: UrgentState.APPROVED,
+        }, {
+          state: WayBillState.SHIPPING,
+          id: '5012381293511239',
+          urgent: UrgentState.NORMAL,
+        }, {
+          state: WayBillState.ARRIVED,
+          id: '5012381293511240',
+          urgent: UrgentState.NORMAL,
+        }, {
+          state: WayBillState.ARRIVED,
+          id: '5012381293511241',
+          urgent: UrgentState.APPROVED,
+        }
+      ], {
+        allLoaded: true,
+      });
+    }, 100);
+  }
+
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.row}>

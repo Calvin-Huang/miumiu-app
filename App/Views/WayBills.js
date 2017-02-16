@@ -158,6 +158,10 @@ export default class WayBills extends Component {
       </TouchableOpacity>
     );
   }
+  renderPaginationAllLoadedView() {
+    return null;
+  }
+
   render() {
     return (
       <View style={styles.container}>

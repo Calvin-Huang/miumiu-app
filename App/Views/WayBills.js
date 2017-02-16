@@ -144,6 +144,20 @@ export default class WayBills extends Component {
 
   }
 
+  renderRowView(rowData, sectionID, rowID, highlightRow) {
+    return (
+      <TouchableOpacity style={styles.row}>
+        <WayBillStateView style={styles.wayBillState} state={rowData.state} />
+        <Text style={{ ...styles.wayBillDescription, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
+          { rowData.id }
+        </Text>
+        { (rowData.state === WayBillState.CONFIRMING && rowData.urgent && UrgentState.APPROVED) &&
+          <IconFasterShipping style={{ marginRight: 14 }} />
+        }
+        <Icon style={styles.rowForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
+      </TouchableOpacity>
+    );
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -318,5 +332,27 @@ const styles = {
       height: 0.75,
     },
     textShadowRadius: 0.5,
+  },
+  wayBills: {
+    flex: 1,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 57,
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  rowForwardIndicator: {
+    marginRight: 22,
+  },
+  wayBillState: {
+    marginLeft: 12,
+    marginRight: 29,
+  },
+  wayBillDescription: {
+    flex: 1,
+    fontSize: 16,
+    color: 'black',
   },
 };

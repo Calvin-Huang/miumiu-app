@@ -6,10 +6,12 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
+  TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
 
+import dismissKeyboard from 'dismissKeyboard';
 
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
@@ -50,6 +52,7 @@ export default class UrgentProcessing extends NavigatorComponent {
 
   render() {
     return (
+      <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
           <MiumiuThemeNavigatorBackground />
           <View style={styles.body}>
@@ -121,6 +124,7 @@ export default class UrgentProcessing extends NavigatorComponent {
             </View>
           </KeyboardAvoidingView>
         </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

@@ -29,6 +29,17 @@ export default class UrgentProcessing extends NavigatorComponent {
       </Text>
     )
   }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: {
+        id: props.route.id,
+      },
+    };
+  }
+
   render() {
     return (
       <View>

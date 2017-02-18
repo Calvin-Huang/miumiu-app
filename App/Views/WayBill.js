@@ -7,12 +7,14 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Navigator,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from 'color';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
+import UrgentProcessing from './UrgentProcessing';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 

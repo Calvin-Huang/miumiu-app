@@ -19,6 +19,12 @@ export default style = {
     fontSize: 14,
     lineHeight: 20,
   },
+  bulletItem: {
+    flexDirection: 'row',
+  },
+  bulletContent: {
+    flex: 1,
+  },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',

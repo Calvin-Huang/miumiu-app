@@ -7,7 +7,28 @@ import {
   View,
 } from 'react-native';
 
-export default class UrgentProcessing extends Component {
+import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+export default class UrgentProcessing extends NavigatorComponent {
+  static navRightButton(route, navigator, index, navState) {
+    return (
+      <TouchableOpacity onPress={() => {
+        dismissKeyboard();
+        navigator.pop();
+      }}>
+        <Text style={NavigatorStyle.itemButton}>
+          取消
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  static title(route, navigator, index, navState) {
+    return (
+      <Text style={NavigatorStyle.title}>
+        加急服務
+      </Text>
+    )
+  }
   render() {
     return (
       <View>

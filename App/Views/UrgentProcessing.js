@@ -58,17 +58,19 @@ export default class UrgentProcessing extends NavigatorComponent {
         <View style={MiumiuTheme.container}>
           <MiumiuThemeNavigatorBackground />
           <View style={styles.body}>
-            <View style={styles.textFieldGroup}>
-              <MKTextField
-                floatingLabelEnabled={true}
-                textInputStyle={{ height: 31 }}
-                underlineSize={1}
-                highlightColor="#D8D8D8"
-                placeholder="請輸入單號"
-                placeholderTextColor="#9E9E9E"
-                style={{ backgroundColor: 'white' }}
-              />
-            </View>
+            { !data &&
+              <View style={styles.textFieldGroup}>
+                <MKTextField
+                  floatingLabelEnabled={true}
+                  textInputStyle={{ height: 31 }}
+                  underlineSize={1}
+                  highlightColor="#D8D8D8"
+                  placeholder="請輸入單號"
+                  placeholderTextColor="#9E9E9E"
+                  style={{ backgroundColor: 'white' }}
+                />
+              </View>
+            }
             <View style={styles.textFieldGroup}>
               <MKTextField
                 floatingLabelEnabled={true}

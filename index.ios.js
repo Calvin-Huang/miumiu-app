@@ -66,6 +66,9 @@ export default class miumiu extends Component {
               return null;
             }
           }}
+          configureScene={(route, routeStack) => {
+            return route.transition;
+          }}
           navigationBar={
             (!this.state.hideNavigator &&
               <Navigator.NavigationBar

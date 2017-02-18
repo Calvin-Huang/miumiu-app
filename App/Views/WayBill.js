@@ -7,11 +7,14 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Navigator,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import Color from 'color';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
+import UrgentProcessing from './UrgentProcessing';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 
@@ -138,10 +141,12 @@ export default class WayBill extends NavigatorComponent {
           </View>
         </View>
         { data.state === WayBillState.CONFIRMING &&
-          <TouchableOpacity style={styles.actionButton}>
-            <IconFasterShipping style={styles.actionButtonIcon} iconColor="white" tintColor="white" />
-            <Text style={styles.actionButtonText}>加急服務</Text>
-          </TouchableOpacity>
+          <View style={{ backgroundColor: Color(MiumiuTheme.actionButton.backgroundColor).lighten(0.2), }}>
+            <TouchableOpacity style={MiumiuTheme.actionButton} onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }>
+              <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
+              <Text style={MiumiuTheme.actionButtonText}>加急服務</Text>
+            </TouchableOpacity>
+          </View>
         }
       </View>
     )
@@ -180,20 +185,6 @@ const styles = {
     marginVertical: 16,
     marginRight: 17,
     textAlign: 'right',
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#4E9ACF',
-    paddingVertical: 14,
-  },
-  actionButtonIcon: {
-    marginRight: 10,
-  },
-  actionButtonText: {
-    color: 'white',
-    fontSize: 16,
   },
   body: {
     flex: 1,

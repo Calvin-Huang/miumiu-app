@@ -51,6 +51,8 @@ export default class UrgentProcessing extends NavigatorComponent {
   }
 
   render() {
+    const { data } = this.state;
+
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>

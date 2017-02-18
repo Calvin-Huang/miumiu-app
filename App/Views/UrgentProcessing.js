@@ -5,8 +5,12 @@
 import React, { Component } from 'react';
 import {
   View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
 
+import Color from 'color';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
@@ -49,6 +53,14 @@ export default class UrgentProcessing extends NavigatorComponent {
           <View style={styles.body}>
 
           </View>
+
+          <KeyboardAvoidingView behavior="padding">
+            <View style={{ backgroundColor: Color(MiumiuTheme.actionButton.backgroundColor).lighten(0.2), }}>
+              <TouchableOpacity style={MiumiuTheme.actionButton} onPress={() => { console.log(data.id); } }>
+                <Text style={MiumiuTheme.actionButtonText}>申請加急</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </View>
     );
   }

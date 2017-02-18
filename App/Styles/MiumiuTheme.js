@@ -8,4 +8,18 @@ export default style = {
     flexDirection: 'column',
     backgroundColor: '#EFEFF4'
   },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#4E9ACF',
+    paddingVertical: 14,
+  },
+  actionButtonIcon: {
+    marginRight: 10,
+  },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
 };

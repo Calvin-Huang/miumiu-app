@@ -181,20 +181,6 @@ const styles = {
     marginRight: 17,
     textAlign: 'right',
   },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#4E9ACF',
-    paddingVertical: 14,
-  },
-  actionButtonIcon: {
-    marginRight: 10,
-  },
-  actionButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
   body: {
     flex: 1,
   },

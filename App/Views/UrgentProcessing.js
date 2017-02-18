@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+import { MiumiuTheme, NavigatorStyle } from '../Styles';
+
 export default class UrgentProcessing extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
     return (
@@ -42,9 +44,19 @@ export default class UrgentProcessing extends NavigatorComponent {
 
   render() {
     return (
-      <View>
+        <View style={MiumiuTheme.container}>
+          <MiumiuThemeNavigatorBackground />
+          <View style={styles.body}>
 
-      </View>
+          </View>
+        </View>
     );
   }
 }
+
+const styles = {
+  body: {
+    flex: 1,
+    marginTop: 27,
+  },
+};

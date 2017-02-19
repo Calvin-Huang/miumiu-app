@@ -238,7 +238,7 @@ export default class WayBills extends NavigatorComponent {
                 <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={styles.searchBarIcon} />
                 <TextInput
                   ref="searchBar"
-                  style={styles.searchBarInput}
+                  style={{ ...styles.whiteText, flex: 1 }}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="輸入關鍵字查單"
                   onFocus={this.showSearchBar.bind(this)}
@@ -281,7 +281,8 @@ export default class WayBills extends NavigatorComponent {
           >
             <Text
               style={{
-                ...styles.textInLightBackground,
+                ...MiumiuTheme.textShadow,
+                ...styles.whiteText,
                 flex: 0,
                 marginLeft: 15,
               }}
@@ -298,7 +299,8 @@ export default class WayBills extends NavigatorComponent {
             >
               <Text
                 style={{
-                  ...styles.textInLightBackground,
+                  ...MiumiuTheme.textShadow,
+                  ...styles.whiteText,
                   fontWeight: 'bold',
                   textDecorationLine: 'underline',
                   textDecorationColor: 'white',
@@ -354,20 +356,9 @@ const styles = {
     marginLeft: 14,
     marginRight: 12,
   },
-  searchBarInput: {
-    flex: 1,
-    fontSize: 14,
-    color: 'white',
-  },
-  textInLightBackground: {
+  whiteText: {
     color: 'white',
     fontSize: 14,
-    textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {
-      width: 0,
-      height: 0.75,
-    },
-    textShadowRadius: 0.5,
   },
   wayBills: {
     flex: 1,

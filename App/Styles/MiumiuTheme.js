@@ -25,6 +25,9 @@ export default style = {
   bulletContent: {
     flex: 1,
   },
+  actionButtonWarning: {
+    backgroundColor: '#F5C163',
+  },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -38,5 +41,13 @@ export default style = {
   actionButtonText: {
     color: 'white',
     fontSize: 16,
+  },
+  textShadow: {
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
+    textShadowOffset: {
+      width: 0,
+      height: 0.75,
+    },
+    textShadowRadius: 0.5,
   },
 };

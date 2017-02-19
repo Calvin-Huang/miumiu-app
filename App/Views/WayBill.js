@@ -148,6 +148,17 @@ export default class WayBill extends NavigatorComponent {
             </TouchableOpacity>
           </View>
         }
+
+        { data.state === WayBillState.ARRIVED &&
+          <View style={{ backgroundColor: Color(MiumiuTheme.actionButtonWarning.backgroundColor).lighten(0.2), }}>
+            <TouchableOpacity
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.actionButtonWarning }}
+              onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }
+            >
+              <Text style={{ ...MiumiuTheme.actionButtonText, ...MiumiuTheme.textShadow }}>取貨</Text>
+            </TouchableOpacity>
+          </View>
+        }
       </View>
     )
   }

@@ -25,6 +25,9 @@ export default style = {
   bulletContent: {
     flex: 1,
   },
+  actionButtonPrimary: {
+    backgroundColor: '#4E9ACF',
+  },
   actionButtonWarning: {
     backgroundColor: '#F5C163',
   },
@@ -32,7 +35,6 @@ export default style = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4E9ACF',
     paddingVertical: 14,
   },
   actionButtonIcon: {

@@ -141,9 +141,9 @@ export default class WayBill extends NavigatorComponent {
           </View>
         </View>
         { data.state === WayBillState.CONFIRMING &&
-          <View style={{ backgroundColor: Color(MiumiuTheme.actionButtonPrimary.backgroundColor).lighten(0.2), }}>
+          <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
-              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.actionButtonPrimary }}
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
               onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }
             >
               <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
@@ -153,10 +153,9 @@ export default class WayBill extends NavigatorComponent {
         }
 
         { data.state === WayBillState.ARRIVED &&
-          <View style={{ backgroundColor: Color(MiumiuTheme.actionButtonWarning.backgroundColor).lighten(0.2), }}>
+          <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
-              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.actionButtonWarning }}
-              onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning }}
             >
               <Text style={{ ...MiumiuTheme.actionButtonText, ...MiumiuTheme.textShadow }}>取貨</Text>
             </TouchableOpacity>

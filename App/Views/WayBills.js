@@ -73,7 +73,7 @@ export default class WayBills extends NavigatorComponent {
         this.state.navBarStretchValue,
         {
           toValue: 64,
-          duration: 100,
+          duration: 250,
           easing: Easing.linear,
         }
       ),
@@ -81,7 +81,7 @@ export default class WayBills extends NavigatorComponent {
         this.state.searchBarMarginBottom,
         {
           toValue: 49,
-          duration: 100,
+          duration: 250,
           easing: Easing.linear,
         }
       ),
@@ -89,7 +89,7 @@ export default class WayBills extends NavigatorComponent {
         this.state.cancelButtonMarginRight,
         {
           toValue: 10,
-          duration: 100,
+          duration: 250,
           easing: Easing.linear,
         }
       )
@@ -109,7 +109,7 @@ export default class WayBills extends NavigatorComponent {
         this.state.navBarStretchValue,
         {
           toValue: 104,
-          duration: 100,
+          duration: 250,
           easing: Easing.linear,
         }
       ),
@@ -117,7 +117,7 @@ export default class WayBills extends NavigatorComponent {
         this.state.searchBarMarginBottom,
         {
           toValue: 9,
-          duration: 100,
+          duration: 250,
           easing: Easing.linear,
         }
       ),
@@ -125,7 +125,7 @@ export default class WayBills extends NavigatorComponent {
         this.state.cancelButtonMarginRight,
         {
           toValue: -45,
-          duration: 100,
+          duration: 250,
           easing: Easing.linear,
         }
       )

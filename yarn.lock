@@ -1013,6 +1013,10 @@ commander@^2.9.0:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
+commander@~2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.1.0.tgz#d121bbae860d9992a3d517ba96f56588e47c6781"
+
 compressible@~2.0.5:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.9.tgz#6daab4e2b599c2770dd9e21e7a891b1c5a755425"
@@ -1975,6 +1979,12 @@ istanbul-reports@^1.0.0:
   resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.0.0.tgz#24b4eb2b1d29d50f103b369bd422f6e640aa0777"
   dependencies:
     handlebars "^4.0.3"
+
+"javascript-qrcode@git+https://git@github.com/awesomejerry/javascript-qrcode.git":
+  version "1.0.7"
+  resolved "git+https://git@github.com/awesomejerry/javascript-qrcode.git#0a51f31226b92ee276d51e10bd98c4989d3549a9"
+  dependencies:
+    commander "~2.1.0"
 
 jest-changed-files@^17.0.2:
   version "17.0.2"
@@ -2985,6 +2995,12 @@ react-native-material-kit@0.4.0:
   resolved "https://registry.yarnpkg.com/react-native-material-kit/-/react-native-material-kit-0.4.0.tgz#3b7df20014a9d008d7d086882ba1c8c2e20c85d3"
   dependencies:
     ramda "~0.21.0"
+
+react-native-qrcode-svg@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-qrcode-svg/-/react-native-qrcode-svg-3.1.1.tgz#3f2d48999658e7dff2a218a2149828ffacebc440"
+  dependencies:
+    javascript-qrcode "git+https://git@github.com/awesomejerry/javascript-qrcode.git"
 
 react-native-vector-icons@^4.0.0:
   version "4.0.0"

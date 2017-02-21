@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import QRCode from 'react-native-qrcode-svg';
 import Color from 'color';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
@@ -177,7 +178,9 @@ export default class WayBill extends NavigatorComponent {
           >
             <TouchableWithoutFeedback>
               <View style={styles.modalBody}>
-                <View style={styles.qrCode} />
+                <View style={styles.qrCode}>
+                  <QRCode value="+998988008752" size={140} />
+                </View>
                 <Text style={styles.qrCodeInfo}>
                   +998988008752
                 </Text>
@@ -266,9 +269,6 @@ const styles = {
     shadowOpacity: 1,
   },
   qrCode: {
-    width: 140,
-    height: 140,
-    backgroundColor: 'blue',
     marginTop: 30,
     marginBottom: 18,
   },

@@ -70,4 +70,9 @@ export default style = {
     },
     textShadowRadius: 0.5,
   },
+  textFieldGroup: {
+    paddingBottom: 14,
+    paddingHorizontal: 16,
+    backgroundColor: 'white'
+  },
 };

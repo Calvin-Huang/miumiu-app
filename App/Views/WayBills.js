@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Navigator,
   Animated,
   Easing,
 } from 'react-native';
@@ -21,12 +22,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
+import AddWayBill from './AddWayBill';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
 import { MiumiuTheme } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
 
 export default class WayBills extends NavigatorComponent {
-  static navLeftButton(index, nextState) {
+  static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => {}}>
         <View style={styles.navBarButton}>
@@ -36,9 +38,18 @@ export default class WayBills extends NavigatorComponent {
     );
   }
 
-  static navRightButton(index, nextState) {
+  static navRightButton(route, navigator, index, navState) {
     return (
-      <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => {}}>
+      <TouchableOpacity
+        underlayColor="rgba(0, 0, 0, 0)"
+        onPress={() => {
+          navigator.push({
+            index: route.index + 1,
+            component: AddWayBill,
+            transition: Navigator.SceneConfigs.FloatFromBottom,
+          });
+        }}
+      >
         <View style={styles.navBarButton}>
           <Icon name="md-add" size={24} color="white" />
         </View>

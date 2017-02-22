@@ -59,7 +59,7 @@ export default class UrgentProcessing extends NavigatorComponent {
           <MiumiuThemeNavigatorBackground />
           <View style={styles.body}>
             { !data &&
-              <View style={styles.textFieldGroup}>
+              <View style={MiumiuTheme.textFieldGroup}>
                 <MKTextField
                   floatingLabelEnabled={true}
                   textInputStyle={{ height: 31 }}
@@ -71,7 +71,7 @@ export default class UrgentProcessing extends NavigatorComponent {
                 />
               </View>
             }
-            <View style={styles.textFieldGroup}>
+            <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 floatingLabelEnabled={true}
                 textInputStyle={{ height: 31 }}
@@ -140,11 +140,6 @@ const styles = {
   body: {
     flex: 1,
     marginTop: 27,
-  },
-  textFieldGroup: {
-    paddingBottom: 14,
-    paddingHorizontal: 16,
-    backgroundColor: 'white'
   },
   instruction: {
     marginTop: 34,

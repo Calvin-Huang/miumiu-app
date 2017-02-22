@@ -121,8 +121,11 @@ export default class UrgentProcessing extends NavigatorComponent {
           </View>
 
           <KeyboardAvoidingView behavior="padding">
-            <View style={{ backgroundColor: Color(MiumiuTheme.actionButton.backgroundColor).lighten(0.2), }}>
-              <TouchableOpacity style={MiumiuTheme.actionButton} onPress={() => { console.log(data.id); } }>
+            <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
+              <TouchableOpacity
+                style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
+                onPress={() => { console.log(data.id); } }
+              >
                 <Text style={MiumiuTheme.actionButtonText}>申請加急</Text>
               </TouchableOpacity>
             </View>

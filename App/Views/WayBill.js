@@ -6,11 +6,14 @@ import {
   StyleSheet,
   View,
   Text,
+  Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Navigator,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import QRCode from 'react-native-qrcode-svg';
 import Color from 'color';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
@@ -42,6 +45,7 @@ export default class WayBill extends NavigatorComponent {
 
     this.state = {
       data: this.props.route.data,
+      showModal: false,
     };
 
     this.fetchWayBill();
@@ -141,13 +145,68 @@ export default class WayBill extends NavigatorComponent {
           </View>
         </View>
         { data.state === WayBillState.CONFIRMING &&
-          <View style={{ backgroundColor: Color(MiumiuTheme.actionButton.backgroundColor).lighten(0.2), }}>
-            <TouchableOpacity style={MiumiuTheme.actionButton} onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }>
+          <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
+            <TouchableOpacity
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
+              onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }
+            >
               <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
               <Text style={MiumiuTheme.actionButtonText}>加急服務</Text>
             </TouchableOpacity>
           </View>
         }
+
+        { data.state === WayBillState.ARRIVED &&
+          <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2), }}>
+            <TouchableOpacity
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning }}
+              onPress={() => { this.setState({ showModal: true }) }}
+            >
+              <Text style={{ ...MiumiuTheme.actionButtonText, ...MiumiuTheme.textShadow }}>取貨</Text>
+            </TouchableOpacity>
+          </View>
+        }
+
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.showModal}
+        >
+          <TouchableOpacity
+            style={styles.modalContainer}
+            onPress={() => { this.setState({ showModal: false }) }}
+          >
+            <TouchableWithoutFeedback>
+              <View style={styles.modalBody}>
+                <View style={styles.qrCode}>
+                  <QRCode value="+998988008752" size={140} />
+                </View>
+                <Text style={styles.qrCodeInfo}>
+                  +998988008752
+                </Text>
+                <Text style={styles.pickupInstruction}>
+                  已提貨單號工作人員會將單號由APP註銷
+                </Text>
+                <View
+                  style={{
+                    alignSelf: 'stretch',
+                     borderRadius: MiumiuTheme.button.borderRadius,
+                     backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
+                    onPress={() => { this.setState({ showModal: false }) }}
+                  >
+                    <Text style={MiumiuTheme.buttonText}>
+                      關閉
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </TouchableOpacity>
+        </Modal>
       </View>
     )
   }
@@ -188,5 +247,40 @@ const styles = {
   },
   body: {
     flex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalBody: {
+    width: 295,
+    backgroundColor: 'white',
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 2,
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 4,
+    shadowOpacity: 1,
+  },
+  qrCode: {
+    marginTop: 30,
+    marginBottom: 18,
+  },
+  qrCodeInfo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 10
+  },
+  pickupInstruction: {
+    fontSize: 12,
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 34
   },
 };

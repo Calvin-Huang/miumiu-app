@@ -62,7 +62,8 @@ export default class Main extends Component {
           initialRoute={routes[0]}
           initialRouteStack={routes}
           renderScene={(route, navigator) => {
-            if (route.component.prototype instanceof NavigatorComponent) {
+            if (route.component.WrappedComponent && (route.component.WrappedComponent.prototype instanceof NavigatorComponent)
+                || route.component.prototype instanceof NavigatorComponent) {
               return <route.component rootComponent={this} route={route} navigator={navigator} />;
             } else {
               throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');

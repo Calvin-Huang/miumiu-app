@@ -16,6 +16,7 @@ import {
   Easing,
 } from 'react-native';
 
+import { connect } from 'react-redux';
 import GiftedListView from 'react-native-gifted-listview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -26,8 +27,9 @@ import AddWayBill from './AddWayBill';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
 import { MiumiuTheme } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
+import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
 
-export default class WayBills extends NavigatorComponent {
+class WayBills extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => {}}>
@@ -77,7 +79,7 @@ export default class WayBills extends NavigatorComponent {
   }
 
   showSearchBar() {
-    this.props.rootComponent.setState({ hideNavigator: true });
+    this.props.hideNavigationBar();
 
     Animated.parallel([
       Animated.timing(
@@ -112,7 +114,7 @@ export default class WayBills extends NavigatorComponent {
   hideSearchBar() {
     dismissKeyboard();
 
-    this.props.rootComponent.setState({ hideNavigator: false });
+    this.props.showNavigationBar();
     this.refs.searchBar.setNativeProps({ text: '' });
 
     Animated.parallel([
@@ -359,10 +361,6 @@ const styles = {
     flexDirection: 'row',
     height: 104,
   },
-  text: {
-    flex: 1,
-    backgroundColor: '#EF00FE',
-  },
   searchBarIcon: {
     marginLeft: 14,
     marginRight: 12,
@@ -410,3 +408,12 @@ const styles = {
     alignItems: 'center',
   },
 };
+
+const mapStateToProps = (state, ownProps) => {
+  return ownProps;
+};
+
+export default connect(
+  mapStateToProps,
+  { showNavigationBar, hideNavigationBar }
+)(WayBills);

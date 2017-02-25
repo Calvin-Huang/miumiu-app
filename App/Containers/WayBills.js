@@ -28,11 +28,13 @@ import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Com
 import { MiumiuTheme } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
 import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
+import { openSideDrawer } from '../Actions/sideDrawerActions';
+import store from '../storeInstance';
 
 class WayBills extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
-      <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => {}}>
+      <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => { store.dispatch(openSideDrawer()); }}>
         <View style={styles.navBarButton}>
           <Icon name="md-menu" size={24} color="white" />
         </View>

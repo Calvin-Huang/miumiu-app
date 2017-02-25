@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -22,14 +23,13 @@ import { NavigatorComponent } from '../Components';
 import WayBills from './WayBills';
 import Menu from '../Components/Menu';
 
-export default class Main extends Component {
+class Main extends Component {
   constructor() {
     super();
 
     this.state = {
       menuIcon: null,
       addIcon: null,
-      hideNavigator: false,
     };
   }
 
@@ -75,7 +75,7 @@ export default class Main extends Component {
             return route.transition;
           }}
           navigationBar={
-            (!this.state.hideNavigator &&
+            (this.props.showNavigator &&
               <Navigator.NavigationBar
                 style={{ flex: 1 }}
                 routeMapper={{
@@ -132,3 +132,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default connect(
+  (state, ownProps) => {
+    return {
+      showNavigator: state.navigationBar.showNavigator,
+    };
+  },
+  {}
+)(Main);

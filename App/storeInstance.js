@@ -10,15 +10,11 @@ import rootEpics from './Epics';
 
 const epicMiddleware = createEpicMiddleware(rootEpics);
 
-export default function configureStore() {
-  const store = createStore(
-    rootReducer,
-    compose(
-      applyMiddleware(
-        epicMiddleware,
-      )
+export default store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(
+      epicMiddleware,
     )
-  );
-
-  return store;
-}
+  )
+);

@@ -50,6 +50,7 @@ class Main extends Component {
 
     return (
       <Drawer
+        open={this.props.sideDrawerOpened}
         ref="sideDrawer"
         type="overlay"
         content={<Menu />}
@@ -136,7 +137,9 @@ const styles = StyleSheet.create({
 export default connect(
   (state, ownProps) => {
     return {
-      showNavigator: state.navigationBar.showNavigator,
+      ...ownProps,
+      showNavigator: state.navigationBar.isShown,
+      sideDrawerOpened: state.sideDrawer.isOpened,
     };
   },
   {}

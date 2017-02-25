@@ -5,7 +5,9 @@
 import { combineReducers } from 'redux';
 
 import wayBills from './wayBills';
+import navigationBar from './navigationBar';
 
 export default combineReducers({
   wayBills,
+  navigationBar,
 });

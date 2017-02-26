@@ -12,6 +12,8 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Animated,
+  Easing,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -32,6 +34,7 @@ class Main extends Component {
     this.state = {
       menuIcon: null,
       addIcon: null,
+      overlayOpacityValue: new Animated.Value(0),
     };
   }
 
@@ -43,6 +46,19 @@ class Main extends Component {
       menuIcon: menuIcon,
       addIcon: addIcon,
     });
+  }
+
+  fadeInOutOverlay() {
+    const nextOpacityValue = -(this.state.overlayOpacityValue._value - 1);
+
+    Animated.timing(
+      this.state.overlayOpacityValue,
+      {
+        toValue: nextOpacityValue,
+        duration: 250,
+        easing: Easing.linear
+      }
+    ).start();
   }
 
   render() {
@@ -57,8 +73,10 @@ class Main extends Component {
         type="overlay"
         content={<Menu />}
         tapToClose={true}
-        openDrawerOffset={304}
+        openDrawerOffset={56}
         onClose={() => { this.props.closeSideDrawer(); }}
+        onOpenStart={this.fadeInOutOverlay.bind(this)}
+        onCloseStart={this.fadeInOutOverlay.bind(this)}
       >
         <StatusBar barStyle='light-content' />
         <Navigator
@@ -121,12 +139,15 @@ class Main extends Component {
             )
           }
         />
+        { this.props.sideDrawerOpened &&
+          <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
+        }
       </Drawer>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
   },
@@ -135,7 +156,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-});
+  overlay: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+};
 
 export default connect(
   (state, ownProps) => {

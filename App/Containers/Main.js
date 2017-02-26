@@ -23,6 +23,8 @@ import { NavigatorComponent } from '../Components';
 import WayBills from './WayBills';
 import Menu from '../Components/Menu';
 
+import { closeSideDrawer } from '../Actions/sideDrawerActions';
+
 class Main extends Component {
   constructor() {
     super();
@@ -56,6 +58,7 @@ class Main extends Component {
         content={<Menu />}
         tapToClose={true}
         openDrawerOffset={304}
+        onClose={() => { this.props.closeSideDrawer(); }}
       >
         <StatusBar barStyle='light-content' />
         <Navigator
@@ -142,5 +145,5 @@ export default connect(
       sideDrawerOpened: state.sideDrawer.isOpened,
     };
   },
-  {}
+  { closeSideDrawer }
 )(Main);

@@ -25,7 +25,7 @@ import { NavigatorComponent } from '../Components';
 import WayBills from './WayBills';
 import Menu from '../Components/Menu';
 
-import { closeSideDrawer } from '../Actions/sideDrawerActions';
+import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 
 class Main extends Component {
   constructor() {
@@ -46,6 +46,12 @@ class Main extends Component {
       menuIcon: menuIcon,
       addIcon: addIcon,
     });
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.openSideDrawer();
+    }, 200);
   }
 
   fadeInOutOverlay() {
@@ -174,5 +180,5 @@ export default connect(
       sideDrawerOpened: state.sideDrawer.isOpened,
     };
   },
-  { closeSideDrawer }
+  { openSideDrawer, closeSideDrawer }
 )(Main);

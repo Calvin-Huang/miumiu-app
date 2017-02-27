@@ -24,6 +24,7 @@ import { NavigatorComponent, IconFasterShipping } from '../Components';
 
 import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
+import Calculator from './Calculator';
 import Menu from '../Components/Menu';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
@@ -51,6 +52,13 @@ class Main extends Component {
           },
           name: '加急服務',
           component: UrgentProcessing,
+          isSelected: false,
+        }, {
+          icon: {
+            name: 'md-calculator'
+          },
+          name: '試算運費',
+          component: Calculator,
           isSelected: false,
         }, {
           icon: {

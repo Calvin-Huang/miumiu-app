@@ -9,6 +9,13 @@ export default styles = {
     fontSize: 17,
     color: 'white',
   },
+  itemButton: {
+    margin: 9,
+    height: 24,
+    width: 24,
+    flex: 0,
+    alignItems: 'center',
+  },
   title: {
     fontSize: 17,
     color: 'white',

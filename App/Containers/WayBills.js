@@ -25,7 +25,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import WayBill from './WayBill';
 import AddWayBill from './AddWayBill';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
-import { MiumiuTheme } from '../Styles';
+import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
 import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
@@ -34,8 +34,8 @@ import store from '../storeInstance';
 class WayBills extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
-      <TouchableOpacity underlayColor="rgba(0, 0, 0, 0)" onPress={() => { store.dispatch(openSideDrawer()); }}>
-        <View style={styles.navBarButton}>
+      <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
+        <View style={NavigatorStyle.itemButton}>
           <Icon name="md-menu" size={24} color="white" />
         </View>
       </TouchableOpacity>
@@ -54,7 +54,7 @@ class WayBills extends NavigatorComponent {
           });
         }}
       >
-        <View style={styles.navBarButton}>
+        <View style={NavigatorStyle.itemButton}>
           <Icon name="md-add" size={24} color="white" />
         </View>
       </TouchableOpacity>
@@ -351,13 +351,6 @@ class WayBills extends NavigatorComponent {
 }
 
 const styles = {
-  navBarButton: {
-    margin: 9,
-    height: 24,
-    width: 24,
-    flex: 0,
-    alignItems: 'center',
-  },
   navBackground: {
     flex: 0,
     flexDirection: 'row',

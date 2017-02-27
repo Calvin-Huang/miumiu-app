@@ -15,17 +15,34 @@ import dismissKeyboard from 'dismissKeyboard';
 
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
+import { openSideDrawer } from '../Actions/sideDrawerActions';
+import store from '../storeInstance';
 
 export default class UrgentProcessing extends NavigatorComponent {
+  static navLeftButton(route, navigator, index, navState) {
+    if (route.index === 0) {
+      return (
+        <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
+          <View style={NavigatorStyle.itemButton}>
+            <Icon name="md-menu" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  }
+
   static navRightButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => {
         dismissKeyboard();
         navigator.pop();
       }}>
-        <Text style={NavigatorStyle.itemButton}>
+        <Text style={NavigatorStyle.itemTextButton}>
           取消
         </Text>
       </TouchableOpacity>

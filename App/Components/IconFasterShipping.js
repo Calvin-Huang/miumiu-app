@@ -13,8 +13,8 @@ export default class IconFasterShipping extends Component {
   render() {
     return (
       <View style={{ ...this.props.style, ...styles.container }}>
-        <Image style={{ ...{ tintColor: this.props.tintColor }, marginRight: -1 }} source={require('../../assets/images/faster-sign.png')} />
-        <Icon name="md-cart" size={17} color={this.props.iconColor || '#4A4A4A'} />
+        <Image style={{ ...{ tintColor: this.props.tintColor || this.props.color }, marginRight: -1 }} source={require('../../assets/images/faster-sign.png')} />
+        <Icon name="md-cart" size={this.props.size || 17} color={this.props.iconColor || this.props.color || '#4A4A4A'} />
       </View>
     );
   }

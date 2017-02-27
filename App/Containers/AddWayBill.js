@@ -25,7 +25,7 @@ export default class AddWayBill extends NavigatorComponent {
         dismissKeyboard();
         navigator.pop();
       }}>
-        <Text style={NavigatorStyle.itemButton}>
+        <Text style={NavigatorStyle.itemTextButton}>
           取消
         </Text>
       </TouchableOpacity>

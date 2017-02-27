@@ -3,7 +3,7 @@
  */
 
 export default styles = {
-  itemButton: {
+  itemTextButton: {
     margin: 9,
     flex: 0,
     fontSize: 17,

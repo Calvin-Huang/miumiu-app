@@ -25,7 +25,7 @@ export default class WayBill extends NavigatorComponent {
   static navRightButton({ data: { id } }, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { console.log(id); }}>
-        <Text style={NavigatorStyle.itemButton}>
+        <Text style={NavigatorStyle.itemTextButton}>
           刪除
         </Text>
       </TouchableOpacity>

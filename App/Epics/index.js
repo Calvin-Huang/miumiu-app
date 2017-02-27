@@ -9,3 +9,4 @@ import fetchWayBills from './fetchWaybills';
 export default combineEpics(
   fetchWayBills,
 );
+export default combineEpics;

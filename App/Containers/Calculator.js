@@ -28,7 +28,10 @@ export default class Calculator extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     if (route.index === 0) {
       return (
-        <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
+        <TouchableOpacity onPress={() => {
+          dismissKeyboard();
+          store.dispatch(openSideDrawer());
+        }}>
           <View style={NavigatorStyle.itemButton}>
             <Icon name="md-menu" size={24} color="white" />
           </View>
@@ -36,7 +39,10 @@ export default class Calculator extends NavigatorComponent {
       );
     } else {
       return (
-        <TouchableOpacity onPress={() => { navigator.pop(); }}>
+        <TouchableOpacity onPress={() => {
+          dismissKeyboard();
+          navigator.pop();
+        }}>
           <View style={NavigatorStyle.itemButton}>
             <Icon name="md-close" size={24} color="white" />
           </View>

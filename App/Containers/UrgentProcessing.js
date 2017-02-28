@@ -37,16 +37,20 @@ export default class UrgentProcessing extends NavigatorComponent {
   }
 
   static navRightButton(route, navigator, index, navState) {
-    return (
-      <TouchableOpacity onPress={() => {
+    if (route.index !== 0) {
+      return (
+        <TouchableOpacity onPress={() => {
         dismissKeyboard();
         navigator.pop();
       }}>
-        <Text style={NavigatorStyle.itemTextButton}>
-          取消
-        </Text>
-      </TouchableOpacity>
-    );
+          <Text style={NavigatorStyle.itemTextButton}>
+            取消
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
   }
 
   static title(route, navigator, index, navState) {
@@ -61,9 +65,7 @@ export default class UrgentProcessing extends NavigatorComponent {
     super(props);
 
     this.state = {
-      data: {
-        id: props.route.id,
-      },
+      data: props.route.data,
     };
   }
 
@@ -75,7 +77,7 @@ export default class UrgentProcessing extends NavigatorComponent {
         <View style={MiumiuTheme.container}>
           <MiumiuThemeNavigatorBackground />
           <View style={styles.body}>
-            { !data &&
+            { (!data || !data.id) &&
               <View style={MiumiuTheme.textFieldGroup}>
                 <MKTextField
                   floatingLabelEnabled={true}

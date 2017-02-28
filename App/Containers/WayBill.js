@@ -148,7 +148,7 @@ export default class WayBill extends NavigatorComponent {
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
-              onPress={() => { this.pushToNextComponent(UrgentProcessing, data.id, Navigator.SceneConfigs.FloatFromBottom); } }
+              onPress={() => { this.pushToNextComponent(UrgentProcessing, data, Navigator.SceneConfigs.FloatFromBottom); } }
             >
               <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
               <Text style={MiumiuTheme.actionButtonText}>加急服務</Text>
@@ -173,11 +173,11 @@ export default class WayBill extends NavigatorComponent {
           visible={this.state.showModal}
         >
           <TouchableOpacity
-            style={styles.modalContainer}
+            style={MiumiuTheme.modalContainer}
             onPress={() => { this.setState({ showModal: false }) }}
           >
             <TouchableWithoutFeedback>
-              <View style={styles.modalBody}>
+              <View style={MiumiuTheme.modalBody}>
                 <View style={styles.qrCode}>
                   <QRCode value="+998988008752" size={140} />
                 </View>
@@ -247,26 +247,6 @@ const styles = {
   },
   body: {
     flex: 1,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalBody: {
-    width: 295,
-    backgroundColor: 'white',
-    padding: 10,
-    alignItems: 'center',
-    borderRadius: 2,
-    shadowColor: 'rgba(0, 0, 0, 0.3)',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 4,
-    shadowOpacity: 1,
   },
   qrCode: {
     marginTop: 30,

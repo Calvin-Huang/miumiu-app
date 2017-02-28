@@ -24,6 +24,7 @@ import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
 import AddWayBill from './AddWayBill';
+import Calculator from './Calculator';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
@@ -310,7 +311,7 @@ class WayBills extends NavigatorComponent {
                 paddingVertical: 14,
                 paddingLeft: 15,
               }}
-              onPress={() => {}}
+              onPress={() => { this.pushToNextComponent(Calculator, null, Navigator.SceneConfigs.FloatFromBottom); }}
             >
               <Text
                 style={{

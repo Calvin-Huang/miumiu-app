@@ -64,14 +64,14 @@ export default class WayBill extends NavigatorComponent {
             };
           case WayBillState.SHIPPING:
             return {
-              destination: '珠海',
+              destination: '澳門',
               arrivedAt: '2017/02/01',
               expiredAt: null,
               amount: 50,
             };
           case WayBillState.ARRIVED:
             return {
-              destination: '珠海',
+              destination: '澳門',
               arrivedAt: '2017/02/01',
               expiredAt: '2017/02/14',
               amount: 65,

@@ -80,6 +80,7 @@ export default class Calculator extends NavigatorComponent {
             <Text style={styles.sectionText}>* 單位為公斤(KG)、公分(CM)</Text>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
+                keyboardType="numeric"
                 floatingLabelEnabled={true}
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
@@ -94,6 +95,7 @@ export default class Calculator extends NavigatorComponent {
             <View style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}>
               <View style={styles.fixMKTextFieldStyleError}>
                 <MKTextField
+                  keyboardType="numeric"
                   floatingLabelEnabled={true}
                   textInputStyle={{ height: 31 }}
                   underlineSize={1}
@@ -107,6 +109,7 @@ export default class Calculator extends NavigatorComponent {
               </View>
               <View style={styles.fixMKTextFieldStyleError}>
                 <MKTextField
+                  keyboardType="numeric"
                   floatingLabelEnabled={true}
                   textInputStyle={{ height: 31 }}
                   underlineSize={1}
@@ -120,6 +123,7 @@ export default class Calculator extends NavigatorComponent {
               </View>
               <View style={styles.fixMKTextFieldStyleError}>
                 <MKTextField
+                  keyboardType="numeric"
                   floatingLabelEnabled={true}
                   textInputStyle={{ height: 31 }}
                   underlineSize={1}

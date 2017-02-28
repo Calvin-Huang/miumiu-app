@@ -139,6 +139,9 @@ export default class Calculator extends NavigatorComponent {
             <View style={styles.guide}>
               <Image source={require('../../assets/images/cardboards.png')} />
               <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLabel }}>貨品測量參考基準</Text>
+              <TouchableOpacity onPress={() => {}}>
+                <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel }}>您還可以參考完整的運費寄量表</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -212,6 +215,11 @@ const styles = {
   },
   guideLabel: {
     marginVertical: 4,
+  },
+  guideLinkLabel: {
+    fontWeight: 'bold',
+    padding: 10,
+    textDecorationLine: 'underline',
   },
   inlineFieldGroup: {
     flexDirection: 'row',

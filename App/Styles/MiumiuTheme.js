@@ -73,6 +73,26 @@ export default style = {
   textFieldGroup: {
     paddingBottom: 14,
     paddingHorizontal: 16,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalBody: {
+    width: 295,
+    backgroundColor: 'white',
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 2,
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 4,
+    shadowOpacity: 1,
   },
 };

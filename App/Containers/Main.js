@@ -81,7 +81,14 @@ class Main extends Component {
           name: '收貨地址',
           component: UrgentProcessing,
           isSelected: false,
-        }
+        }, {
+          icon: {
+            name: 'md-settings',
+          },
+          name: '設定',
+          component: Calculator,
+          isSelected: false,
+        },
       ]
     };
   }

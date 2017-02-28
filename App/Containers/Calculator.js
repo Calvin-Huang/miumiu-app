@@ -136,7 +136,10 @@ export default class Calculator extends NavigatorComponent {
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
-                onPress={() => { this.setState({ showModal: true }); }}
+                onPress={() => {
+                  dismissKeyboard();
+                  this.setState({ showModal: true });
+                }}
               >
                 <Text style={MiumiuTheme.actionButtonText}>開始試算</Text>
               </TouchableOpacity>

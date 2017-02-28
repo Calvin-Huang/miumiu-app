@@ -69,16 +69,16 @@ class Main extends Component {
           isSelected: false,
         }, {
           icon: {
-            name: 'md-help-circle',
+            name: 'md-flag',
           },
-          name: '常見問題',
+          name: '收貨地址',
           component: UrgentProcessing,
           isSelected: false,
         }, {
           icon: {
-            name: 'md-flag',
+            name: 'md-help-circle',
           },
-          name: '收貨地址',
+          name: '常見問題',
           component: UrgentProcessing,
           isSelected: false,
         }, {

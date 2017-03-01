@@ -7,7 +7,6 @@ import {
   AppRegistry,
   StyleSheet,
   StatusBar,
-  Navigator,
   View,
   Text,
   Image,
@@ -25,7 +24,7 @@ import { NavigatorComponent, IconFasterShipping } from '../Components';
 import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
-import Menu from '../Components/Menu';
+import { Menu, Navigator } from '../Components';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 
@@ -164,59 +163,9 @@ class Main extends Component {
           style={styles.container}
           initialRoute={routes[0]}
           initialRouteStack={routes}
-          renderScene={(route, navigator) => {
-            if (route.component.WrappedComponent && (route.component.WrappedComponent.prototype instanceof NavigatorComponent)
-                || route.component.prototype instanceof NavigatorComponent) {
-              return <route.component rootComponent={this} route={route} navigator={navigator} />;
-            } else {
-              throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');
-
-              return null;
-            }
-          }}
-          configureScene={(route, routeStack) => {
-            return route.transition;
-          }}
           navigationBar={
             (this.props.showNavigator &&
-              <Navigator.NavigationBar
-                style={{ flex: 1 }}
-                routeMapper={{
-                  LeftButton: (route, navigator, index, navState) => {
-                    if (route.component.navLeftButton) {
-                      return (
-                        <View style={styles.navBarContentContainer}>
-                          {route.component.navLeftButton(route, navigator, index, navState)}
-                        </View>
-                      );
-                    } else {
-                      return null;
-                    }
-                  },
-                  RightButton: (route, navigator, index, navState) => {
-                    if (route.component.navRightButton) {
-                      return (
-                        <View style={styles.navBarContentContainer}>
-                          {route.component.navRightButton(route, navigator, index, navState)}
-                        </View>
-                      );
-                    } else {
-                      return null;
-                    }
-                  },
-                  Title: (route, navigator, index, navState) => {
-                    if (route.component.title) {
-                      return (
-                        <View style={styles.navBarContentContainer}>
-                          {route.component.title(route, navigator, index, navState)}
-                        </View>
-                      );
-                    } else {
-                      return null;
-                    }
-                  },
-                }}
-              />
+              <Navigator.NavigationBar style={{ flex: 1 }} />
             )
           }
         />
@@ -231,11 +180,6 @@ class Main extends Component {
 const styles = {
   container: {
     flex: 1,
-  },
-  navBarContentContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   overlay: {
     position: 'absolute',

@@ -51,14 +51,6 @@ export default class Calculator extends NavigatorComponent {
     }
   }
 
-  static title(route, navigator, index, navState) {
-    return (
-      <Text style={NavigatorStyle.title}>
-        運費試算
-      </Text>
-    )
-  }
-
   constructor(props) {
     super(props);
 
@@ -75,7 +67,13 @@ export default class Calculator extends NavigatorComponent {
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
-          <MiumiuThemeNavigatorBackground />
+          <MiumiuThemeNavigatorBackground>
+            <View style={NavigatorStyle.titleView}>
+              <Text style={NavigatorStyle.titleText}>
+                運費試算
+              </Text>
+            </View>
+          </MiumiuThemeNavigatorBackground>
           <View style={styles.body}>
             <Text style={styles.sectionText}>* 單位為公斤(KG)、公分(CM)</Text>
             <View style={MiumiuTheme.textFieldGroup}>

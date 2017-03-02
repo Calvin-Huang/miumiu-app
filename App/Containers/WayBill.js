@@ -32,14 +32,6 @@ export default class WayBill extends NavigatorComponent {
     );
   }
 
-  static title({ data: { id } }, navigator, index, navState) {
-    return (
-      <Text style={NavigatorStyle.title}>
-        單號: { id }
-      </Text>
-    );
-  }
-
   constructor(props) {
     super(props);
 
@@ -113,7 +105,13 @@ export default class WayBill extends NavigatorComponent {
 
     return (
       <View style={MiumiuTheme.container}>
-        <MiumiuThemeNavigatorBackground />
+        <MiumiuThemeNavigatorBackground>
+          <View style={NavigatorStyle.titleView}>
+            <Text style={NavigatorStyle.titleText}>
+              單號: { data.id }
+            </Text>
+          </View>
+        </MiumiuThemeNavigatorBackground>
         <View style={styles.body}>
           <View style={styles.sectionHeader}>
             <Icon style={styles.sectionIcon} name={icon} size={24} color={iconColor} />

@@ -32,14 +32,6 @@ export default class AddWayBill extends NavigatorComponent {
     );
   }
 
-  static title() {
-    return (
-      <Text style={NavigatorStyle.title}>
-        新增貨單
-      </Text>
-    );
-  }
-
   constructor(props) {
     super(props);
 
@@ -52,7 +44,13 @@ export default class AddWayBill extends NavigatorComponent {
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
-          <MiumiuThemeNavigatorBackground />
+          <MiumiuThemeNavigatorBackground>
+            <View style={NavigatorStyle.titleView}>
+              <Text style={NavigatorStyle.titleText}>
+                新增貨單
+              </Text>
+            </View>
+          </MiumiuThemeNavigatorBackground>
           <View style={styles.body}>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField

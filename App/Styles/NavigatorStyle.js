@@ -16,9 +16,19 @@ export default styles = {
     flex: 0,
     alignItems: 'center',
   },
-  title: {
+  titleText: {
     fontSize: 17,
     color: 'white',
     fontWeight: 'bold',
-  }
+  },
+  titleView: {
+    position: 'absolute',
+    top: 20,
+    right: 0,
+    left: 0,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
 };

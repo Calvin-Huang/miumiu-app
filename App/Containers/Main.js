@@ -24,17 +24,17 @@ import { NavigatorComponent, IconFasterShipping } from '../Components';
 import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
+import SignIn from './SignIn';
 import { Menu, Navigator } from '../Components';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
+import { checkUserSignedIn, userSignIn, userSignOut } from '../Actions/userActions';
 
 class Main extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      menuIcon: null,
-      addIcon: null,
       overlayOpacityValue: new Animated.Value(0),
       navigationItems: [
         {
@@ -92,20 +92,24 @@ class Main extends Component {
     };
   }
 
-  async componentWillMount() {
-    const menuIcon = await Icon.getImageSource('menu', 24, 'white');
-    const addIcon = await Icon.getImageSource('add', 24, 'white');
-
-    this.setState({
-      menuIcon: menuIcon,
-      addIcon: addIcon,
-    });
+  componentDidMount() {
+    this.props.checkUserSignedIn();
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.props.openSideDrawer();
-    }, 200);
+  componentWillReceiveProps(props) {
+    if (!props.currentUser || this.props.currentUser !== props.currentUser) {
+      if (props.currentUser) {
+        setTimeout(() => {
+          this.props.openSideDrawer();
+        }, 200);
+      } else {
+        this.refs.navigator.push({
+          index: 1,
+          component: SignIn,
+          transition: Navigator.SceneConfigs.FloatFromBottom,
+        });
+      }
+    }
   }
 
   fadeInOutOverlay() {
@@ -169,6 +173,18 @@ class Main extends Component {
             )
           }
         />
+        <TouchableOpacity
+          style={{ position: 'absolute', top: 20, right: 30 }}
+          onPress={async () => { this.props.userSignOut(); }}
+        >
+          <Text>Clear</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ position: 'absolute', top: 20, right: 80 }}
+          onPress={async () => { this.props.userSignIn('calvin.peak', '12364362'); }}
+        >
+          <Text>SignIn</Text>
+        </TouchableOpacity>
         { this.props.sideDrawerOpened &&
           <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
         }
@@ -197,7 +213,14 @@ export default connect(
       ...ownProps,
       showNavigator: state.navigationBar.isShown,
       sideDrawerOpened: state.sideDrawer.isOpened,
+      currentUser: state.user.currentUser,
     };
   },
-  { openSideDrawer, closeSideDrawer }
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignIn, userSignOut },
+  null,
+  {
+    areStatePropsEqual: (prev, next) => {
+      return !(prev.currentUser === next.currentUser === null) && prev === next;
+    }
+  },
 )(Main);

@@ -4,3 +4,4 @@
 
 export * from './navigationBarActions';
 export * from './sideDrawerActions';
+export * from './userActions';

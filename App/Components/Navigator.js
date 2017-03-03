@@ -56,7 +56,7 @@ Navigator.defaultProps = {
   renderScene: (route, navigator) => {
     if (route.component.WrappedComponent && (route.component.WrappedComponent.prototype instanceof NavigatorComponent)
       || route.component.prototype instanceof NavigatorComponent) {
-      return <route.component rootComponent={this} route={route} navigator={navigator} />;
+      return <route.component route={route} navigator={navigator} />;
     } else {
       throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');
 

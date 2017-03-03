@@ -13,7 +13,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class NavigatorComponent extends Component {
   static propTypes = {
-    rootComponent: PropTypes.object.isRequired,
     navigator: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
   }

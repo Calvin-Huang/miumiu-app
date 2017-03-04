@@ -9,6 +9,8 @@ import {
   Navigator,
 } from 'react-native';
 
+import dismissKeyboard from 'dismissKeyboard';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class NavigatorComponent extends Component {
@@ -21,7 +23,7 @@ export default class NavigatorComponent extends Component {
   static navLeftButton(route, navigator, index, navState) {
     if (route.transition === Navigator.SceneConfigs.PushFromRight) {
       return (
-        <TouchableOpacity onPress={() => { navigator.pop(); }}>
+        <TouchableOpacity onPress={() => { dismissKeyboard(); navigator.pop(); }}>
           <Icon style={styles.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       );

@@ -62,12 +62,6 @@ class WayBills extends NavigatorComponent {
     );
   }
 
-  static title(index, nextState) {
-    return (
-      <Image source={require('../../assets/images/icon-miumiu.png')} />
-    );
-  }
-
   constructor(props) {
     super(props);
 
@@ -236,6 +230,11 @@ class WayBills extends NavigatorComponent {
             colors={['#57C9EB', '#55BCE3', '#4E9ACF', '#487ABD']}
             style={styles.navBackground}
           >
+            { !this.state.isSearching &&
+              <View style={NavigatorStyle.titleView}>
+                <Image source={require('../../assets/images/icon-miumiu.png')} />
+              </View>
+            }
             <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
               <Animated.View
                 style={{

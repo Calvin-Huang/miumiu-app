@@ -53,14 +53,6 @@ export default class UrgentProcessing extends NavigatorComponent {
     }
   }
 
-  static title(route, navigator, index, navState) {
-    return (
-      <Text style={NavigatorStyle.title}>
-        加急服務
-      </Text>
-    )
-  }
-
   constructor(props) {
     super(props);
 
@@ -75,7 +67,13 @@ export default class UrgentProcessing extends NavigatorComponent {
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
-          <MiumiuThemeNavigatorBackground />
+          <MiumiuThemeNavigatorBackground>
+            <View style={NavigatorStyle.titleView}>
+              <Text style={NavigatorStyle.titleText}>
+                加急服務
+              </Text>
+            </View>
+          </MiumiuThemeNavigatorBackground>
           <View style={styles.body}>
             { (!data || !data.id) &&
               <View style={MiumiuTheme.textFieldGroup}>

@@ -74,6 +74,7 @@ export default style = {
     paddingBottom: 14,
     paddingHorizontal: 16,
     backgroundColor: 'white',
+    alignSelf: 'stretch',
   },
   modalContainer: {
     flex: 1,

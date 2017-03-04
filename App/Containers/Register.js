@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MKTextField, MKCheckbox } from 'react-native-material-kit';
 
 import { NavigatorComponent } from '../Components';
+import ConfirmRegistrationCode from './ConfirmRegistrationCode';
 import { MiumiuTheme } from '../Styles';
 
 export default class Register extends NavigatorComponent {
@@ -111,6 +112,7 @@ export default class Register extends NavigatorComponent {
           </View>
           <TouchableOpacity
             style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
+            onPress={() => { this.pushToNextComponent(ConfirmRegistrationCode); }}
           >
             <LinearGradient
               start={{ x: 0.485544682, y: 1.44908902 }} end={{ x: 0.485544682, y: -0.811377672 }}

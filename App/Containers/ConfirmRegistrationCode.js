@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TextInput,
+  Navigator,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -16,6 +17,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { NavigatorComponent } from '../Components';
+import RegistrationCompleted from './RegistrationCompleted';
 import { MiumiuTheme } from '../Styles';
 
 export default class ConfirmRegistrationCode extends NavigatorComponent {
@@ -73,6 +75,12 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
           </View>
           <TouchableOpacity
             style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
+            onPress={() => {
+              dismissKeyboard();
+
+              // Disable swipe back gesture.
+              this.pushToNextComponent(RegistrationCompleted, null, { ...Navigator.SceneConfigs.PushFromRight, gestures: {} });
+            }}
           >
             <LinearGradient
               start={{ x: 0.485544682, y: 1.44908902 }} end={{ x: 0.485544682, y: -0.811377672 }}

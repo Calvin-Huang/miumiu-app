@@ -33,6 +33,22 @@ export default style = {
     fontSize: 14,
     lineHeight: 20,
   },
+  roundButton: {
+    alignSelf: 'stretch',
+    borderRadius: 22,
+    marginHorizontal: 10,
+    borderWidth: 0.5,
+    borderColor: 'white',
+    marginTop: 20,
+    marginBottom: 20,
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowRadius: 2,
+    shadowOpacity: 1,
+  },
   bulletItem: {
     flexDirection: 'row',
   },
@@ -95,5 +111,9 @@ export default style = {
     },
     shadowRadius: 4,
     shadowOpacity: 1,
+  },
+  fixMKTextFieldStyleError: {
+    flex: 1,
+    flexDirection: 'column',
   },
 };

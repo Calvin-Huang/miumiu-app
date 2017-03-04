@@ -19,6 +19,7 @@ import { MKTextField } from 'react-native-material-kit';
 
 import { userSignIn } from '../Actions/userActions';
 import { NavigatorComponent } from '../Components';
+import Register from './Register';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
 const SignInType = {
@@ -165,6 +166,7 @@ class SignIn extends NavigatorComponent {
             </View>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning, ...MiumiuTheme.roundButton }}
+              onPress={() => { this.pushToNextComponent(Register); }}
             >
               <Text style={{ ...MiumiuTheme.buttonText, ...MiumiuTheme.textShadow }}>
                 註冊

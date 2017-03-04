@@ -45,6 +45,8 @@ class SignIn extends NavigatorComponent {
 
   componentWillReceiveProps(props) {
     if (props.currentUser) {
+      dismissKeyboard();
+
       this.props.navigator.popToTop();
     }
   }
@@ -166,7 +168,7 @@ class SignIn extends NavigatorComponent {
             </View>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning, ...MiumiuTheme.roundButton }}
-              onPress={() => { this.pushToNextComponent(Register); }}
+              onPress={() => { dismissKeyboard(); this.pushToNextComponent(Register); }}
             >
               <Text style={{ ...MiumiuTheme.buttonText, ...MiumiuTheme.textShadow }}>
                 註冊

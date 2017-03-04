@@ -175,18 +175,6 @@ class Main extends Component {
             )
           }
         />
-        <TouchableOpacity
-          style={{ position: 'absolute', top: 20, right: 30 }}
-          onPress={async () => { this.props.userSignOut(); }}
-        >
-          <Text>Clear</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ position: 'absolute', top: 20, right: 80 }}
-          onPress={async () => { this.props.userSignIn('calvin.peak', '12364362'); }}
-        >
-          <Text>SignIn</Text>
-        </TouchableOpacity>
         { this.props.sideDrawerOpened &&
           <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
         }

@@ -97,17 +97,19 @@ class Main extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!props.currentUser || this.props.currentUser !== props.currentUser) {
-      if (props.currentUser) {
-        setTimeout(() => {
-          this.props.openSideDrawer();
-        }, 200);
-      } else {
-        this.refs.navigator.push({
-          index: 1,
-          component: SignIn,
-          transition: Navigator.SceneConfigs.FloatFromBottom,
-        });
+    if (!props.sideDrawerOpened === this.props.sideDrawerOpened === props.sideDrawerOpened) {
+      if (!props.currentUser || this.props.currentUser !== props.currentUser) {
+        if (props.currentUser) {
+          setTimeout(() => {
+            this.props.openSideDrawer();
+          }, 200);
+        } else {
+          this.refs.navigator.push({
+            index: 1,
+            component: SignIn,
+            transition: Navigator.SceneConfigs.FloatFromBottom,
+          });
+        }
       }
     }
   }

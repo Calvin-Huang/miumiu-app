@@ -91,7 +91,7 @@ class SignIn extends NavigatorComponent {
                   </Text>
                   <View style={styles.triangle} />
                 </TouchableOpacity>
-                <View style={styles.fixMKTextFieldStyleError}>
+                <View style={MiumiuTheme.fixMKTextFieldStyleError}>
                   <MKTextField
                     keyboardType="numeric"
                     floatingLabelEnabled={true}
@@ -100,7 +100,6 @@ class SignIn extends NavigatorComponent {
                     highlightColor="#D8D8D8"
                     placeholder="手機號碼"
                     placeholderTextColor="#9E9E9E"
-                    style={styles.textField}
                     onChangeText={(text) => { this.setState({ width: text }); }}
                     value={this.state.phone}
                   />
@@ -117,7 +116,6 @@ class SignIn extends NavigatorComponent {
                   highlightColor="#D8D8D8"
                   placeholder="Email"
                   placeholderTextColor="#9E9E9E"
-                  style={styles.textField}
                   onChangeText={(text) => { this.setState({ width: text }); }}
                   value={this.state.email}
                 />
@@ -138,7 +136,7 @@ class SignIn extends NavigatorComponent {
               />
             </View>
             <TouchableOpacity
-              style={{ ...MiumiuTheme.actionButton, ...styles.button }}
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
               onPress={this.signInButtonClicked.bind(this)}
             >
               <LinearGradient
@@ -166,8 +164,7 @@ class SignIn extends NavigatorComponent {
               <View style={styles.separator} />
             </View>
             <TouchableOpacity
-              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning, ...styles.button }}
-              onPress={() => {  }}
+              style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning, ...MiumiuTheme.roundButton }}
             >
               <Text style={{ ...MiumiuTheme.buttonText, ...MiumiuTheme.textShadow }}>
                 註冊
@@ -240,10 +237,6 @@ const styles = {
       { rotate: '180deg' }
     ],
   },
-  fixMKTextFieldStyleError: {
-    flex: 1,
-    flexDirection: 'column',
-  },
   forgetButton: {
     padding: 14,
   },
@@ -269,22 +262,6 @@ const styles = {
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     height: 0.5,
     marginVertical: 14,
-  },
-  button: {
-    alignSelf: 'stretch',
-    borderRadius: 22,
-    marginHorizontal: 10,
-    borderWidth: 0.5,
-    borderColor: 'white',
-    marginTop: 20,
-    marginBottom: 20,
-    shadowColor: 'rgba(0, 0, 0, 0.3)',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowRadius: 2,
-    shadowOpacity: 1,
   },
   signInButtonBackground: {
     borderRadius: 22,

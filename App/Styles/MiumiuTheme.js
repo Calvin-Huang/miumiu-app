@@ -116,4 +116,17 @@ export default style = {
     flex: 1,
     flexDirection: 'column',
   },
+  pickerToolBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    backgroundColor: 'white',
+  },
+  pickerToolBarButtonText: {
+    color: 'rgba(0, 122, 254, 1)',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+  },
+  picker: {
+    backgroundColor: '#EFF0F4',
+  },
 };

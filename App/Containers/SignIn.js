@@ -7,6 +7,9 @@ import {
   View,
   Text,
   Image,
+  Picker,
+  Animated,
+  Easing,
   TouchableOpacity,
   TouchableWithoutFeedback ,
 } from 'react-native';
@@ -36,10 +39,12 @@ class SignIn extends NavigatorComponent {
     super(props);
 
     this.state = {
+      areaCode: '+853',
       email: null,
       phone: null,
       password: null,
       signInType: SignInType.Phone,
+      pickerToBottom: new Animated.Value(-255),
     }
   }
 
@@ -53,6 +58,28 @@ class SignIn extends NavigatorComponent {
 
   signInButtonClicked() {
     this.props.userSignIn('calvin.peak', '12364362')
+  }
+
+  showAreaCodePicker() {
+    Animated.timing(
+      this.state.pickerToBottom,
+      {
+        toValue: 0,
+        duration: 250,
+        easing: Easing.inOut(Easing.quad),
+      }
+    ).start();
+  }
+
+  hideAreaCodePicker() {
+    Animated.timing(
+      this.state.pickerToBottom,
+      {
+        toValue: -255,
+        duration: 250,
+        easing: Easing.inOut(Easing.quad),
+      }
+    ).start();
   }
 
   render() {
@@ -88,9 +115,12 @@ class SignIn extends NavigatorComponent {
             </View>
             { this.state.signInType === SignInType.Phone &&
               <View style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}>
-                <TouchableOpacity style={styles.dropDownButton}>
+                <TouchableOpacity
+                  style={styles.dropDownButton}
+                  onPress={this.showAreaCodePicker.bind(this)}
+                >
                   <Text style={styles.dropDownButtonText}>
-                    +81
+                    {this.state.areaCode}
                   </Text>
                   <View style={styles.triangle} />
                 </TouchableOpacity>
@@ -175,6 +205,29 @@ class SignIn extends NavigatorComponent {
               </Text>
             </TouchableOpacity>
           </View>
+          <Animated.View
+            style={{
+              ...styles.areaCodePicker,
+              bottom: this.state.pickerToBottom,
+            }}
+          >
+            <View style={MiumiuTheme.pickerToolBar}>
+              <TouchableOpacity onPress={this.hideAreaCodePicker.bind(this)}>
+                <Text style={MiumiuTheme.pickerToolBarButtonText}>
+                  關閉
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Picker
+              style={MiumiuTheme.picker}
+              selectedValue={this.state.areaCode}
+              onValueChange={(code) => this.setState({areaCode: code})}
+            >
+              <Picker.Item label="澳門 (+853)" value="+853" />
+              <Picker.Item label="中國 (+86)" value="+86" />
+              <Picker.Item label="香港 (+852)" value="+852" />
+            </Picker>
+          </Animated.View>
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -223,7 +276,7 @@ const styles = {
     fontSize: 16,
     color: '#9E9E9E',
     paddingVertical: 8,
-    width: 50,
+    width: 60,
     textAlign: 'center',
   },
   triangle: {
@@ -274,6 +327,12 @@ const styles = {
     right: 0,
     bottom: 0,
     left: 0,
+  },
+  areaCodePicker: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
   },
 };
 

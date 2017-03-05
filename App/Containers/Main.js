@@ -17,7 +17,7 @@ import {
 
 import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
-import Icon from 'react-native-vector-icons/Ionicons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import { NavigatorComponent, IconFasterShipping } from '../Components';
 
@@ -57,6 +57,15 @@ class Main extends Component {
             name: 'md-calculator'
           },
           name: '試算運費',
+          component: Calculator,
+          isSelected: false,
+        }, {
+          icon: {
+            component: FontAwesomeIcon,
+            name: 'qrcode',
+            size: 20,
+          },
+          name: 'QRCode 取貨',
           component: Calculator,
           isSelected: false,
         }, {

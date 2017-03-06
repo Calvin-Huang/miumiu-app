@@ -176,7 +176,10 @@ class WayBills extends NavigatorComponent {
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
-      <TouchableOpacity style={styles.row} onPress={() => { this.pushToNextComponent(WayBill, rowData) }}>
+      <TouchableOpacity style={styles.row} onPress={() => {
+        this.hideSearchBar();
+        this.pushToNextComponent(WayBill, rowData);
+      }}>
         <WayBillStateView style={styles.wayBillState} state={rowData.state} />
         <Text style={{ ...styles.wayBillDescription, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
           { rowData.id }

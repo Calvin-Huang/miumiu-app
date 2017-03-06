@@ -16,10 +16,11 @@ NavigatorNavigationBar.defaultProps = {
   ...NavigatorNavigationBar.defaultProps,
   routeMapper: {
     LeftButton: (route, navigator, index, navState) => {
-      if (route.component.navLeftButton) {
+      const component = route.component.WrappedComponent || route.component;
+      if (component.navLeftButton) {
         return (
           <View style={styles.navBarContentContainer}>
-            {route.component.navLeftButton(route, navigator, index, navState)}
+            {component.navLeftButton(route, navigator, index, navState)}
           </View>
         );
       } else {
@@ -27,10 +28,11 @@ NavigatorNavigationBar.defaultProps = {
       }
     },
     RightButton: (route, navigator, index, navState) => {
-      if (route.component.navRightButton) {
+      const component = route.component.WrappedComponent || route.component;
+      if (component.navRightButton) {
         return (
           <View style={styles.navBarContentContainer}>
-            {route.component.navRightButton(route, navigator, index, navState)}
+            {component.navRightButton(route, navigator, index, navState)}
           </View>
         );
       } else {
@@ -38,10 +40,11 @@ NavigatorNavigationBar.defaultProps = {
       }
     },
     Title: (route, navigator, index, navState) => {
-      if (route.component.title) {
+      const component = route.component.WrappedComponent || route.component;
+      if (component.title) {
         return (
           <View style={styles.navBarContentContainer}>
-            {route.component.title(route, navigator, index, navState)}
+            {component.title(route, navigator, index, navState)}
           </View>
         );
       } else {

@@ -24,6 +24,7 @@ import { NavigatorComponent, IconFasterShipping } from '../Components';
 import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
+import DeliveryAddresses from './DeliveryAddresses';
 import SignIn from './SignIn';
 import { Menu, Navigator } from '../Components';
 
@@ -80,7 +81,7 @@ class Main extends Component {
             name: 'md-flag',
           },
           name: '收貨地址',
-          component: UrgentProcessing,
+          component: DeliveryAddresses,
           isSelected: false,
         }, {
           icon: {

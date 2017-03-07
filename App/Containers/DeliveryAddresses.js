@@ -210,14 +210,9 @@ class DeliveryAddresses extends NavigatorComponent {
             >
               <Animated.Text
                 style={{
-                  flex: 1,
-                  top: 32,
-                  textAlign: 'center',
+                  ...MiumiuTheme.searchBarCancelButton,
                   marginBottom: this.state.searchBarMarginBottom,
                   marginRight: this.state.cancelButtonMarginRight,
-                  backgroundColor: 'transparent',
-                  fontSize: 17,
-                  color: 'white',
                 }}
               >
                 取消

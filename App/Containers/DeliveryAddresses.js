@@ -1,19 +1,16 @@
 /**
- * Created by Calvin Huang on 2/3/17.
+ * Created by Calvin Huang on 3/7/17.
  */
-import React, { PropTypes, Component } from 'react';
+
+import React, { Component } from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   TextInput,
-  Image,
-  ActivityIndicator,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Navigator,
   Animated,
   Easing,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -22,41 +19,16 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
-import WayBill from './WayBill';
-import AddWayBill from './AddWayBill';
-import Calculator from './Calculator';
-import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
-import { MiumiuTheme, NavigatorStyle } from '../Styles';
-import { WayBillState, UrgentState } from '../Constants/states';
-import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
-import { openSideDrawer } from '../Actions/sideDrawerActions';
-import store from '../storeInstance';
+import { NavigatorComponent } from '../Components';
+import { NavigatorStyle, MiumiuTheme } from '../Styles';
+import { showNavigationBar, hideNavigationBar, openSideDrawer } from '../Actions';
 
-class WayBills extends NavigatorComponent {
+class DeliveryAddresses extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
         <View style={NavigatorStyle.itemButton}>
           <Icon name="md-menu" size={24} color="white" />
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  static navRightButton(route, navigator, index, navState) {
-    return (
-      <TouchableOpacity
-        underlayColor="rgba(0, 0, 0, 0)"
-        onPress={() => {
-          navigator.push({
-            index: route.index + 1,
-            component: AddWayBill,
-            transition: Navigator.SceneConfigs.FloatFromBottom,
-          });
-        }}
-      >
-        <View style={NavigatorStyle.itemButton}>
-          <Icon name="md-add" size={24} color="white" />
         </View>
       </TouchableOpacity>
     );
@@ -148,25 +120,15 @@ class WayBills extends NavigatorComponent {
 
   }
 
-  fetchWayBills(page = 1, callback, option) {
+  fetchDeliveryAddresses(page = 1, callback, option) {
     setTimeout(() => {
       callback([
         {
-          state: WayBillState.CONFIRMING,
           id: '5012381293511238',
-          urgent: UrgentState.APPROVED,
+          name: '澳門店',
         }, {
-          state: WayBillState.SHIPPING,
           id: '5012381293511239',
-          urgent: UrgentState.NORMAL,
-        }, {
-          state: WayBillState.ARRIVED,
-          id: '5012381293511240',
-          urgent: UrgentState.NORMAL,
-        }, {
-          state: WayBillState.ARRIVED,
-          id: '5012381293511241',
-          urgent: UrgentState.APPROVED,
+          name: '廈門店',
         }
       ], {
         allLoaded: true,
@@ -176,39 +138,21 @@ class WayBills extends NavigatorComponent {
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
-      <TouchableOpacity style={styles.row} onPress={() => {
+      <TouchableOpacity style={styles.listViewRow} onPress={() => {
         this.hideSearchBar();
-        this.pushToNextComponent(WayBill, rowData);
+        // this.pushToNextComponent(WayBill, rowData);
       }}>
-        <WayBillStateView style={styles.wayBillState} state={rowData.state} />
-        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
-          { rowData.id }
+        <Text style={MiumiuTheme.listViewText}>
+          { rowData.name }
         </Text>
-        { (rowData.state === WayBillState.CONFIRMING && rowData.urgent && UrgentState.APPROVED) &&
-          <IconFasterShipping style={{ marginRight: 14 }} />
-        }
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
     );
   }
 
-  renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
-    const rowData = this.refs.listView.state.rows;
-
-    if (rowData.length - 1 == rowID) {
-      return null;
-    }
-
-    return (
-      <View key={`#seperator-${sectionID}-${rowID}`} style={styles.separatorContainer}>
-        <View style={styles.separator} />
-      </View>
-    );
-  }
-
   renderPaginationFetchingView(paginateCallback) {
     return (
-      <View style={styles.paginationFetchingView}>
+      <View style={MiumiuTheme.paginationFetchingView}>
         <ActivityIndicator />
       </View>
     );
@@ -235,7 +179,9 @@ class WayBills extends NavigatorComponent {
           >
             { !this.state.isSearching &&
               <View style={NavigatorStyle.titleView}>
-                <Image source={require('../../assets/images/icon-miumiu.png')} />
+                <Text style={NavigatorStyle.titleText}>
+                  收貨地址
+                </Text>
               </View>
             }
             <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
@@ -250,7 +196,7 @@ class WayBills extends NavigatorComponent {
                   ref="searchBar"
                   style={{ ...MiumiuTheme.buttonText, flex: 1 }}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
-                  placeholder="輸入關鍵字查單"
+                  placeholder="查詢離你最近的據點"
                   onFocus={this.showSearchBar.bind(this)}
                   onChangeText={this.searchBarTextChanged.bind(this)}
                 />
@@ -280,55 +226,11 @@ class WayBills extends NavigatorComponent {
           </LinearGradient>
         </Animated.View>
 
-        { !this.state.isSearching &&
-          <View
-            style={{
-                flex: 0,
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#F5C163',
-              }}
-          >
-            <Text
-              style={{
-                ...MiumiuTheme.textShadow,
-                ...MiumiuTheme.buttonText,
-                flex: 0,
-                marginLeft: 15,
-              }}
-            >
-              嗨！Michael Guan，你可以先
-            </Text>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                paddingVertical: 14,
-                paddingLeft: 15,
-              }}
-              onPress={() => { this.pushToNextComponent(Calculator, null, Navigator.SceneConfigs.FloatFromBottom); }}
-            >
-              <Text
-                style={{
-                  ...MiumiuTheme.textShadow,
-                  ...MiumiuTheme.buttonText,
-                  fontWeight: 'bold',
-                  textDecorationLine: 'underline',
-                  textDecorationColor: 'white',
-                  textDecorationStyle: 'solid',
-                }}
-              >
-                試算運費
-              </Text>
-            </TouchableOpacity>
-          </View>
-        }
-
         <GiftedListView
           ref="listView"
           style={styles.wayBills}
           rowView={this.renderRowView.bind(this)}
-          renderSeparator={this.renderSeparator.bind(this)}
-          onFetch={this.fetchWayBills.bind(this)}
+          onFetch={this.fetchDeliveryAddresses.bind(this)}
           paginationWaitingView={this.renderPaginationFetchingView.bind(this)}
           paginationAllLoadedView={this.renderPaginationAllLoadedView.bind(this)}
           onEndReached={() => { this.refs.listView._onPaginate(); }}
@@ -346,35 +248,10 @@ class WayBills extends NavigatorComponent {
 }
 
 const styles = {
-  wayBills: {
-    flex: 1,
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 57,
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  separatorContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'white',
-  },
-  separator: {
-    flex: 1,
-    marginLeft: 72,
-    height: 1,
-    backgroundColor: '#EFF0F4',
-  },
-  wayBillState: {
-    marginLeft: 12,
-    marginRight: 29,
-  },
-  paginationView: {
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+  listViewRow: {
+    ...MiumiuTheme.listViewRow,
+    paddingVertical: 16,
+    paddingLeft: 17,
   },
 };
 
@@ -385,4 +262,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   { showNavigationBar, hideNavigationBar }
-)(WayBills);
+)(DeliveryAddresses);

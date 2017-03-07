@@ -117,24 +117,24 @@ export default class WayBill extends NavigatorComponent {
             <Icon style={styles.sectionIcon} name={icon} size={24} color={iconColor} />
             <Text style={styles.sectionText}>{sectionTitle}</Text>
           </View>
-          <View style={styles.infoFieldContainer}>
-            <Text style={styles.infoFieldNameText}>
+          <View style={styles.listViewRow}>
+            <Text style={MiumiuTheme.listViewText}>
               到貨日
             </Text>
             <Text style={styles.infoFieldValueText}>
               {data.arrivedAt || '-'}
             </Text>
           </View>
-          <View style={styles.infoFieldContainer}>
-            <Text style={styles.infoFieldNameText}>
+          <View style={styles.listViewRow}>
+            <Text style={MiumiuTheme.listViewText}>
               到期日
             </Text>
             <Text style={styles.infoFieldValueText}>
               {data.expiredAt || '-'}
             </Text>
           </View>
-          <View style={styles.infoFieldContainer}>
-            <Text style={styles.infoFieldNameText}>
+          <View style={styles.listViewRow}>
+            <Text style={MiumiuTheme.listViewText}>
               金額
             </Text>
             <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>
@@ -225,22 +225,14 @@ const styles = {
     fontSize: 14,
     color: 'rgba(0, 0, 0, 0.54)',
   },
-  infoFieldContainer: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 1,
-  },
-  infoFieldNameText: {
-    fontSize: 16,
-    marginVertical: 16,
-    marginLeft: 17,
+  listViewRow: {
+    ...MiumiuTheme.listViewRow,
+    paddingVertical: 16,
+    paddingHorizontal: 17,
   },
   infoFieldValueText: {
+    ...MiumiuTheme.listViewText,
     flex: 1,
-    fontSize: 16,
-    marginVertical: 16,
-    marginRight: 17,
     textAlign: 'right',
   },
   body: {

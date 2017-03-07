@@ -129,4 +129,43 @@ export default style = {
   picker: {
     backgroundColor: '#EFF0F4',
   },
+  navBackgroundWithSearchBar: {
+    flex: 0,
+    flexDirection: 'row',
+    height: 104,
+  },
+  searchBar: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    margin: 9,
+    height: 28,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    overflow: 'hidden',
+  },
+  searchBarIcon: {
+    marginLeft: 14,
+    marginRight: 12,
+  },
+  listViewRow: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 1,
+  },
+  listViewText: {
+    flex: 1,
+    fontSize: 16,
+    color: 'black',
+  },
+  listViewForwardIndicator: {
+    marginRight: 22,
+  },
+  paginationFetchingView: {
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 };

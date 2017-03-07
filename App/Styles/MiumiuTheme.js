@@ -149,6 +149,14 @@ export default style = {
     marginLeft: 14,
     marginRight: 12,
   },
+  searchBarCancelButton: {
+    flex: 1,
+    top: 32,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    fontSize: 17,
+    color: 'white',
+  },
   listViewRow: {
     backgroundColor: 'white',
     flexDirection: 'row',

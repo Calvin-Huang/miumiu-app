@@ -181,13 +181,13 @@ class WayBills extends NavigatorComponent {
         this.pushToNextComponent(WayBill, rowData);
       }}>
         <WayBillStateView style={styles.wayBillState} state={rowData.state} />
-        <Text style={{ ...styles.wayBillDescription, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
+        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
           { rowData.id }
         </Text>
         { (rowData.state === WayBillState.CONFIRMING && rowData.urgent && UrgentState.APPROVED) &&
           <IconFasterShipping style={{ marginRight: 14 }} />
         }
-        <Icon style={styles.rowForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
+        <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
     );
   }
@@ -208,7 +208,7 @@ class WayBills extends NavigatorComponent {
 
   renderPaginationFetchingView(paginateCallback) {
     return (
-      <View style={styles.paginationView}>
+      <View style={styles.paginationFetchingView}>
         <ActivityIndicator />
       </View>
     );
@@ -231,7 +231,7 @@ class WayBills extends NavigatorComponent {
             start={{ x: 0.485544672, y: 1.08471279 }} end={{ x: 0.485544682, y: -0.0498809549 }}
             locations={[0, 0.0802375638, 0.438058036, 1]}
             colors={['#57C9EB', '#55BCE3', '#4E9ACF', '#487ABD']}
-            style={styles.navBackground}
+            style={MiumiuTheme.navBackgroundWithSearchBar}
           >
             { !this.state.isSearching &&
               <View style={NavigatorStyle.titleView}>
@@ -241,22 +241,14 @@ class WayBills extends NavigatorComponent {
             <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
               <Animated.View
                 style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-end',
-                  margin: 9,
-                  height: 28,
-                  borderRadius: 4,
-                  backgroundColor: 'rgba(255, 255, 255, 0.16)',
-                  overflow: 'hidden',
+                  ...MiumiuTheme.searchBar,
                   marginBottom: this.state.searchBarMarginBottom,
                 }}
               >
-                <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={styles.searchBarIcon} />
+                <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
                 <TextInput
                   ref="searchBar"
-                  style={{ ...styles.whiteText, flex: 1 }}
+                  style={{ ...MiumiuTheme.buttonText, flex: 1 }}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="輸入關鍵字查單"
                   onFocus={this.showSearchBar.bind(this)}
@@ -300,7 +292,7 @@ class WayBills extends NavigatorComponent {
             <Text
               style={{
                 ...MiumiuTheme.textShadow,
-                ...styles.whiteText,
+                ...MiumiuTheme.buttonText,
                 flex: 0,
                 marginLeft: 15,
               }}
@@ -318,7 +310,7 @@ class WayBills extends NavigatorComponent {
               <Text
                 style={{
                   ...MiumiuTheme.textShadow,
-                  ...styles.whiteText,
+                  ...MiumiuTheme.buttonText,
                   fontWeight: 'bold',
                   textDecorationLine: 'underline',
                   textDecorationColor: 'white',
@@ -354,19 +346,6 @@ class WayBills extends NavigatorComponent {
 }
 
 const styles = {
-  navBackground: {
-    flex: 0,
-    flexDirection: 'row',
-    height: 104,
-  },
-  searchBarIcon: {
-    marginLeft: 14,
-    marginRight: 12,
-  },
-  whiteText: {
-    color: 'white',
-    fontSize: 14,
-  },
   wayBills: {
     flex: 1,
   },
@@ -376,9 +355,6 @@ const styles = {
     height: 57,
     alignItems: 'center',
     backgroundColor: 'white',
-  },
-  rowForwardIndicator: {
-    marginRight: 22,
   },
   separatorContainer: {
     flex: 1,
@@ -394,11 +370,6 @@ const styles = {
   wayBillState: {
     marginLeft: 12,
     marginRight: 29,
-  },
-  wayBillDescription: {
-    flex: 1,
-    fontSize: 16,
-    color: 'black',
   },
   paginationView: {
     height: 44,

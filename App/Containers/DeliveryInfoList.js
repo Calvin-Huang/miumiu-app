@@ -20,10 +20,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import { NavigatorComponent } from '../Components';
+import DeliveryInfo from './DeliveryInfo';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { showNavigationBar, hideNavigationBar, openSideDrawer } from '../Actions';
 
-class DeliveryAddresses extends NavigatorComponent {
+class DeliveryInfoList extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
@@ -140,7 +141,7 @@ class DeliveryAddresses extends NavigatorComponent {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
         this.hideSearchBar();
-        // this.pushToNextComponent(WayBill, rowData);
+        this.pushToNextComponent(DeliveryInfo, rowData);
       }}>
         <Text style={MiumiuTheme.listViewText}>
           { rowData.name }
@@ -257,4 +258,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   { showNavigationBar, hideNavigationBar }
-)(DeliveryAddresses);
+)(DeliveryInfoList);

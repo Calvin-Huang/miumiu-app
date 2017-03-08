@@ -75,7 +75,7 @@ export default class Calculator extends NavigatorComponent {
             </View>
           </MiumiuThemeNavigatorBackground>
           <View style={styles.body}>
-            <Text style={styles.sectionText}>* 單位為公斤(KG)、公分(CM)</Text>
+            <Text style={MiumiuTheme.sectionText}>* 單位為公斤(KG)、公分(CM)</Text>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 keyboardType="numeric"
@@ -91,7 +91,7 @@ export default class Calculator extends NavigatorComponent {
               />
             </View>
             <View style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}>
-              <View style={styles.fixMKTextFieldStyleError}>
+              <View style={MiumiuTheme.fixMKTextFieldStyleError}>
                 <MKTextField
                   keyboardType="numeric"
                   floatingLabelEnabled={true}
@@ -105,7 +105,7 @@ export default class Calculator extends NavigatorComponent {
                   value={this.state.text}
                 />
               </View>
-              <View style={styles.fixMKTextFieldStyleError}>
+              <View style={MiumiuTheme.fixMKTextFieldStyleError}>
                 <MKTextField
                   keyboardType="numeric"
                   floatingLabelEnabled={true}
@@ -119,7 +119,7 @@ export default class Calculator extends NavigatorComponent {
                   value={this.state.text}
                 />
               </View>
-              <View style={styles.fixMKTextFieldStyleError}>
+              <View style={MiumiuTheme.fixMKTextFieldStyleError}>
                 <MKTextField
                   keyboardType="numeric"
                   floatingLabelEnabled={true}
@@ -201,12 +201,6 @@ const styles = {
   body: {
     flex: 1,
   },
-  sectionText: {
-    marginLeft: 16,
-    marginVertical: 15,
-    fontSize: 14,
-    color: 'rgba(0, 0, 0, 0.54)',
-  },
   guide: {
     marginTop: 32,
     alignItems: 'center',
@@ -226,10 +220,6 @@ const styles = {
   textField: {
     backgroundColor: 'white',
     marginHorizontal: 11,
-  },
-  fixMKTextFieldStyleError: {
-    flex: 1,
-    flexDirection: 'column',
   },
   heroText: {
     fontSize: 20,

@@ -157,6 +157,12 @@ export default style = {
     fontSize: 17,
     color: 'white',
   },
+  sectionText: {
+    marginLeft: 16,
+    marginVertical: 15,
+    fontSize: 14,
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
   listViewRow: {
     backgroundColor: 'white',
     flexDirection: 'row',
@@ -175,5 +181,9 @@ export default style = {
     height: 44,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  fixMKTextFieldStyleError: {
+    flex: 1,
+    flexDirection: 'column',
   },
 };

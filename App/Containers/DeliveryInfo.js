@@ -21,6 +21,14 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Component
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
 export default class DeliveryInfo extends NavigatorComponent {
+  static navLeftButton(route, navigator, index, navState) {
+    return (
+      <TouchableOpacity onPress={() => { navigator.pop(); }}>
+        <Icon style={NavigatorStyle.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
+    );
+  }
+
   constructor(props) {
     super(props);
 
@@ -55,6 +63,7 @@ export default class DeliveryInfo extends NavigatorComponent {
     setTimeout(() => {
       this.setState({
         data: {
+          ...this.state.data,
           openFrom: '09：00',
           openTo: '15：00',
           receiver: '官先生2017',

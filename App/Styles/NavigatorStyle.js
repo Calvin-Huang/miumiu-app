@@ -3,6 +3,12 @@
  */
 
 export default styles = {
+  navBackButton: {
+    marginTop: 10,
+    marginRight: 80,
+    marginLeft: 9,
+    marginBottom: 8,
+  },
   itemTextButton: {
     margin: 9,
     flex: 0,

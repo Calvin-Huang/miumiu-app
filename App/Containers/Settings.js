@@ -10,10 +10,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
+import { userSignOut } from '../Actions';
 
-export default class Settings extends NavigatorComponent {
+class Settings extends NavigatorComponent {
   render() {
     return (
       <View style={MiumiuTheme.container}>
@@ -29,7 +32,7 @@ export default class Settings extends NavigatorComponent {
             <Text style={styles.listViewText}>到貨通知推播</Text>
             <Switch value={true} />
           </View>
-          <TouchableOpacity style={styles.signOutButton}>
+          <TouchableOpacity style={styles.signOutButton} onPress={() => { this.props.userSignOut(); }}>
             <Text style={MiumiuTheme.buttonText}>登出</Text>
           </TouchableOpacity>
         </View>
@@ -57,4 +60,13 @@ const styles = {
     marginVertical: 16,
     marginHorizontal: 17,
   }
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return ownProps;
 }
+
+export default connect(
+  mapStateToProps,
+  { userSignOut }
+)(Settings);

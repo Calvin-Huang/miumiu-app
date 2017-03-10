@@ -22,6 +22,7 @@ import { MKTextField } from 'react-native-material-kit';
 
 import { userSignIn } from '../Actions/userActions';
 import { NavigatorComponent } from '../Components';
+import WayBills from './WayBills';
 import Register from './Register';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
@@ -52,7 +53,10 @@ class SignIn extends NavigatorComponent {
     if (props.currentUser) {
       dismissKeyboard();
 
-      this.props.navigator.popToTop();
+      this.props.navigator.replacePreviousAndPop({
+        index: 0,
+        component: WayBills,
+      });
     }
   }
 

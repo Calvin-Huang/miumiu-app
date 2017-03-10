@@ -12,11 +12,23 @@ import {
 
 import { connect } from 'react-redux';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
-import { userSignOut } from '../Actions';
+import { openSideDrawer, userSignOut } from '../Actions';
 
 class Settings extends NavigatorComponent {
+  static navLeftButton(route, navigator, index, navState) {
+    return (
+      <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
+        <View style={NavigatorStyle.itemButton}>
+          <Icon name="md-menu" size={24} color="white" />
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   render() {
     return (
       <View style={MiumiuTheme.container}>
@@ -68,5 +80,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { userSignOut }
+  { openSideDrawer, userSignOut }
 )(Settings);

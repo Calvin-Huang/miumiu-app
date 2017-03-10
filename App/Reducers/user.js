@@ -51,7 +51,7 @@ export default function user(state = initialState, action) {
   }
 }
 
-export function userQRCodeModal(state , action) {
+export function userQRCodeModal(state = { show: false } , action) {
   switch (action.type) {
     case SHOW_USER_QRCODE:
       return {
@@ -62,8 +62,6 @@ export function userQRCodeModal(state , action) {
         show: false,
       };
     default:
-      return {
-        show: false,
-      };
+      return state;
   }
 }

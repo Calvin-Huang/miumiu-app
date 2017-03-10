@@ -44,3 +44,15 @@ export function userSignOutSuccess() {
     type: ActionTypes.USER_SIGN_OUT_SUCCESS,
   };
 }
+
+export function showUserQRCode() {
+  return {
+    type: ActionTypes.SHOW_USER_QRCODE,
+  };
+}
+
+export function hideUserQRCode() {
+  return {
+    type: ActionTypes.HIDE_USER_QRCODE,
+  };
+}

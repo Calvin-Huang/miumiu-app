@@ -7,11 +7,12 @@ import { combineReducers } from 'redux';
 import wayBills from './wayBills';
 import navigationBar from './navigationBar';
 import sideDrawer from './sideDrawer';
-import user from './user';
+import user, { userQRCodeModal } from './user';
 
 export default combineReducers({
   wayBills,
   navigationBar,
   sideDrawer,
   user,
+  userQRCodeModal,
 });

@@ -15,7 +15,7 @@ export function userSignIn(username, password) {
     type: ActionTypes.USER_SIGN_IN,
     username: username,
     password: password,
-  }
+  };
 }
 
 export function userSignInSuccess(user) {
@@ -30,17 +30,17 @@ export function userSignInFailed({ errorMessage, statusCode }) {
     type: ActionTypes.USER_SIGN_IN_FAILED,
     errorMessage: errorMessage,
     statusCode: statusCode,
-  }
+  };
 }
 
 export function userSignOut() {
   return {
     type: ActionTypes.USER_SIGN_OUT,
-  }
+  };
 }
 
 export function userSignOutSuccess() {
   return {
     type: ActionTypes.USER_SIGN_OUT_SUCCESS,
-  }
+  };
 }

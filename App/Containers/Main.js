@@ -23,7 +23,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
 import Color from 'color';
 
-import { NavigatorComponent, IconFasterShipping } from '../Components';
+import { IconFasterShipping } from '../Components';
 
 import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';

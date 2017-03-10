@@ -34,7 +34,7 @@ export default class FAQDetail extends NavigatorComponent {
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
           <View style={NavigatorStyle.titleView}>
-            <Text style={NavigatorStyle.titleText}>
+            <Text numberOfLines={1} style={{ ...NavigatorStyle.titleText, marginHorizontal: 30 }}>
               {title}
             </Text>
           </View>

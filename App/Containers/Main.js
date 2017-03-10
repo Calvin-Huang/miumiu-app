@@ -114,19 +114,17 @@ class Main extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!props.sideDrawerOpened === this.props.sideDrawerOpened === props.sideDrawerOpened) {
-      if (!props.currentUser || this.props.currentUser !== props.currentUser) {
-        if (props.currentUser) {
-          setTimeout(() => {
-            this.props.openSideDrawer();
-          }, 200);
-        } else {
-          this.refs.navigator.push({
-            index: 1,
-            component: SignIn,
-            transition: Navigator.SceneConfigs.FloatFromBottom,
-          });
-        }
+    if (this.props.currentUser !== props.currentUser) {
+      if (props.currentUser) {
+        setTimeout(() => {
+          this.props.openSideDrawer();
+        }, 200);
+      } else {
+        this.refs.navigator.push({
+          index: 1,
+          component: SignIn,
+          transition: Navigator.SceneConfigs.FloatFromBottom,
+        });
       }
     }
   }
@@ -279,12 +277,6 @@ export default connect(
       currentUser: state.user.currentUser,
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
-  },
-  null,
-  {
-    areStatePropsEqual: (prev, next) => {
-      return !(prev.currentUser === next.currentUser === null) && prev === next;
-    }
   },
   { openSideDrawer, closeSideDrawer, checkUserSignedIn, hideUserQRCode },
 )(Main);

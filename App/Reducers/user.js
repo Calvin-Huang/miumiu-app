@@ -11,7 +11,9 @@ import {
 } from '../Constants/actionTypes';
 
 const initialState = {
-  currentUser: null,
+
+  // Empty user for first time check in app launched.
+  currentUser: {},
   result: {
     signedIn: null,
     errorMessage: null,
@@ -40,7 +42,10 @@ export default function user(state = initialState, action) {
         }
       };
     case USER_SIGN_OUT:
-      return initialState;
+      return {
+        ...initialState,
+        currentUser: null,
+      };
     default:
       return state;
   }

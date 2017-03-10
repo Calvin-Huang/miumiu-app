@@ -36,7 +36,7 @@ import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
-import { checkUserSignedIn, hideUserQRCode } from '../Actions/userActions';
+import { checkUserSignedIn, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 
 class Main extends Component {
   constructor(props) {
@@ -74,7 +74,7 @@ class Main extends Component {
             size: 20,
           },
           name: 'QRCode 取貨',
-          component: Calculator,
+          component: Component,
           isSelected: false,
         }, {
           icon: {
@@ -143,17 +143,21 @@ class Main extends Component {
   }
 
   navigationItemClicked(itemData) {
-    this.setState({
-      navigationItems: this.state.navigationItems.map((item) => {
-        item.isSelected = (item === itemData);
-
-        return item;
-      })
-    });
-
-    this.refs.navigator.replace({ index: 0, component: itemData.component });
-
     this.props.closeSideDrawer();
+
+    if (itemData.component !== Component) {
+      this.setState({
+        navigationItems: this.state.navigationItems.map((item) => {
+          item.isSelected = (item === itemData);
+
+          return item;
+        })
+      });
+
+      this.refs.navigator.replace({ index: 0, component: itemData.component });
+    } else {
+      this.props.showUserQRCode();
+    }
   }
 
   render() {
@@ -278,5 +282,5 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn, hideUserQRCode },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, showUserQRCode, hideUserQRCode },
 )(Main);

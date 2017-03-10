@@ -29,8 +29,7 @@ export default class FAQDetail extends NavigatorComponent {
   }
 
   render() {
-    const { title } = this.state.data;
-    const content = `<p><span style="font-size:16px;">3. 登入或註冊<a href="https://google.com" target="_blank">&lt;我的帳戶&gt;</a>後按<a href="http://p.bee.mo/ad1.php" target="_blank">&lt;收貨地址&gt;</a></span><img src="https://camo.githubusercontent.com/45299927bd5c3724defb7ede1e46dade87b2e78d/687474703a2f2f617564756e6f2e6769746875622e636f6d2f636c6d747261636b722f6d656469612f636c6d747261636b725f30332e6a7067" alt=""></p>`;
+    const { title, content } = this.state.data;
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>

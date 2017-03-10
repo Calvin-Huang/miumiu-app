@@ -2,10 +2,18 @@
  * Created by Calvin Huang on 3/1/17.
  */
 
-import { USER_SIGN_IN_SUCCESS, USER_SIGN_IN_FAILED, USER_SIGN_OUT } from '../Constants/actionTypes';
+import {
+  USER_SIGN_IN_SUCCESS,
+  USER_SIGN_IN_FAILED,
+  USER_SIGN_OUT,
+  SHOW_USER_QRCODE,
+  HIDE_USER_QRCODE,
+} from '../Constants/actionTypes';
 
 const initialState = {
-  currentUser: null,
+
+  // Empty user for first time check in app launched.
+  currentUser: {},
   result: {
     signedIn: null,
     errorMessage: null,
@@ -34,7 +42,25 @@ export default function user(state = initialState, action) {
         }
       };
     case USER_SIGN_OUT:
-      return initialState;
+      return {
+        ...initialState,
+        currentUser: null,
+      };
+    default:
+      return state;
+  }
+}
+
+export function userQRCodeModal(state = { show: false } , action) {
+  switch (action.type) {
+    case SHOW_USER_QRCODE:
+      return {
+        show: true,
+      };
+    case HIDE_USER_QRCODE:
+      return {
+        show: false,
+      };
     default:
       return state;
   }

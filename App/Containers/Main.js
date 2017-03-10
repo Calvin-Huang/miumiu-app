@@ -10,7 +10,9 @@ import {
   View,
   Text,
   Image,
+  Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Animated,
   Easing,
 } from 'react-native';
@@ -18,8 +20,10 @@ import {
 import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import QRCode from 'react-native-qrcode-svg';
+import Color from 'color';
 
-import { NavigatorComponent, IconFasterShipping } from '../Components';
+import { IconFasterShipping } from '../Components';
 
 import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
@@ -29,9 +33,10 @@ import FAQ from './FAQ';
 import Settings from './Settings';
 import SignIn from './SignIn';
 import { Menu, Navigator } from '../Components';
+import { MiumiuTheme } from '../Styles';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
-import { checkUserSignedIn } from '../Actions/userActions';
+import { checkUserSignedIn, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 
 class Main extends Component {
   constructor(props) {
@@ -69,7 +74,7 @@ class Main extends Component {
             size: 20,
           },
           name: 'QRCode 取貨',
-          component: Calculator,
+          component: Component,
           isSelected: false,
         }, {
           icon: {
@@ -109,19 +114,17 @@ class Main extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!props.sideDrawerOpened === this.props.sideDrawerOpened === props.sideDrawerOpened) {
-      if (!props.currentUser || this.props.currentUser !== props.currentUser) {
-        if (props.currentUser) {
-          setTimeout(() => {
-            this.props.openSideDrawer();
-          }, 200);
-        } else {
-          this.refs.navigator.push({
-            index: 1,
-            component: SignIn,
-            transition: Navigator.SceneConfigs.FloatFromBottom,
-          });
-        }
+    if (this.props.currentUser !== props.currentUser) {
+      if (props.currentUser) {
+        setTimeout(() => {
+          this.props.openSideDrawer();
+        }, 200);
+      } else {
+        this.refs.navigator.push({
+          index: 1,
+          component: SignIn,
+          transition: Navigator.SceneConfigs.FloatFromBottom,
+        });
       }
     }
   }
@@ -140,17 +143,21 @@ class Main extends Component {
   }
 
   navigationItemClicked(itemData) {
-    this.setState({
-      navigationItems: this.state.navigationItems.map((item) => {
-        item.isSelected = (item === itemData);
-
-        return item;
-      })
-    });
-
-    this.refs.navigator.replace({ index: 0, component: itemData.component });
-
     this.props.closeSideDrawer();
+
+    if (itemData.component !== Component) {
+      this.setState({
+        navigationItems: this.state.navigationItems.map((item) => {
+          item.isSelected = (item === itemData);
+
+          return item;
+        })
+      });
+
+      this.refs.navigator.replace({ index: 0, component: itemData.component });
+    } else {
+      this.props.showUserQRCode();
+    }
   }
 
   render() {
@@ -190,6 +197,47 @@ class Main extends Component {
         { this.props.sideDrawerOpened &&
           <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
         }
+
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.showUserQRCodeModal}
+        >
+          <TouchableOpacity
+            style={MiumiuTheme.modalContainer}
+            onPress={() => { this.props.hideUserQRCode(); }}
+          >
+            <TouchableWithoutFeedback>
+              <View style={MiumiuTheme.modalBody}>
+                <View style={styles.qrCode}>
+                  <QRCode value="+998988008752" size={140} />
+                </View>
+                <Text style={styles.qrCodeInfo}>
+                  +998988008752
+                </Text>
+                <Text style={styles.pickupInstruction}>
+                  已提貨單號工作人員會將單號由APP註銷
+                </Text>
+                <View
+                  style={{
+                    alignSelf: 'stretch',
+                     borderRadius: MiumiuTheme.button.borderRadius,
+                     backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
+                    onPress={() => { this.props.hideUserQRCode(); }}
+                  >
+                    <Text style={MiumiuTheme.buttonText}>
+                      關閉
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </TouchableOpacity>
+        </Modal>
       </Drawer>
     );
   }
@@ -207,6 +255,21 @@ const styles = {
     bottom: 0,
     left: 0,
   },
+  qrCode: {
+    marginTop: 30,
+    marginBottom: 18,
+  },
+  qrCodeInfo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 10
+  },
+  pickupInstruction: {
+    fontSize: 12,
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 34
+  },
 };
 
 export default connect(
@@ -216,13 +279,8 @@ export default connect(
       showNavigator: state.navigationBar.isShown,
       sideDrawerOpened: state.sideDrawer.isOpened,
       currentUser: state.user.currentUser,
+      showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn },
-  null,
-  {
-    areStatePropsEqual: (prev, next) => {
-      return !(prev.currentUser === next.currentUser === null) && prev === next;
-    }
-  },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, showUserQRCode, hideUserQRCode },
 )(Main);

@@ -6,22 +6,23 @@ import {
   StyleSheet,
   View,
   Text,
-  Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import Icon from 'react-native-vector-icons/Ionicons';
-import QRCode from 'react-native-qrcode-svg';
 import Color from 'color';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
+import { showUserQRCode } from '../Actions';
 
-export default class WayBill extends NavigatorComponent {
+class WayBill extends NavigatorComponent {
   static navRightButton({ data: { id } }, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { console.log(id); }}>
@@ -37,7 +38,6 @@ export default class WayBill extends NavigatorComponent {
 
     this.state = {
       data: this.props.route.data,
-      showModal: false,
     };
 
     this.fetchWayBill();
@@ -158,53 +158,12 @@ export default class WayBill extends NavigatorComponent {
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning }}
-              onPress={() => { this.setState({ showModal: true }) }}
+              onPress={() => { this.props.showUserQRCode(); }}
             >
               <Text style={{ ...MiumiuTheme.actionButtonText, ...MiumiuTheme.textShadow }}>取貨</Text>
             </TouchableOpacity>
           </View>
         }
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.showModal}
-        >
-          <TouchableOpacity
-            style={MiumiuTheme.modalContainer}
-            onPress={() => { this.setState({ showModal: false }) }}
-          >
-            <TouchableWithoutFeedback>
-              <View style={MiumiuTheme.modalBody}>
-                <View style={styles.qrCode}>
-                  <QRCode value="+998988008752" size={140} />
-                </View>
-                <Text style={styles.qrCodeInfo}>
-                  +998988008752
-                </Text>
-                <Text style={styles.pickupInstruction}>
-                  已提貨單號工作人員會將單號由APP註銷
-                </Text>
-                <View
-                  style={{
-                    alignSelf: 'stretch',
-                     borderRadius: MiumiuTheme.button.borderRadius,
-                     backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
-                    onPress={() => { this.setState({ showModal: false }) }}
-                  >
-                    <Text style={MiumiuTheme.buttonText}>
-                      關閉
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </TouchableOpacity>
-        </Modal>
       </View>
     )
   }
@@ -238,19 +197,13 @@ const styles = {
   body: {
     flex: 1,
   },
-  qrCode: {
-    marginTop: 30,
-    marginBottom: 18,
-  },
-  qrCodeInfo: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: MiumiuTheme.titleText.color,
-    marginBottom: 10
-  },
-  pickupInstruction: {
-    fontSize: 12,
-    color: MiumiuTheme.titleText.color,
-    marginBottom: 34
-  },
 };
+
+const mapStateToProps = (state, ownProps) => {
+  return ownProps;
+}
+
+export default connect(
+  mapStateToProps,
+  { showUserQRCode }
+)(WayBill);

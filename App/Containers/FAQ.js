@@ -20,6 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import { NavigatorComponent } from '../Components';
+import FAQDetail from './FAQDetail';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { showNavigationBar, hideNavigationBar, openSideDrawer } from '../Actions';
 
@@ -146,7 +147,7 @@ class FAQ extends NavigatorComponent {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
         this.hideSearchBar();
-        // this.pushToNextComponent(WayBill, rowData);
+        this.pushToNextComponent(FAQDetail, rowData);
       }}>
         <Text style={MiumiuTheme.listViewText}>
           { rowData.title }

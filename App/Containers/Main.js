@@ -26,11 +26,12 @@ import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
 import DeliveryInfoList from './DeliveryInfoList';
 import FAQ from './FAQ';
+import Settings from './Settings';
 import SignIn from './SignIn';
 import { Menu, Navigator } from '../Components';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
-import { checkUserSignedIn, userSignIn, userSignOut } from '../Actions/userActions';
+import { checkUserSignedIn } from '../Actions/userActions';
 
 class Main extends Component {
   constructor(props) {
@@ -217,7 +218,7 @@ export default connect(
       currentUser: state.user.currentUser,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignIn, userSignOut },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn },
   null,
   {
     areStatePropsEqual: (prev, next) => {

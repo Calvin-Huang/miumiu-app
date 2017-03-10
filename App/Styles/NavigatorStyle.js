@@ -9,6 +9,9 @@ export default styles = {
     marginLeft: 9,
     marginBottom: 8,
   },
+  itemButtonsContainer: {
+    flexDirection: 'row-reverse',
+  },
   itemTextButton: {
     margin: 9,
     flex: 0,

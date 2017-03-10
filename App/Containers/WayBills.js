@@ -19,6 +19,7 @@ import {
 import { connect } from 'react-redux';
 import GiftedListView from 'react-native-gifted-listview';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
@@ -30,6 +31,7 @@ import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { WayBillState, UrgentState } from '../Constants/states';
 import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
+import { showUserQRCode } from '../Actions/userActions';
 import store from '../storeInstance';
 
 class WayBills extends NavigatorComponent {
@@ -45,20 +47,26 @@ class WayBills extends NavigatorComponent {
 
   static navRightButton(route, navigator, index, navState) {
     return (
-      <TouchableOpacity
-        underlayColor="rgba(0, 0, 0, 0)"
-        onPress={() => {
-          navigator.push({
-            index: route.index + 1,
-            component: AddWayBill,
-            transition: Navigator.SceneConfigs.FloatFromBottom,
-          });
-        }}
-      >
-        <View style={NavigatorStyle.itemButton}>
-          <Icon name="md-add" size={24} color="white" />
-        </View>
-      </TouchableOpacity>
+      <View style={NavigatorStyle.itemButtonsContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            navigator.push({
+              index: route.index + 1,
+              component: AddWayBill,
+              transition: Navigator.SceneConfigs.FloatFromBottom,
+            });
+          }}
+        >
+          <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
+            <Icon name="md-add" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => { store.dispatch(showUserQRCode()); }}>
+          <View style={{ ...NavigatorStyle.itemButton, marginLeft: 16, marginRight: 2 }}>
+            <FontAwesomeIcon name="qrcode" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 

@@ -10,7 +10,9 @@ import {
   View,
   Text,
   Image,
+  Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Animated,
   Easing,
 } from 'react-native';
@@ -18,6 +20,8 @@ import {
 import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import QRCode from 'react-native-qrcode-svg';
+import Color from 'color';
 
 import { NavigatorComponent, IconFasterShipping } from '../Components';
 
@@ -29,9 +33,10 @@ import FAQ from './FAQ';
 import Settings from './Settings';
 import SignIn from './SignIn';
 import { Menu, Navigator } from '../Components';
+import { MiumiuTheme } from '../Styles';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
-import { checkUserSignedIn } from '../Actions/userActions';
+import { checkUserSignedIn, hideUserQRCode } from '../Actions/userActions';
 
 class Main extends Component {
   constructor(props) {
@@ -190,6 +195,47 @@ class Main extends Component {
         { this.props.sideDrawerOpened &&
           <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
         }
+
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.showUserQRCodeModal}
+        >
+          <TouchableOpacity
+            style={MiumiuTheme.modalContainer}
+            onPress={() => { this.props.hideUserQRCode(); }}
+          >
+            <TouchableWithoutFeedback>
+              <View style={MiumiuTheme.modalBody}>
+                <View style={styles.qrCode}>
+                  <QRCode value="+998988008752" size={140} />
+                </View>
+                <Text style={styles.qrCodeInfo}>
+                  +998988008752
+                </Text>
+                <Text style={styles.pickupInstruction}>
+                  已提貨單號工作人員會將單號由APP註銷
+                </Text>
+                <View
+                  style={{
+                    alignSelf: 'stretch',
+                     borderRadius: MiumiuTheme.button.borderRadius,
+                     backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
+                    onPress={() => { this.props.hideUserQRCode(); }}
+                  >
+                    <Text style={MiumiuTheme.buttonText}>
+                      關閉
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </TouchableOpacity>
+        </Modal>
       </Drawer>
     );
   }
@@ -216,13 +262,14 @@ export default connect(
       showNavigator: state.navigationBar.isShown,
       sideDrawerOpened: state.sideDrawer.isOpened,
       currentUser: state.user.currentUser,
+      showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn },
   null,
   {
     areStatePropsEqual: (prev, next) => {
       return !(prev.currentUser === next.currentUser === null) && prev === next;
     }
   },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, hideUserQRCode },
 )(Main);

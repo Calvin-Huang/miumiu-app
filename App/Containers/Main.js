@@ -96,7 +96,7 @@ class Main extends Component {
             name: 'md-settings',
           },
           name: '設定',
-          component: Calculator,
+          component: Settings,
           isSelected: false,
         },
       ]

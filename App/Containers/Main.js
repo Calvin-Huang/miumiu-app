@@ -253,6 +253,21 @@ const styles = {
     bottom: 0,
     left: 0,
   },
+  qrCode: {
+    marginTop: 30,
+    marginBottom: 18,
+  },
+  qrCodeInfo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 10
+  },
+  pickupInstruction: {
+    fontSize: 12,
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 34
+  },
 };
 
 export default connect(

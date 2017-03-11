@@ -17,6 +17,8 @@ import {
   Easing,
 } from 'react-native';
 
+import dismissKeyboard from 'dismissKeyboard';
+
 import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -137,6 +139,12 @@ class Main extends Component {
           component: SignIn,
           transition: Navigator.SceneConfigs.FloatFromBottom,
         });
+      }
+    }
+
+    if (this.props.sideDrawerOpened !== props.sideDrawerOpened) {
+      if (props.sideDrawerOpened) {
+        dismissKeyboard();
       }
     }
   }

@@ -28,10 +28,7 @@ class PickUpPassword extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity
-        onPress={() => {
-          dismissKeyboard();
-          store.dispatch(openSideDrawer());
-        }}
+        onPress={() => { store.dispatch(openSideDrawer()); }}
       >
         <View style={NavigatorStyle.itemButton}>
           <Icon name="md-menu" size={24} color="white" />

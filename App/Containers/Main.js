@@ -117,6 +117,17 @@ class Main extends Component {
   componentWillReceiveProps(props) {
     if (this.props.currentUser !== props.currentUser) {
       if (props.currentUser) {
+
+        // Reset menu status.
+        this.setState({
+          navigationItems: this.state.navigationItems.map((item, index) => {
+            item.isSelected = (index === 0);
+
+            return item;
+          })
+        });
+
+
         setTimeout(() => {
           this.props.openSideDrawer();
         }, 200);

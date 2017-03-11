@@ -29,6 +29,7 @@ import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
 import DeliveryInfoList from './DeliveryInfoList';
+import PickUpPassword from './PickUpPassword';
 import FAQ from './FAQ';
 import Settings from './Settings';
 import SignIn from './SignIn';
@@ -81,7 +82,7 @@ class Main extends Component {
             name: 'md-lock',
           },
           name: '取貨鎖設定',
-          component: UrgentProcessing,
+          component: PickUpPassword,
           isSelected: false,
         }, {
           icon: {

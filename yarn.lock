@@ -3109,6 +3109,10 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
+react-native-device-brightness@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-brightness/-/react-native-device-brightness-1.0.0.tgz#328103f97ac2b8c94aa40c097bf85c29e85586bc"
+
 react-native-drawer@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.3.0.tgz#a0369ec80ff0b61c9f152dbdea91fe76c843113a"
@@ -3122,6 +3126,10 @@ react-native-drawer@^2.3.0:
 react-native-html-render@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-html-render/-/react-native-html-render-1.0.5.tgz#929e7e49ce56a34d2c5073702beedaaa12c2e92f"
+
+react-native-image-picker@^0.26.2:
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.2.tgz#1280627d61438027284c97d0a8892b7d3777f2e3"
 
 react-native-linear-gradient@^2.0.0:
   version "2.0.0"

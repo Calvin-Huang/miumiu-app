@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   Modal,
+  AsyncStorage,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Animated,
@@ -23,6 +24,7 @@ import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
+import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
 
 import { IconFasterShipping } from '../Components';
@@ -145,6 +147,22 @@ class Main extends Component {
     if (this.props.sideDrawerOpened !== props.sideDrawerOpened) {
       if (props.sideDrawerOpened) {
         dismissKeyboard();
+      }
+    }
+
+    if (this.props.showUserQRCodeModal !== props.showUserQRCodeModal) {
+      if (props.showUserQRCodeModal) {
+
+        DeviceBrightness.getBrightnessLevel()
+          .then((brightnessLevel) => {
+            AsyncStorage.setItem('brightnessLevel', `${brightnessLevel}`);
+            DeviceBrightness.setBrightnessLevel(1.0);
+          });
+      } else {
+        AsyncStorage.getItem('brightnessLevel')
+          .then((brightnessLevel) => {
+            DeviceBrightness.setBrightnessLevel(parseFloat(brightnessLevel, 10));
+          });
       }
     }
   }

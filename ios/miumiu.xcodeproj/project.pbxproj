@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -40,6 +39,7 @@
 		CB44A8AC60D04396A25B6261 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13E051B097A5493FB1E5D7AF /* MaterialIcons.ttf */; };
 		F38408677FE949EE80C278E4 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F64841B15E61492D803B0F79 /* MaterialCommunityIcons.ttf */; };
 		F8800D7DF22E4933BAAD246E /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5147AC0A0CAE438D843BFA9A /* libBVLinearGradient.a */; };
+		EF870EE1991641248EBABA5A /* libRNDeviceBrightness.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8446D3CA95424B8BAD311794 /* libRNDeviceBrightness.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -298,6 +298,8 @@
 		D7B22D7A547344799CA77C73 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
 		D9526CABC1124AC7B5CE6227 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		F64841B15E61492D803B0F79 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		E4AB5EA65E8F432989E6A098 /* RNDeviceBrightness.xcodeproj */ = {isa = PBXFileReference; name = "RNDeviceBrightness.xcodeproj"; path = "../node_modules/react-native-device-brightness/RNDeviceBrightness.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		8446D3CA95424B8BAD311794 /* libRNDeviceBrightness.a */ = {isa = PBXFileReference; name = "libRNDeviceBrightness.a"; path = "libRNDeviceBrightness.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -330,6 +332,7 @@
 				CAB338EA9E9244748CD36361 /* libRNVectorIcons.a in Frameworks */,
 				F8800D7DF22E4933BAAD246E /* libBVLinearGradient.a in Frameworks */,
 				277401A8D5A24ABB839F5747 /* libRNSVG.a in Frameworks */,
+				EF870EE1991641248EBABA5A /* libRNDeviceBrightness.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -527,6 +530,7 @@
 				D00595CC87AD4755BCE61C6D /* RNVectorIcons.xcodeproj */,
 				B4A460954E454C9EA4E1E49D /* BVLinearGradient.xcodeproj */,
 				D7B22D7A547344799CA77C73 /* RNSVG.xcodeproj */,
+				E4AB5EA65E8F432989E6A098 /* RNDeviceBrightness.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1028,6 +1032,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/miumiu.app/miumiu";
@@ -1045,6 +1050,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

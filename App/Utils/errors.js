@@ -37,8 +37,8 @@ class ExpendableError extends Error {
 
 
 export class JWTExpiredError extends ExpendableError {
-  constructor(message, jwtToken) {
-    super(message);
+  constructor(jwtToken) {
+    super('JWT has expired');
 
     this.jwtToken = jwtToken;
   }

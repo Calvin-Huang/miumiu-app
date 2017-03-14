@@ -11,23 +11,23 @@ import { TIMEOUT, BASE_URL, REFRESH_TOKEN_END_POINT } from '../Constants/config'
 import { getAuthenticationToken, setAuthenticationToken } from './authentication';
 import { JWTExpiredError } from './errors';
 
-export function get(path, body) {
+export async function get(path, body) {
   return bodyOf(request('GET', path, body));
 }
 
-export function post(path, body) {
+export async function post(path, body) {
   return bodyOf(request('POST', path, body));
 }
 
-export function put(path, body) {
+export async function put(path, body) {
   return bodyOf(request('PUT', path, body));
 }
 
-export function del(path) {
+export async function del(path) {
   return bodyOf(request('DELETE', path));
 }
 
-export function url(path) {
+export async function url(path) {
   return path.indexOf('/') === 0 ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 

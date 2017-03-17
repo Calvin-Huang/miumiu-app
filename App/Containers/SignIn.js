@@ -80,7 +80,7 @@ class SignIn extends NavigatorComponent {
                 highlightColor="#D8D8D8"
                 placeholder="手機號碼或Email信箱"
                 placeholderTextColor="#9E9E9E"
-                onChangeText={(text) => { this.setState({ width: text }); }}
+                onChangeText={(account) => { this.setState({ account }); }}
                 value={this.state.account}
               />
             </View>
@@ -94,7 +94,7 @@ class SignIn extends NavigatorComponent {
                 placeholder="密碼"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
-                onChangeText={(text) => { this.setState({ weight: text }); }}
+                onChangeText={(password) => { this.setState({ password }); }}
                 value={this.state.password}
               />
             </View>

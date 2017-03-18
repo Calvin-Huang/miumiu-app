@@ -30,5 +30,9 @@ export async function getAuthenticationToken() {
 export async function currentUser() {
   const jwtToken = await getAuthenticationToken();
 
-  return jwtDecode(jwtToken);
+  if (jwtToken) {
+    return jwtDecode(jwtToken);
+  } else {
+    return null;
+  }
 }

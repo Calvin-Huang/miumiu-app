@@ -88,6 +88,23 @@ async function handleResponse(response) {
   }
 
   const responseBody = await response.text();
+
+  // Store Authorization to AsyncStorage
+  const { Authorization } = headers;
+  if (Authorization) {
+    try {
+      const jwtToken = Authorization.replace('Bearer ', '');
+      const oldJwtToken = await getAuthenticationToken();
+
+      // Only retrieved token different to old one needs be stored.
+      if (oldJwtToken !== jwtToken) {
+        setAuthenticationToken(jwtToken);
+      }
+    } catch (error) {
+      // Not handling expired error here.
+    }
+  }
+
   return {
     status,
     headers,

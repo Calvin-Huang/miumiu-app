@@ -27,12 +27,13 @@ export async function del(path) {
   return bodyOf(request('DELETE', path));
 }
 
-export async function url(path) {
-  return path.indexOf('/') === 0 ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
+export function url(path) {
+  return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 
 async function request(method, path, body, suppressRedBox) {
   const endPoint = url(path);
+
   let token;
 
   try {

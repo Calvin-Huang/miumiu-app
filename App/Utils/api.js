@@ -142,13 +142,15 @@ function timeout(promise, ms) {
     }, ms);
 
     promise
-      .then((response) => {
-        clearTimeout(timer);
-        resolve(response);
-      })
-      .reject((error) => {
-        clearTimeout(timer);
-        reject(error);
-      })
+      .then(
+        (response) => {
+          clearTimeout(timer);
+          resolve(response);
+        },
+        (error) => {
+          clearTimeout(timer);
+          reject(error);
+        }
+      )
   })
 }

@@ -15,11 +15,13 @@ export function setAuthenticationToken(token) {
 export async function getAuthenticationToken() {
   const jwtToken = await AsyncStorage.getItem(AUTHENTICATION_TOKEN_KEY);
 
-  const { exp } = jwtDecode(jwtToken);
-  const currentTime = (new Date()).getTime();
+  if (jwtToken) {
+    const { exp } = jwtDecode(jwtToken);
+    const currentTime = (new Date()).getTime();
 
-  if (exp * 1000 < currentTime) {
-    throw new JWTExpiredError(jwtToken);
+    if (exp * 1000 < currentTime) {
+      throw new JWTExpiredError(jwtToken);
+    }
   }
 
   return jwtToken;

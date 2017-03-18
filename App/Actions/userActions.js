@@ -10,10 +10,10 @@ export function checkUserSignedIn() {
   };
 }
 
-export function userSignIn(username, password) {
+export function userSignIn(account, password) {
   return {
     type: ActionTypes.USER_SIGN_IN,
-    username: username,
+    account: account,
     password: password,
   };
 }

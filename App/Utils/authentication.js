@@ -36,3 +36,7 @@ export async function currentUser() {
     return null;
   }
 }
+
+export async function signOut() {
+  return AsyncStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
+}

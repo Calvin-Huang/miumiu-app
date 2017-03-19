@@ -6,9 +6,6 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Animated,
-  Easing,
-  Picker,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -32,30 +29,7 @@ export default class Register extends NavigatorComponent {
       email: null,
       phone: null,
       password: null,
-      pickerToBottom: new Animated.Value(-255),
     }
-  }
-
-  showAreaCodePicker() {
-    Animated.timing(
-      this.state.pickerToBottom,
-      {
-        toValue: 0,
-        duration: 250,
-        easing: Easing.inOut(Easing.quad),
-      }
-    ).start();
-  }
-
-  hideAreaCodePicker() {
-    Animated.timing(
-      this.state.pickerToBottom,
-      {
-        toValue: -255,
-        duration: 250,
-        easing: Easing.inOut(Easing.quad),
-      }
-    ).start();
   }
 
   render() {
@@ -71,30 +45,19 @@ export default class Register extends NavigatorComponent {
             <Text style={styles.registerHintText}>
               手機或信箱可以擇一填寫
             </Text>
-            <View style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}>
-              <TouchableOpacity
-                style={styles.dropDownButton}
-                onPress={this.showAreaCodePicker.bind(this)}
-              >
-                <Text style={styles.dropDownButtonText}>
-                  {this.state.areaCode}
-                </Text>
-                <View style={styles.triangle} />
-              </TouchableOpacity>
-              <View style={MiumiuTheme.fixMKTextFieldStyleError}>
-                <MKTextField
-                  keyboardType="numeric"
-                  floatingLabelEnabled={true}
-                  textInputStyle={{ height: 31 }}
-                  underlineSize={1}
-                  highlightColor="#D8D8D8"
-                  placeholder="手機號碼"
-                  placeholderTextColor="#9E9E9E"
-                  style={styles.textField}
-                  onChangeText={(text) => { this.setState({ width: text }); }}
-                  value={this.state.phone}
-                />
-              </View>
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                keyboardType="numeric"
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="手機號碼"
+                placeholderTextColor="#9E9E9E"
+                style={styles.textField}
+                onChangeText={(text) => { this.setState({ width: text }); }}
+                value={this.state.phone}
+              />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
@@ -154,29 +117,6 @@ export default class Register extends NavigatorComponent {
               註冊
             </Text>
           </TouchableOpacity>
-          <Animated.View
-            style={{
-              ...styles.areaCodePicker,
-              bottom: this.state.pickerToBottom,
-            }}
-          >
-            <View style={MiumiuTheme.pickerToolBar}>
-              <TouchableOpacity onPress={this.hideAreaCodePicker.bind(this)}>
-                <Text style={MiumiuTheme.pickerToolBarButtonText}>
-                  關閉
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Picker
-              style={MiumiuTheme.picker}
-              selectedValue={this.state.areaCode}
-              onValueChange={(code) => this.setState({areaCode: code})}
-            >
-              <Picker.Item label="澳門 (+853)" value="+853" />
-              <Picker.Item label="中國 (+86)" value="+86" />
-              <Picker.Item label="香港 (+852)" value="+852" />
-            </Picker>
-          </Animated.View>
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -198,37 +138,8 @@ const styles = {
   registerHintText: {
     fontSize: 14,
     color: 'white',
-    margin: 14,
+    marginBottom: 14,
     textAlign: 'center',
-  },
-  dropDownButton: {
-    marginTop: 11,
-    marginRight: 10,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'rgba(155, 155, 155, 0.1)',
-  },
-  dropDownButtonText: {
-    fontSize: 16,
-    color: '#9E9E9E',
-    paddingVertical: 8,
-    width: 60,
-    textAlign: 'center',
-  },
-  triangle: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderTopWidth: 12,
-    borderTopColor: '#F5C163',
-    borderRightWidth: 12,
-    borderRightColor: 'transparent',
-    transform: [
-      { rotate: '180deg' }
-    ],
   },
   serviceTermGroup: {
     flexDirection: 'row',
@@ -253,11 +164,5 @@ const styles = {
     right: 0,
     bottom: 0,
     left: 0,
-  },
-  areaCodePicker: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    backgroundColor: 'white',
   },
 }

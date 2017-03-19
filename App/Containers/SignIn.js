@@ -7,9 +7,8 @@ import {
   View,
   Text,
   Image,
-  Picker,
-  Animated,
   Easing,
+  ActivityIndicator,
   TouchableOpacity,
   TouchableWithoutFeedback ,
 } from 'react-native';
@@ -40,12 +39,9 @@ class SignIn extends NavigatorComponent {
     super(props);
 
     this.state = {
-      areaCode: '+853',
-      email: null,
-      phone: null,
+      account: null,
       password: null,
-      signInType: SignInType.Phone,
-      pickerToBottom: new Animated.Value(-255),
+      isFirstTimeShowError: true,
     }
   }
 
@@ -58,32 +54,17 @@ class SignIn extends NavigatorComponent {
         component: WayBills,
       });
     }
+
+    if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {
+      this.setState({
+        isFirstTimeShowError: false,
+      })
+    }
   }
 
   signInButtonClicked() {
-    this.props.userSignIn('calvin.peak', '12364362')
-  }
-
-  showAreaCodePicker() {
-    Animated.timing(
-      this.state.pickerToBottom,
-      {
-        toValue: 0,
-        duration: 250,
-        easing: Easing.inOut(Easing.quad),
-      }
-    ).start();
-  }
-
-  hideAreaCodePicker() {
-    Animated.timing(
-      this.state.pickerToBottom,
-      {
-        toValue: -255,
-        duration: 250,
-        easing: Easing.inOut(Easing.quad),
-      }
-    ).start();
+    this.props.userSignIn(this.state.account, this.state.password);
+    dismissKeyboard();
   }
 
   render() {
@@ -99,65 +80,19 @@ class SignIn extends NavigatorComponent {
             <Image source={require('../../assets/images/icon-miumiu.png')} />
           </View>
           <View style={styles.body}>
-            <View style={styles.switchButtonGroup}>
-              <TouchableOpacity
-                style={{ ...styles.switchButton, ...(this.state.signInType === SignInType.Phone ? styles.switchButtonActive : {}) }}
-                onPress={() => this.setState({ signInType: SignInType.Phone })}
-              >
-                <Text style={{ ...styles.switchButtonText }}>
-                  手機號碼登入
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ ...styles.switchButton, ...(this.state.signInType === SignInType.Email ? styles.switchButtonActive : {}) }}
-                onPress={() => this.setState({ signInType: SignInType.Email })}
-              >
-                <Text style={{ ...styles.switchButtonText }}>
-                  信箱登入
-                </Text>
-              </TouchableOpacity>
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                autoCapitalize="none"
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="手機號碼或Email信箱"
+                placeholderTextColor="#9E9E9E"
+                onChangeText={(account) => { this.setState({ account }); }}
+                value={this.state.account}
+              />
             </View>
-            { this.state.signInType === SignInType.Phone &&
-              <View style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}>
-                <TouchableOpacity
-                  style={styles.dropDownButton}
-                  onPress={this.showAreaCodePicker.bind(this)}
-                >
-                  <Text style={styles.dropDownButtonText}>
-                    {this.state.areaCode}
-                  </Text>
-                  <View style={styles.triangle} />
-                </TouchableOpacity>
-                <View style={MiumiuTheme.fixMKTextFieldStyleError}>
-                  <MKTextField
-                    keyboardType="numeric"
-                    floatingLabelEnabled={true}
-                    textInputStyle={{ height: 31 }}
-                    underlineSize={1}
-                    highlightColor="#D8D8D8"
-                    placeholder="手機號碼"
-                    placeholderTextColor="#9E9E9E"
-                    onChangeText={(text) => { this.setState({ width: text }); }}
-                    value={this.state.phone}
-                  />
-                </View>
-              </View>
-            }
-            { this.state.signInType === SignInType.Email &&
-              <View style={MiumiuTheme.textFieldGroup}>
-                <MKTextField
-                  keyboardType="email-address"
-                  floatingLabelEnabled={true}
-                  textInputStyle={{ height: 31 }}
-                  underlineSize={1}
-                  highlightColor="#D8D8D8"
-                  placeholder="Email"
-                  placeholderTextColor="#9E9E9E"
-                  onChangeText={(text) => { this.setState({ width: text }); }}
-                  value={this.state.email}
-                />
-              </View>
-            }
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 password={true}
@@ -168,10 +103,17 @@ class SignIn extends NavigatorComponent {
                 placeholder="密碼"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
-                onChangeText={(text) => { this.setState({ weight: text }); }}
+                onChangeText={(password) => { this.setState({ password }); }}
                 value={this.state.password}
               />
             </View>
+            { !this.state.isFirstTimeShowError && this.props.errorMessage &&
+              <View style={MiumiuTheme.textFieldGroup}>
+                <Text style={MiumiuTheme.errorText}>
+                  {this.props.errorMessage}
+                </Text>
+              </View>
+            }
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
               onPress={this.signInButtonClicked.bind(this)}
@@ -185,6 +127,9 @@ class SignIn extends NavigatorComponent {
               <Text style={MiumiuTheme.buttonText}>
                 登入
               </Text>
+              { this.props.isSigningIn &&
+                <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+              }
             </TouchableOpacity>
             <View style={style.otherWays}>
               <TouchableOpacity style={styles.forgetButton}>
@@ -209,29 +154,6 @@ class SignIn extends NavigatorComponent {
               </Text>
             </TouchableOpacity>
           </View>
-          <Animated.View
-            style={{
-              ...styles.areaCodePicker,
-              bottom: this.state.pickerToBottom,
-            }}
-          >
-            <View style={MiumiuTheme.pickerToolBar}>
-              <TouchableOpacity onPress={this.hideAreaCodePicker.bind(this)}>
-                <Text style={MiumiuTheme.pickerToolBarButtonText}>
-                  關閉
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Picker
-              style={MiumiuTheme.picker}
-              selectedValue={this.state.areaCode}
-              onValueChange={(code) => this.setState({areaCode: code})}
-            >
-              <Picker.Item label="澳門 (+853)" value="+853" />
-              <Picker.Item label="中國 (+86)" value="+86" />
-              <Picker.Item label="香港 (+852)" value="+852" />
-            </Picker>
-          </Animated.View>
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -243,60 +165,8 @@ const styles = {
     flex: 1,
   },
   body: {
-    marginTop: 64,
+    marginTop: 92,
     alignItems: 'center',
-  },
-  inlineFieldGroup: {
-    flexDirection: 'row',
-    paddingTop: 4.5,
-    paddingBottom: 0,
-  },
-  switchButtonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
-  switchButton: {
-    marginHorizontal: 18,
-  },
-  switchButtonText: {
-    flex: 0,
-    color: 'white',
-    fontSize: 16,
-    padding: 6,
-  },
-  switchButtonActive: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 3,
-  },
-  dropDownButton: {
-    marginTop: 11,
-    marginRight: 10,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'rgba(155, 155, 155, 0.1)',
-  },
-  dropDownButtonText: {
-    fontSize: 16,
-    color: '#9E9E9E',
-    paddingVertical: 8,
-    width: 60,
-    textAlign: 'center',
-  },
-  triangle: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderTopWidth: 12,
-    borderTopColor: '#F5C163',
-    borderRightWidth: 12,
-    borderRightColor: 'transparent',
-    transform: [
-      { rotate: '180deg' }
-    ],
   },
   forgetButton: {
     padding: 14,
@@ -332,19 +202,16 @@ const styles = {
     bottom: 0,
     left: 0,
   },
-  areaCodePicker: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    backgroundColor: 'white',
-  },
 };
 
 export default connect(
   (state, ownProps) => {
+    const { user } = state;
     return {
       ...ownProps,
-      currentUser: state.user.currentUser,
+      isSigningIn: user.isSigningIn,
+      currentUser: user.currentUser,
+      errorMessage: user.result.errorMessage,
     }
   },
   { userSignIn }

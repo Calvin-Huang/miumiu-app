@@ -33,6 +33,11 @@ export default style = {
     fontSize: 14,
     lineHeight: 20,
   },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+  },
   roundButton: {
     alignSelf: 'stretch',
     borderRadius: 22,
@@ -66,6 +71,12 @@ export default style = {
   },
   button: sharedStyle.button,
   buttonText: sharedStyle.buttonText,
+  buttonActivityIndicator: {
+    position: 'absolute',
+    right: 40,
+    top: 0,
+    bottom: 0,
+  },
   actionButton: {
     ...sharedStyle.button,
     borderRadius: 0,

@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   Easing,
+  ActivityIndicator,
   TouchableOpacity,
   TouchableWithoutFeedback ,
 } from 'react-native';
@@ -40,6 +41,7 @@ class SignIn extends NavigatorComponent {
     this.state = {
       account: null,
       password: null,
+      isFirstTimeShowError: true,
     }
   }
 
@@ -52,10 +54,17 @@ class SignIn extends NavigatorComponent {
         component: WayBills,
       });
     }
+
+    if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {
+      this.setState({
+        isFirstTimeShowError: false,
+      })
+    }
   }
 
   signInButtonClicked() {
-    this.props.userSignIn('calvin.peak', '12364362')
+    this.props.userSignIn(this.state.account, this.state.password);
+    dismissKeyboard();
   }
 
   render() {
@@ -73,7 +82,7 @@ class SignIn extends NavigatorComponent {
           <View style={styles.body}>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
-                keyboardType="email-address"
+                autoCapitalize="none"
                 floatingLabelEnabled={true}
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
@@ -98,6 +107,13 @@ class SignIn extends NavigatorComponent {
                 value={this.state.password}
               />
             </View>
+            { !this.state.isFirstTimeShowError && this.props.errorMessage &&
+              <View style={MiumiuTheme.textFieldGroup}>
+                <Text style={MiumiuTheme.errorText}>
+                  {this.props.errorMessage}
+                </Text>
+              </View>
+            }
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
               onPress={this.signInButtonClicked.bind(this)}
@@ -111,6 +127,9 @@ class SignIn extends NavigatorComponent {
               <Text style={MiumiuTheme.buttonText}>
                 登入
               </Text>
+              { this.props.isSigningIn &&
+                <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+              }
             </TouchableOpacity>
             <View style={style.otherWays}>
               <TouchableOpacity style={styles.forgetButton}>
@@ -187,9 +206,12 @@ const styles = {
 
 export default connect(
   (state, ownProps) => {
+    const { user } = state;
     return {
       ...ownProps,
-      currentUser: state.user.currentUser,
+      isSigningIn: user.isSigningIn,
+      currentUser: user.currentUser,
+      errorMessage: user.result.errorMessage,
     }
   },
   { userSignIn }

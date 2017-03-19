@@ -6,17 +6,18 @@ import { AsyncStorage } from 'react-native';
 
 import * as ActionTypes from '../Constants/actionTypes';
 import { userSignInSuccess, userSignInFailed, userSignOutSuccess } from '../Actions';
+import { currentUser, signOut } from '../Utils/authentication';
 
 import { post } from '../Utils/api';
 
 export function checkUserSignedIn(action$) {
   return action$.ofType(ActionTypes.CHECK_USER_SIGNED_IN)
     .switchMap(async (_) => {
-      const user = JSON.parse((await AsyncStorage.getItem('user')));
+      const user = await currentUser();
       if (user) {
         return userSignInSuccess(user);
       } else {
-        return userSignInFailed({ errorMessage: '尚未登入', statusCode: 403 });
+        return userSignInFailed({ errorMessage: '尚未登入', statusCode: 401 });
       }
     });
 }
@@ -24,18 +25,15 @@ export function checkUserSignedIn(action$) {
 export function userSignIn(action$) {
   return action$.ofType(ActionTypes.USER_SIGN_IN)
     .switchMap(async ({ account, password }) => {
-      if (username === 'calvin.peak' && password === '12364362') {
-        const user = {
-          id: 'fb:1231o23i1924812',
-          name: 'Calvin Huang',
-          gender: 'male',
-        };
 
-        AsyncStorage.setItem('user', JSON.stringify(user));
+      try {
+        await post('auth/login', { account, password });
+
+        const user = await currentUser();
 
         return userSignInSuccess(user);
-      } else {
-        return userSignInFailed({ errorMessage: '帳號密碼錯誤', statusCode: 403 });
+      } catch (error) {
+        return userSignInFailed({ errorMessage: error.message, statusCode: error.code });
       }
     });
 }
@@ -44,7 +42,8 @@ export function userSignOut(action$) {
   return action$.ofType(ActionTypes.USER_SIGN_OUT)
     .switchMap(async (_) => {
 
-      await AsyncStorage.removeItem('user');
+      // Remove stored token
+      await signOut();
 
       return userSignOutSuccess();
     })

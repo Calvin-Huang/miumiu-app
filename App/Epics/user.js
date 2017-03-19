@@ -4,6 +4,8 @@
 
 import { AsyncStorage } from 'react-native';
 
+import HttpError from 'standard-http-error';
+
 import * as ActionTypes from '../Constants/actionTypes';
 import { userSignInSuccess, userSignInFailed, userSignOutSuccess } from '../Actions';
 import { currentUser, signOut } from '../Utils/authentication';
@@ -17,7 +19,7 @@ export function checkUserSignedIn(action$) {
       if (user) {
         return userSignInSuccess(user);
       } else {
-        return userSignInFailed({ errorMessage: '尚未登入', statusCode: 401 });
+        return userSignInFailed(new HttpError(401, '尚未登入'));
       }
     });
 }
@@ -33,7 +35,7 @@ export function userSignIn(action$) {
 
         return userSignInSuccess(user);
       } catch (error) {
-        return userSignInFailed({ errorMessage: error.message, statusCode: error.code });
+        return userSignInFailed(error);
       }
     });
 }

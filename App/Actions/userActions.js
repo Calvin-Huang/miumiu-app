@@ -25,11 +25,10 @@ export function userSignInSuccess(user) {
   };
 }
 
-export function userSignInFailed({ errorMessage, statusCode }) {
+export function userSignInFailed(error) {
   return {
     type: ActionTypes.USER_SIGN_IN_FAILED,
-    errorMessage: errorMessage,
-    statusCode: statusCode,
+    error,
   };
 }
 

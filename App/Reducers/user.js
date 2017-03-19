@@ -19,8 +19,7 @@ const initialState = {
   currentUser: {},
   result: {
     signedIn: null,
-    errorMessage: null,
-    statusCode: null,
+    error: null,
   }
 };
 
@@ -37,8 +36,7 @@ export default function user(state = initialState, action) {
         currentUser: action.user,
         result: {
           signedIn: true,
-          errorMessage: null,
-          statusCode: null,
+          error: null,
         }
       };
     case USER_SIGN_IN_FAILED:
@@ -47,8 +45,7 @@ export default function user(state = initialState, action) {
         currentUser: null,
         result: {
           signedIn: false,
-          errorMessage: action.errorMessage,
-          statusCode: action.statusCode,
+          error: action.error,
         }
       };
     case USER_SIGN_OUT:

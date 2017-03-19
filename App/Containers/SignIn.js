@@ -207,11 +207,12 @@ const styles = {
 export default connect(
   (state, ownProps) => {
     const { user } = state;
+
     return {
       ...ownProps,
       isSigningIn: user.isSigningIn,
       currentUser: user.currentUser,
-      errorMessage: user.result.errorMessage,
+      errorMessage: user.result.error ? user.result.error.message : null,
     }
   },
   { userSignIn }

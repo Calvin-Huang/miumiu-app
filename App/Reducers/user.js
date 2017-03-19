@@ -3,6 +3,7 @@
  */
 
 import {
+  USER_SIGN_IN,
   USER_SIGN_IN_SUCCESS,
   USER_SIGN_IN_FAILED,
   USER_SIGN_OUT,
@@ -11,6 +12,8 @@ import {
 } from '../Constants/actionTypes';
 
 const initialState = {
+
+  isSigningIn: false,
 
   // Empty user for first time check in app launched.
   currentUser: {},
@@ -23,8 +26,14 @@ const initialState = {
 
 export default function user(state = initialState, action) {
   switch (action.type) {
+    case USER_SIGN_IN:
+      return {
+        ...state,
+        isSigningIn: true,
+      };
     case USER_SIGN_IN_SUCCESS:
       return {
+        isSigningIn: false,
         currentUser: action.user,
         result: {
           signedIn: true,
@@ -34,6 +43,7 @@ export default function user(state = initialState, action) {
       };
     case USER_SIGN_IN_FAILED:
       return {
+        isSigningIn: false,
         currentUser: null,
         result: {
           signedIn: false,
@@ -44,6 +54,7 @@ export default function user(state = initialState, action) {
     case USER_SIGN_OUT:
       return {
         ...initialState,
+        isSigningIn: false,
         currentUser: null,
       };
     default:

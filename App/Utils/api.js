@@ -31,7 +31,7 @@ export function url(path) {
   return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 
-async function request(method, path, body, suppressRedBox) {
+async function request(method, path, body, suppressRedBox = true) {
   const endPoint = url(path);
 
   let token;
@@ -44,10 +44,18 @@ async function request(method, path, body, suppressRedBox) {
       const refreshTokenEndPoint = url(REFRESH_TOKEN_PATH);
       const headers = getRequestHeaders(null, expiredToken);
 
+      if (suppressRedBox) {
+        console.log(`💬  Refresh expired token, expiredToken: ${expiredToken}`);
+      }
+
       const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
       const { body: { token: newToken } } = await handleResponse(response);
 
       token = newToken;
+
+      if (suppressRedBox) {
+        console.log(`✅  Expired token refreshed, newToken: ${newToken}`);
+      }
 
       // Store new token to local storage.
       setAuthenticationToken(newToken);
@@ -59,7 +67,17 @@ async function request(method, path, body, suppressRedBox) {
     ? { method, headers, body: JSON.stringify(body) }
     : { method, headers };
 
+  if (suppressRedBox) {
+    console.log('🚀  Request Options 🚀');
+    console.log(options);
+  }
+
   const response = await timeout(fetch(endPoint, options), TIMEOUT);
+
+  if (suppressRedBox) {
+    console.log('🎯  Response 🎯');
+    console.log(response);
+  }
 
   return handleResponse(response);
 }

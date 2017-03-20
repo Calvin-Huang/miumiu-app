@@ -48,17 +48,25 @@ async function request(method, path, body, suppressRedBox = true) {
         console.log(`💬  Refresh expired token, expiredToken: ${expiredToken}`);
       }
 
-      const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
-      const { body: { token: newToken } } = await handleResponse(response);
+      try {
+        const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
+        const { body: { token: newToken } } = await handleResponse(response);
 
-      token = newToken;
+        token = newToken;
 
-      if (suppressRedBox) {
-        console.log(`✅  Expired token refreshed, newToken: ${newToken}`);
+        if (suppressRedBox) {
+          console.log(`✅  Expired token refreshed, newToken: ${newToken}`);
+        }
+
+        // Store new token to local storage.
+        setAuthenticationToken(newToken);
+      } catch (error) {
+
+        if (suppressRedBox) {
+          console.log('❌  Refresh expired token failed ❌');
+          console.log(error);
+        }
       }
-
-      // Store new token to local storage.
-      setAuthenticationToken(newToken);
     }
   }
 

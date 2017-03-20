@@ -119,15 +119,21 @@ async function handleResponse(response) {
   // Store Authorization to AsyncStorage
   const { token } = JSON.parse(responseBody);
   if (token) {
-    try {
-      const oldJwtToken = await getAuthenticationToken();
+    let oldJwtToken;
 
-      // Only retrieved token different to old one needs be stored.
-      if (oldJwtToken !== token) {
-        setAuthenticationToken(token);
-      }
+    try {
+      oldJwtToken = await getAuthenticationToken();
     } catch (error) {
-      // Not handling expired error here.
+
+      // Retrieve expired token.
+      if (error instanceof JWTExpiredError) {
+        oldJwtToken = error.jwtToken;
+      }
+    }
+
+    // Only retrieved token different to old one needs be stored.
+    if (oldJwtToken !== token) {
+      setAuthenticationToken(token);
     }
   }
 

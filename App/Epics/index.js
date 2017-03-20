@@ -6,11 +6,12 @@ import 'rxjs';
 import { combineEpics } from 'redux-observable';
 
 import * as userEpics from './user';
-// import fetchWayBills from './fetchWaybills';
+import * as wayBillEpics from './wayBill';
 
 // export default combineEpics;
 
 export default combineEpics(
+  wayBillEpics.fetchWayBills,
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
   userEpics.userSignOut,

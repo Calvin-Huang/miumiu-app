@@ -8,7 +8,7 @@ import * as ActionTypes from '../Constants/actionTypes';
 import { fetchWayBillsSuccess, fetchWayBillsFailed } from '../Actions/wayBillActions';
 import { get } from '../Utils/api';
 
-export default function fetchWayBills(action$) {
+export function fetchWayBills(action$) {
   return action$,ofType(ActionTypes.REQUESTED_WAYBILLS)
     .switchMap(async (action) => {
       try {

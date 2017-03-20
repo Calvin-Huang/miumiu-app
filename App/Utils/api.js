@@ -7,7 +7,7 @@
 
 import HttpError from 'standard-http-error';
 
-import { TIMEOUT, BASE_URL, REFRESH_TOKEN_END_POINT } from '../Constants/config';
+import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH } from '../Constants/config';
 import { getAuthenticationToken, setAuthenticationToken } from './authentication';
 import { JWTExpiredError } from './errors';
 
@@ -41,7 +41,7 @@ async function request(method, path, body, suppressRedBox) {
   } catch (error) {
     if (error instanceof JWTExpiredError) {
       const { jwtToken: expiredToken } = error;
-      const refreshTokenEndPoint = url(REFRESH_TOKEN_END_POINT);
+      const refreshTokenEndPoint = url(REFRESH_TOKEN_PATH);
       const headers = getRequestHeaders(null, expiredToken);
 
       const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);

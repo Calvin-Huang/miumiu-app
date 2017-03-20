@@ -9,7 +9,7 @@ import { fetchWayBillsSuccess, fetchWayBillsFailed } from '../Actions/wayBillAct
 import { get } from '../Utils/api';
 
 export function fetchWayBills(action$) {
-  return action$,ofType(ActionTypes.REQUESTED_WAYBILLS)
+  return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
     .switchMap(async (action) => {
       try {
         const { data, per_page: perPage, current_page: currentPage, total } = await get('board', { page: action.page });

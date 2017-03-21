@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
   Text,
+  ListView,
   TextInput,
   Image,
   ActivityIndicator,
@@ -32,7 +33,10 @@ import { WayBillState, UrgentState } from '../Constants/states';
 import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import { showUserQRCode } from '../Actions/userActions';
+import { fetchWayBills } from '../Actions/wayBillActions';
 import store from '../storeInstance';
+
+const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class WayBills extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -70,6 +74,21 @@ class WayBills extends NavigatorComponent {
     );
   }
 
+  static propTypes = {
+    wayBills: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequred,
+        title: PropTypes.string.isRequred,
+      })).isRequired,
+    currentPage: PropTypes.number.isRequired,
+  };
+
+  static defaultProps = {
+    wayBills: [],
+    currentPage: 1,
+    isFetching: false,
+  };
+
   constructor(props) {
     super(props);
 
@@ -80,7 +99,19 @@ class WayBills extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
-    }
+      wayBills: dataSource.cloneWithRows(props.wayBills),
+    };
+  }
+
+  componentDidMount() {
+    // AsyncStorage.removeItem('miumiu:JWTToken');
+    this.props.fetchWayBills(this.props.currentPage);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      wayBills: dataSource.cloneWithRows(props.wayBills),
+    });
   }
 
   showSearchBar() {
@@ -188,11 +219,11 @@ class WayBills extends NavigatorComponent {
         this.hideSearchBar();
         this.pushToNextComponent(WayBill, rowData);
       }}>
-        <WayBillStateView style={styles.wayBillState} state={rowData.state} />
-        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
-          { rowData.id }
+        <WayBillStateView style={styles.wayBillState} state={rowData.status} />
+        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.status === WayBillState.CONFIRMING ? 0.6 : 1 }}>
+          { rowData.shippingNo }
         </Text>
-        { (rowData.state === WayBillState.CONFIRMING && rowData.urgent && UrgentState.APPROVED) &&
+        { rowData.isUrgent &&
           <IconFasterShipping style={{ marginRight: 14 }} />
         }
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
@@ -201,7 +232,7 @@ class WayBills extends NavigatorComponent {
   }
 
   renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
-    const rowData = this.refs.listView.state.rows;
+    const rowData = this.props.wayBills;
 
     if (rowData.length - 1 == rowID) {
       return null;
@@ -214,16 +245,12 @@ class WayBills extends NavigatorComponent {
     );
   }
 
-  renderPaginationFetchingView(paginateCallback) {
+  renderFooter() {
     return (
-      <View style={styles.paginationFetchingView}>
+      <View style={styles.paginationView}>
         <ActivityIndicator />
       </View>
-    );
-  }
-
-  renderPaginationAllLoadedView() {
-    return null;
+    )
   }
 
   render() {
@@ -326,23 +353,16 @@ class WayBills extends NavigatorComponent {
           </View>
         }
 
-        <GiftedListView
-          ref="listView"
+        <ListView
           style={styles.wayBills}
-          rowView={this.renderRowView.bind(this)}
+          dataSource={this.state.wayBills}
+          renderRow={this.renderRowView.bind(this)}
           renderSeparator={this.renderSeparator.bind(this)}
-          onFetch={this.fetchWayBills.bind(this)}
-          paginationWaitingView={this.renderPaginationFetchingView.bind(this)}
-          paginationAllLoadedView={this.renderPaginationAllLoadedView.bind(this)}
-          onEndReached={() => { this.refs.listView._onPaginate(); }}
-          customStyles={{
-            paginationView: {
-              height: 60,
-            },
-          }}
-        >
-
-        </GiftedListView>
+          renderFooter={this.renderFooter.bind(this)}
+          onEndReached={() => { this.props.fetchWayBills(this.props.currentPage); }}
+          onEndReachedThreshold={60}
+          enableEmptySections={true}
+        />
       </View>
     );
   }
@@ -375,17 +395,25 @@ const styles = {
     marginRight: 29,
   },
   paginationView: {
-    height: 44,
+    height: 60,
     justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'white',
   },
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { wayBills } = state;
+
+  return {
+    ...ownProps,
+    wayBills: wayBills.data,
+    currentPage: wayBills.currentPage,
+    isFetching: wayBills.isFetching,
+    error: wayBills.error,
+  };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar }
+  { showNavigationBar, hideNavigationBar, fetchWayBills }
 )(WayBills);

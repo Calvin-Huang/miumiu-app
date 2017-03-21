@@ -20,6 +20,10 @@ const initialState = {
 };
 
 export default function wayBills(state = initialState, action) {
+  const filterCondition = (wayBill) => {
+    return wayBill.status !== WayBillState.PICKED_UP && wayBill.status !== WayBillState.UNKNOWN_OWNER
+  } ;
+
   switch (action.type) {
     case REQUESTED_WAYBILLS:
       return {
@@ -31,11 +35,6 @@ export default function wayBills(state = initialState, action) {
 
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
-
-      const filterCondition = (wayBill) => {
-
-        return wayBill.status !== WayBillState.PICKED_UP && wayBill.status !== WayBillState.UNKNOWN_OWNER
-      } ;
 
       return {
         data: [ ...state.data, ...humps.camelizeKeys(data.filter(filterCondition)) ],

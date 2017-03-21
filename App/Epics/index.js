@@ -12,6 +12,7 @@ import * as wayBillEpics from './wayBill';
 
 export default combineEpics(
   wayBillEpics.fetchWayBills,
+  wayBillEpics.refreshingWayBills,
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
   userEpics.userSignOut,

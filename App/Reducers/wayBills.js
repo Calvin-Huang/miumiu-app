@@ -30,7 +30,7 @@ export default function wayBills(state = initialState, action) {
     case RECEIVED_WAYBILLS_SUCCESS:
 
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
-      const hasNextPage = (perPage * currentPage) > total;
+      const hasNextPage = (perPage * currentPage) < total;
 
       const filterCondition = (wayBill) => {
 

@@ -214,21 +214,25 @@ class WayBills extends NavigatorComponent {
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
-    return (
-      <TouchableOpacity style={styles.row} onPress={() => {
-        this.hideSearchBar();
-        this.pushToNextComponent(WayBill, rowData);
-      }}>
-        <WayBillStateView style={styles.wayBillState} state={rowData.status} />
-        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.status === WayBillState.CONFIRMING ? 0.6 : 1 }}>
-          { rowData.shippingNo }
-        </Text>
-        { rowData.isUrgent &&
-          <IconFasterShipping style={{ marginRight: 14 }} />
-        }
-        <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
-      </TouchableOpacity>
-    );
+    if (this.props.error) {
+
+    } else {
+      return (
+        <TouchableOpacity style={styles.row} onPress={() => {
+          this.hideSearchBar();
+          this.pushToNextComponent(WayBill, rowData);
+        }}>
+          <WayBillStateView style={styles.wayBillState} state={rowData.status} />
+          <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.status === WayBillState.CONFIRMING ? 0.6 : 1 }}>
+            { rowData.shippingNo }
+          </Text>
+          { rowData.isUrgent &&
+            <IconFasterShipping style={{ marginRight: 14 }} />
+          }
+          <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
+        </TouchableOpacity>
+      );
+    }
   }
 
   renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
@@ -246,11 +250,15 @@ class WayBills extends NavigatorComponent {
   }
 
   renderFooter() {
-    return (
-      <View style={styles.paginationView}>
-        <ActivityIndicator />
-      </View>
-    )
+    if (this.props.error) {
+
+    } else if (this.props.isFetching) {
+      return (
+        <View style={styles.paginationView}>
+          <ActivityIndicator />
+        </View>
+      )
+    }
   }
 
   render() {

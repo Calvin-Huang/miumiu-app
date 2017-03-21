@@ -255,13 +255,21 @@ class WayBills extends NavigatorComponent {
 
   renderFooter() {
     if (this.props.error) {
+      return (
+        <TouchableOpacity
+          style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+          onPress={() => { this.props.fetchWayBills(this.props.currentPage); }}
+        >
+          <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
+        </TouchableOpacity>
+      );
 
     } else if (this.props.isFetching) {
       return (
         <View style={styles.paginationView}>
           <ActivityIndicator />
         </View>
-      )
+      );
     }
   }
 

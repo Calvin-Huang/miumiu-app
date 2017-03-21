@@ -10,7 +10,7 @@ import { get } from '../Utils/api';
 
 export function fetchWayBills(action$) {
   return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
-    .switchMap(async (action) => {
+    .concatMap(async (action) => {
       try {
         const response = await get('board', { page: action.currentPage });
         return fetchWayBillsSuccess(response);

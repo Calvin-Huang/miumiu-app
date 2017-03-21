@@ -24,3 +24,23 @@ export function fetchWayBillsFailed(error) {
     error,
   }
 }
+
+export function refreshWayBills() {
+  return {
+    type: Actions.START_REFRESHING_WAYBILLS,
+  }
+}
+
+export function refreshWayBillsSuccess(response) {
+  return {
+    type: Actions.REFRESH_WAYBILLS_SUCCESS,
+    response,
+  }
+}
+
+export function refreshWayBillsFailed(error) {
+  return {
+    type: Actions.REFRESH_WAYBILLS_FAILED,
+    error,
+  }
+}

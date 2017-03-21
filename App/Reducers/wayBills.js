@@ -6,6 +6,9 @@ import {
   REQUESTED_WAYBILLS,
   RECEIVED_WAYBILLS_SUCCESS,
   RECEIVED_WAYBILLS_FAILED,
+  START_REFRESHING_WAYBILLS,
+  REFRESH_WAYBILLS_SUCCESS,
+  REFRESH_WAYBILLS_FAILED,
 } from '../Constants/actionTypes';
 
 import humps from 'humps';
@@ -15,6 +18,7 @@ import { WayBillState } from '../Constants/states';
 const initialState = {
   data: [],
   currentPage: 1,
+  isRefreshing: false,
   isFetching: false,
   error: null,
 };
@@ -28,6 +32,7 @@ export default function wayBills(state = initialState, action) {
     case REQUESTED_WAYBILLS:
       return {
         ...state,
+        isRefreshing: false,
         isFetching: true,
         error: null,
       };
@@ -39,6 +44,7 @@ export default function wayBills(state = initialState, action) {
       return {
         data: [ ...state.data, ...humps.camelizeKeys(data.filter(filterCondition)) ],
         currentPage,
+        isRefreshing: false,
 
         // TRUE when need to fetch next page for infinity scroll.
         isFetching: hasNextPage,
@@ -48,6 +54,37 @@ export default function wayBills(state = initialState, action) {
     case RECEIVED_WAYBILLS_FAILED:
       return {
         ...state,
+        isRefreshing: false,
+        isFetching: false,
+        error: action.error,
+      };
+    case START_REFRESHING_WAYBILLS:
+      return {
+        ...state,
+        isRefreshing: true,
+        isFetching: false,
+        error: null,
+      };
+    case REFRESH_WAYBILLS_SUCCESS: {
+
+      const { data, per_page: perPage, current_page: currentPage, total } = action.response;
+      const hasNextPage = (perPage * currentPage) < total;
+
+      return {
+        data: humps.camelizeKeys(data.filter(filterCondition)),
+        currentPage,
+        isRefreshing: false,
+
+        // TRUE when need to fetch next page for infinity scroll.
+        isFetching: hasNextPage,
+        error: null,
+      };
+    }
+    case REFRESH_WAYBILLS_FAILED:
+      return {
+        data: [],
+        currentPage,
+        isRefreshing: false,
         isFetching: false,
         error: action.error,
       };

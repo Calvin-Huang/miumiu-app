@@ -27,7 +27,7 @@ export default function wayBills(state = initialState, action) {
         isFetching: true,
         error: null,
       };
-    case RECEIVED_WAYBILLS_SUCCESS:
+    case RECEIVED_WAYBILLS_SUCCESS: {
 
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
@@ -45,6 +45,7 @@ export default function wayBills(state = initialState, action) {
         isFetching: hasNextPage,
         error: null,
       };
+    }
     case RECEIVED_WAYBILLS_FAILED:
       return {
         ...state,

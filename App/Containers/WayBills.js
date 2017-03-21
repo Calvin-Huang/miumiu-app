@@ -10,6 +10,7 @@ import {
   TextInput,
   Image,
   ActivityIndicator,
+  RefreshControl,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
@@ -33,7 +34,7 @@ import { WayBillState, UrgentState } from '../Constants/states';
 import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import { showUserQRCode } from '../Actions/userActions';
-import { fetchWayBills } from '../Actions/wayBillActions';
+import { fetchWayBills, refreshWayBills } from '../Actions/wayBillActions';
 import store from '../storeInstance';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -86,6 +87,7 @@ class WayBills extends NavigatorComponent {
   static defaultProps = {
     wayBills: [],
     currentPage: 1,
+    isRefreshing: false,
     isFetching: false,
   };
 
@@ -373,9 +375,15 @@ class WayBills extends NavigatorComponent {
           renderRow={this.renderRowView.bind(this)}
           renderSeparator={this.renderSeparator.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
-          onEndReached={() => { this.props.fetchWayBills(this.props.currentPage + 1); }}
+          onEndReached={this.onPaginating.bind(this)}
           onEndReachedThreshold={60}
           enableEmptySections={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.isRefreshing}
+              onRefresh={this.props.refreshWayBills.bind(this)}
+            />
+          }
         />
       </View>
     );
@@ -422,6 +430,7 @@ const mapStateToProps = (state, ownProps) => {
     ...ownProps,
     wayBills: wayBills.data,
     currentPage: wayBills.currentPage,
+    isRefreshing: wayBills.isRefreshing,
     isFetching: wayBills.isFetching,
     error: wayBills.error,
   };
@@ -429,5 +438,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchWayBills }
+  { showNavigationBar, hideNavigationBar, fetchWayBills, refreshWayBills }
 )(WayBills);

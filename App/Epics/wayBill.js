@@ -12,12 +12,8 @@ export function fetchWayBills(action$) {
   return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
     .switchMap(async (action) => {
       try {
-        const { data, per_page: perPage, current_page: currentPage, total } = await get('board', { page: action.page });
-        const hasNextPage = (perPage * currentPage) > total;
-
-        action.callback(data, { allLoaded: hasNextPage });
-
-        return fetchWayBillsSuccess(data);
+        const response = await get('board', { page: action.currentPage });
+        return fetchWayBillsSuccess(response);
       } catch (error) {
         return fetchWayBillsFailed(error);
       }

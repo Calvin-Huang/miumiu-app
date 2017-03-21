@@ -213,6 +213,12 @@ class WayBills extends NavigatorComponent {
     }, 100);
   }
 
+  onPaginating() {
+    if (this.props.isFetching) {
+      this.props.fetchWayBills(this.props.currentPage + 1)
+    }
+  }
+
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     if (this.props.error) {
 

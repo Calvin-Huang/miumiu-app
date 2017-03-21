@@ -21,7 +21,7 @@ export function fetchWayBills(action$) {
 
         return fetchWayBillsSuccess(response);
       } catch (error) {
-        return fetchWayBillsFailed(error);
+        return fetchWayBillsFailed(error, action.currentPage);
       }
     });
 }

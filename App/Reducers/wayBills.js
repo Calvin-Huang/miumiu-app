@@ -54,6 +54,7 @@ export default function wayBills(state = initialState, action) {
     case RECEIVED_WAYBILLS_FAILED:
       return {
         ...state,
+        currentPage: action.atPage,
         isRefreshing: false,
         isFetching: false,
         error: action.error,

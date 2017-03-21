@@ -367,7 +367,7 @@ class WayBills extends NavigatorComponent {
           renderRow={this.renderRowView.bind(this)}
           renderSeparator={this.renderSeparator.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
-          onEndReached={() => { this.props.fetchWayBills(this.props.currentPage); }}
+          onEndReached={() => { this.props.fetchWayBills(this.props.currentPage + 1); }}
           onEndReachedThreshold={60}
           enableEmptySections={true}
         />

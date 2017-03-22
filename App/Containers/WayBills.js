@@ -102,6 +102,15 @@ class WayBills extends NavigatorComponent {
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
       wayBills: dataSource.cloneWithRows(props.wayBills),
+      emptyStateImage: ((randomNumber) => {
+        const images = [
+          require('../../assets/images/cat-and-cardboard-1.png'),
+          require('../../assets/images/cat-and-cardboard-2.png'),
+          require('../../assets/images/cat-and-cardboard-3.png'),
+          require('../../assets/images/cat-and-cardboard-4.png'),
+        ];
+        return images[randomNumber];
+      })(Math.floor(Math.random() * 4)),
     };
   }
 
@@ -270,6 +279,21 @@ class WayBills extends NavigatorComponent {
           <ActivityIndicator />
         </View>
       );
+
+    } else if (this.props.wayBills.length === 0) {
+      return (
+        <View style={styles.emptyStateView}>
+          <Image
+            style={styles.emptyStateImageView}
+            resizeMode="center"
+            source={this.state.emptyStateImage}
+          />
+          <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>目前沒有貨單，快開始使用喵喵代收吧！</Text>
+          <TouchableOpacity style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, width: 300 }}>
+            <Text style={MiumiuTheme.buttonText}>新增貨單</Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
   }
 
@@ -424,6 +448,15 @@ const styles = {
     height: 60,
     justifyContent: 'center',
     backgroundColor: 'white',
+  },
+  emptyStateView: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  emptyStateImageView: {
+    width: 300,
+    height: 200,
+    marginTop: 55,
   },
 };
 

@@ -12,7 +12,12 @@ import { getAuthenticationToken, setAuthenticationToken } from './authentication
 import { JWTExpiredError } from './errors';
 
 export async function get(path, body) {
-  return bodyOf(request('GET', path, body));
+  let pathQuery = path;
+  if (body) {
+    pathQuery += `?${Object.keys(body).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`).join('&')}`;
+  }
+
+  return bodyOf(request('GET', pathQuery, null));
 }
 
 export async function post(path, body) {

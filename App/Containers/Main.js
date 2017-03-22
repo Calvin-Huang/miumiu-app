@@ -27,6 +27,13 @@ import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
 
+import FCM, {
+  FCMEvent,
+  RemoteNotificationResult,
+  WillPresentNotificationResult,
+  NotificationType,
+} from 'react-native-fcm';
+
 import { IconFasterShipping } from '../Components';
 
 import WayBills from './WayBills';
@@ -116,6 +123,12 @@ class Main extends Component {
 
   componentDidMount() {
     this.props.checkUserSignedIn();
+
+    FCM.requestPermissions();
+    FCM.getFCMToken()
+      .then((token) => {
+        
+      });
   }
 
   componentWillReceiveProps(props) {

@@ -7,12 +7,17 @@
 
 import HttpError from 'standard-http-error';
 
-import { TIMEOUT, BASE_URL, REFRESH_TOKEN_END_POINT } from '../Constants/config';
+import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH } from '../Constants/config';
 import { getAuthenticationToken, setAuthenticationToken } from './authentication';
 import { JWTExpiredError } from './errors';
 
 export async function get(path, body) {
-  return bodyOf(request('GET', path, body));
+  let pathQuery = path;
+  if (body) {
+    pathQuery += `?${Object.keys(body).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`).join('&')}`;
+  }
+
+  return bodyOf(request('GET', pathQuery, null));
 }
 
 export async function post(path, body) {
@@ -31,7 +36,7 @@ export function url(path) {
   return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 
-async function request(method, path, body, suppressRedBox) {
+async function request(method, path, body, suppressRedBox = true) {
   const endPoint = url(path);
 
   let token;
@@ -41,16 +46,32 @@ async function request(method, path, body, suppressRedBox) {
   } catch (error) {
     if (error instanceof JWTExpiredError) {
       const { jwtToken: expiredToken } = error;
-      const refreshTokenEndPoint = url(REFRESH_TOKEN_END_POINT);
+      const refreshTokenEndPoint = url(REFRESH_TOKEN_PATH);
       const headers = getRequestHeaders(null, expiredToken);
 
-      const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
-      const { body: { token: newToken } } = await handleResponse(response);
+      if (suppressRedBox) {
+        console.log(`💬  Refresh expired token, expiredToken: ${expiredToken}`);
+      }
 
-      token = newToken;
+      try {
+        const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
+        const { body: { token: newToken } } = await handleResponse(response);
 
-      // Store new token to local storage.
-      setAuthenticationToken(newToken);
+        token = newToken;
+
+        if (suppressRedBox) {
+          console.log(`✅  Expired token refreshed, newToken: ${newToken}`);
+        }
+
+        // Store new token to local storage.
+        setAuthenticationToken(newToken);
+      } catch (error) {
+
+        if (suppressRedBox) {
+          console.log('❌  Refresh expired token failed ❌');
+          console.log(error);
+        }
+      }
     }
   }
 
@@ -59,7 +80,17 @@ async function request(method, path, body, suppressRedBox) {
     ? { method, headers, body: JSON.stringify(body) }
     : { method, headers };
 
+  if (suppressRedBox) {
+    console.log('🚀  Request Options 🚀');
+    console.log(options);
+  }
+
   const response = await timeout(fetch(endPoint, options), TIMEOUT);
+
+  if (suppressRedBox) {
+    console.log('🎯  Response 🎯');
+    console.log(response);
+  }
 
   return handleResponse(response);
 }
@@ -93,15 +124,21 @@ async function handleResponse(response) {
   // Store Authorization to AsyncStorage
   const { token } = JSON.parse(responseBody);
   if (token) {
-    try {
-      const oldJwtToken = await getAuthenticationToken();
+    let oldJwtToken;
 
-      // Only retrieved token different to old one needs be stored.
-      if (oldJwtToken !== token) {
-        setAuthenticationToken(token);
-      }
+    try {
+      oldJwtToken = await getAuthenticationToken();
     } catch (error) {
-      // Not handling expired error here.
+
+      // Retrieve expired token.
+      if (error instanceof JWTExpiredError) {
+        oldJwtToken = error.jwtToken;
+      }
+    }
+
+    // Only retrieved token different to old one needs be stored.
+    if (oldJwtToken !== token) {
+      setAuthenticationToken(token);
     }
   }
 

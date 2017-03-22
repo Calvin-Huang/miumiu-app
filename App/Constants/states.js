@@ -3,9 +3,11 @@
  */
 
 export const WayBillState = {
-  CONFIRMING: 0,
+  CONFIRMING: 5,
   SHIPPING: 1,
   ARRIVED: 2,
+  PICKED_UP: 3,
+  UNKNOWN_OWNER: 4,
 };
 
 export const UrgentState = {

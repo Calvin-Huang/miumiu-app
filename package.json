@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"color": "^1.0.3",
+		"humps": "^2.0.0",
 		"jwt-decode": "^2.1.0",
 		"react": "~15.4.0-rc.4",
 		"react-native": "0.40.0",

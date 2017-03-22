@@ -6,9 +6,11 @@ import {
   StyleSheet,
   View,
   Text,
+  ListView,
   TextInput,
   Image,
   ActivityIndicator,
+  RefreshControl,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
@@ -32,7 +34,10 @@ import { WayBillState, UrgentState } from '../Constants/states';
 import { showNavigationBar, hideNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import { showUserQRCode } from '../Actions/userActions';
+import { fetchWayBills, refreshWayBills } from '../Actions/wayBillActions';
 import store from '../storeInstance';
+
+const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class WayBills extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -70,6 +75,22 @@ class WayBills extends NavigatorComponent {
     );
   }
 
+  static propTypes = {
+    wayBills: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequred,
+        title: PropTypes.string.isRequred,
+      })).isRequired,
+    currentPage: PropTypes.number.isRequired,
+  };
+
+  static defaultProps = {
+    wayBills: [],
+    currentPage: 1,
+    isRefreshing: false,
+    isFetching: false,
+  };
+
   constructor(props) {
     super(props);
 
@@ -80,7 +101,28 @@ class WayBills extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
-    }
+      wayBills: dataSource.cloneWithRows(props.wayBills),
+      emptyStateImage: ((randomNumber) => {
+        const images = [
+          require('../../assets/images/cat-and-cardboard-1.png'),
+          require('../../assets/images/cat-and-cardboard-2.png'),
+          require('../../assets/images/cat-and-cardboard-3.png'),
+          require('../../assets/images/cat-and-cardboard-4.png'),
+        ];
+        return images[randomNumber];
+      })(Math.floor(Math.random() * 4)),
+    };
+  }
+
+  componentDidMount() {
+    // AsyncStorage.removeItem('miumiu:JWTToken');
+    this.props.fetchWayBills(this.props.currentPage);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      wayBills: dataSource.cloneWithRows(props.wayBills),
+    });
   }
 
   showSearchBar() {
@@ -182,18 +224,24 @@ class WayBills extends NavigatorComponent {
     }, 100);
   }
 
+  onPaginating() {
+    if (this.props.isFetching) {
+      this.props.fetchWayBills(this.props.currentPage + 1)
+    }
+  }
+
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.row} onPress={() => {
-        this.hideSearchBar();
-        this.pushToNextComponent(WayBill, rowData);
-      }}>
-        <WayBillStateView style={styles.wayBillState} state={rowData.state} />
-        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.state === WayBillState.CONFIRMING ? 0.6 : 1 }}>
-          { rowData.id }
+          this.hideSearchBar();
+          this.pushToNextComponent(WayBill, rowData);
+        }}>
+        <WayBillStateView style={styles.wayBillState} state={rowData.status} />
+        <Text style={{ ...MiumiuTheme.listViewText, opacity: rowData.status === WayBillState.CONFIRMING ? 0.6 : 1 }}>
+          { rowData.shippingNo }
         </Text>
-        { (rowData.state === WayBillState.CONFIRMING && rowData.urgent && UrgentState.APPROVED) &&
-          <IconFasterShipping style={{ marginRight: 14 }} />
+        { rowData.isUrgent &&
+        <IconFasterShipping style={{ marginRight: 14 }} />
         }
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
@@ -201,7 +249,7 @@ class WayBills extends NavigatorComponent {
   }
 
   renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
-    const rowData = this.refs.listView.state.rows;
+    const rowData = this.props.wayBills;
 
     if (rowData.length - 1 == rowID) {
       return null;
@@ -214,16 +262,44 @@ class WayBills extends NavigatorComponent {
     );
   }
 
-  renderPaginationFetchingView(paginateCallback) {
-    return (
-      <View style={styles.paginationFetchingView}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
+  renderFooter() {
+    if (this.props.error) {
+      return (
+        <TouchableOpacity
+          style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+          onPress={() => { this.props.fetchWayBills(this.props.currentPage); }}
+        >
+          <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
+        </TouchableOpacity>
+      );
 
-  renderPaginationAllLoadedView() {
-    return null;
+    } else if (this.props.isFetching) {
+      return (
+        <View style={styles.paginationView}>
+          <ActivityIndicator />
+        </View>
+      );
+
+    } else if (this.props.wayBills.length === 0) {
+      return (
+        <View style={styles.emptyStateView}>
+          <Image
+            style={styles.emptyStateImageView}
+            resizeMode="center"
+            source={this.state.emptyStateImage}
+          />
+          <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>目前沒有貨單，快開始使用喵喵代收吧！</Text>
+          <TouchableOpacity
+            style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, width: 300 }}
+            onPress={() => {
+              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+            }}
+          >
+            <Text style={MiumiuTheme.buttonText}>新增貨單</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   }
 
   render() {
@@ -326,23 +402,22 @@ class WayBills extends NavigatorComponent {
           </View>
         }
 
-        <GiftedListView
-          ref="listView"
+        <ListView
           style={styles.wayBills}
-          rowView={this.renderRowView.bind(this)}
+          dataSource={this.state.wayBills}
+          renderRow={this.renderRowView.bind(this)}
           renderSeparator={this.renderSeparator.bind(this)}
-          onFetch={this.fetchWayBills.bind(this)}
-          paginationWaitingView={this.renderPaginationFetchingView.bind(this)}
-          paginationAllLoadedView={this.renderPaginationAllLoadedView.bind(this)}
-          onEndReached={() => { this.refs.listView._onPaginate(); }}
-          customStyles={{
-            paginationView: {
-              height: 60,
-            },
-          }}
-        >
-
-        </GiftedListView>
+          renderFooter={this.renderFooter.bind(this)}
+          onEndReached={this.onPaginating.bind(this)}
+          onEndReachedThreshold={60}
+          enableEmptySections={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.isRefreshing}
+              onRefresh={this.props.refreshWayBills.bind(this)}
+            />
+          }
+        />
       </View>
     );
   }
@@ -375,17 +450,35 @@ const styles = {
     marginRight: 29,
   },
   paginationView: {
-    height: 44,
+    height: 60,
     justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  emptyStateView: {
+    flexDirection: 'column',
     alignItems: 'center',
+  },
+  emptyStateImageView: {
+    width: 300,
+    height: 200,
+    marginTop: 55,
   },
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { wayBills } = state;
+
+  return {
+    ...ownProps,
+    wayBills: wayBills.data,
+    currentPage: wayBills.currentPage,
+    isRefreshing: wayBills.isRefreshing,
+    isFetching: wayBills.isFetching,
+    error: wayBills.error,
+  };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar }
+  { showNavigationBar, hideNavigationBar, fetchWayBills, refreshWayBills }
 )(WayBills);

@@ -18,10 +18,11 @@ export function fetchWayBillsSuccess(response) {
   }
 }
 
-export function fetchWayBillsFailed(error) {
+export function fetchWayBillsFailed(error, atPage) {
   return {
     type: Actions.RECEIVED_WAYBILLS_FAILED,
     error,
+    atPage,
   }
 }
 

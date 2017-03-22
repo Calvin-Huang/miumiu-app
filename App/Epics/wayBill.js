@@ -17,7 +17,7 @@ export function fetchWayBills(action$) {
   return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
     .concatMap(async (action) => {
       try {
-        const response = await get('shipping', { page: action.currentPage });
+        const response = await get(`shipping?page=${action.currentPage}`);
 
         return fetchWayBillsSuccess(response);
       } catch (error) {
@@ -31,7 +31,7 @@ export function refreshingWayBills(action$) {
     .switchMap(async (_) => {
       try {
         // Reset to first page.
-        const response = await get('shipping', { page: 1 });
+        const response = await get(`shipping?page=${action.currentPage}`);
 
         return refreshWayBillsSuccess(response);
       } catch (error) {

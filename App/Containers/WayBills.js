@@ -289,7 +289,12 @@ class WayBills extends NavigatorComponent {
             source={this.state.emptyStateImage}
           />
           <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>目前沒有貨單，快開始使用喵喵代收吧！</Text>
-          <TouchableOpacity style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, width: 300 }}>
+          <TouchableOpacity
+            style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, width: 300 }}
+            onPress={() => {
+              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+            }}
+          >
             <Text style={MiumiuTheme.buttonText}>新增貨單</Text>
           </TouchableOpacity>
         </View>

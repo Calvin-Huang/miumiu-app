@@ -43,7 +43,7 @@ export function refreshingWayBills(action$) {
 }
 
 export function addingWayBill(action$) {
-  return action$.ofType()
+  return action$.ofType(ActionTypes.ADD_WAYBILL)
     .switchMap(async (action) => {
       try {
         const response = await post('shipping', { shipping_no: action.shippingNo });

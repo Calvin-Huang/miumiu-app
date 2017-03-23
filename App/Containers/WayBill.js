@@ -15,22 +15,28 @@ import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from 'color';
+import moment from 'moment';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { showUserQRCode } from '../Actions';
+import { DATETIME_FORMAT } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
-  static navRightButton({ data: { id } }, navigator, index, navState) {
-    return (
-      <TouchableOpacity onPress={() => { console.log(id); }}>
-        <Text style={NavigatorStyle.itemTextButton}>
-          刪除
-        </Text>
-      </TouchableOpacity>
-    );
+  static navRightButton({ data: { shippingNo, status } }, navigator, index, navState) {
+    if (status === WayBillState.CONFIRMING) {
+      return (
+        <TouchableOpacity onPress={() => { console.log(shippingNo); }}>
+          <Text style={NavigatorStyle.itemTextButton}>
+            刪除
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
   }
 
   constructor(props) {
@@ -39,65 +45,26 @@ class WayBill extends NavigatorComponent {
     this.state = {
       data: this.props.route.data,
     };
-
-    this.fetchWayBill();
-  }
-
-  fetchWayBill(id = this.state.data.id) {
-    setTimeout(() => {
-      const mockData = ((state) => {
-        switch (state) {
-          case WayBillState.CONFIRMING:
-            return {
-              destination: null,
-              arrivedAt: null,
-              expiredAt: null,
-              amount: null,
-            };
-          case WayBillState.SHIPPING:
-            return {
-              destination: '澳門',
-              arrivedAt: '2017/02/01',
-              expiredAt: null,
-              amount: 50,
-            };
-          case WayBillState.ARRIVED:
-            return {
-              destination: '澳門',
-              arrivedAt: '2017/02/01',
-              expiredAt: '2017/02/14',
-              amount: 65,
-            };
-        }
-      })(this.state.data.state);
-
-      this.setState({
-        data: {
-          ...this.state.data,
-          ...mockData,
-        },
-      });
-    }, 500);
   }
 
   render() {
     const { data } = this.state;
-    const { icon, iconColor, title } = stateInfoMapping[data.state] || {};
+    const { icon, iconColor, title } = stateInfoMapping[data.status] || {};
 
     const sectionTitle = ((data) => {
-      switch (data.state) {
+      switch (data.status) {
         case WayBillState.CONFIRMING:
           return '待確認訂單，您可以申請加急服務';
         case WayBillState.SHIPPING:
           return (
             <Text style={styles.sectionText}>
-              往 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.destination || '-'}</Text> 貨運中
+              往 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.locationName || '-'}</Text> 貨運中
             </Text>
           );
         case WayBillState.ARRIVED:
           return (
             <Text style={styles.sectionText}>
-              已到 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.destination || '-'}</Text> 集貨中心，請儘速提領
+              已到 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.locationName || '-'}</Text> 集貨中心，請儘速提領
             </Text>
           );
       }
@@ -108,7 +75,7 @@ class WayBill extends NavigatorComponent {
         <MiumiuThemeNavigatorBackground>
           <View style={NavigatorStyle.titleView}>
             <Text style={NavigatorStyle.titleText}>
-              單號: { data.id }
+              單號: { data.shippingNo }
             </Text>
           </View>
         </MiumiuThemeNavigatorBackground>
@@ -122,7 +89,7 @@ class WayBill extends NavigatorComponent {
               到貨日
             </Text>
             <Text style={styles.infoFieldValueText}>
-              {data.arrivedAt || '-'}
+              {data.arrivedAt ? moment(data.arrivedAt).format(DATETIME_FORMAT) : '-'}
             </Text>
           </View>
           <View style={styles.listViewRow}>
@@ -130,19 +97,27 @@ class WayBill extends NavigatorComponent {
               到期日
             </Text>
             <Text style={styles.infoFieldValueText}>
-              {data.expiredAt || '-'}
+              {data.expiredAt ? moment(data.expiredAt).format(DATETIME_FORMAT) : '-'}
+            </Text>
+          </View>
+          <View style={styles.listViewRow}>
+            <Text style={{ ...MiumiuTheme.listViewText, color: '#F6A623' }}>
+              物流費用
+            </Text>
+            <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>
+              {data.fee ? `$${data.fee}` : '-'}
             </Text>
           </View>
           <View style={styles.listViewRow}>
             <Text style={MiumiuTheme.listViewText}>
-              金額
+              倉儲費用
             </Text>
-            <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>
-              {data.amount ? `$${data.amount}` : '-'}
+            <Text style={styles.infoFieldValueText}>
+              {data.stockFee ? `$${data.stockFee}` : '-'}
             </Text>
           </View>
         </View>
-        { data.state === WayBillState.CONFIRMING &&
+        { data.status === WayBillState.CONFIRMING &&
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
@@ -154,7 +129,7 @@ class WayBill extends NavigatorComponent {
           </View>
         }
 
-        { data.state === WayBillState.ARRIVED &&
+        { data.status === WayBillState.ARRIVED &&
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning }}

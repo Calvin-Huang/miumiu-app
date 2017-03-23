@@ -72,6 +72,8 @@ class AddWayBill extends NavigatorComponent {
   }
 
   render() {
+    const { shippingNo } = this.state;
+    const submittable = !!shippingNo;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
@@ -93,7 +95,7 @@ class AddWayBill extends NavigatorComponent {
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
                 onChangeText={(shippingNo) => { this.setState({ shippingNo }); }}
-                value={this.state.shippingNo}
+                value={shippingNo}
               />
             </View>
           </View>
@@ -103,8 +105,12 @@ class AddWayBill extends NavigatorComponent {
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
                 onPress={this.submitButtonClicked.bind(this)}
+                disabled={!submittable}
               >
-                <Text style={MiumiuTheme.actionButtonText}>送出單號</Text>
+                <Text style={{
+                  ...MiumiuTheme.actionButtonText,
+                  opacity: submittable ? 1 : 0.7,
+                }}>送出單號</Text>
                 { this.props.isRequesting &&
                   <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
                 }

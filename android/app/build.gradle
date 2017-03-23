@@ -126,6 +126,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-blur')
     compile project(':react-native-fcm')
     compile project(':react-native-device-brightness')
     compile project(':react-native-svg')

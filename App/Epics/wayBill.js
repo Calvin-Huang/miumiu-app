@@ -4,6 +4,8 @@
 
 import React from 'react-native';
 
+import { Observable } from 'rxjs';
+
 import * as ActionTypes from '../Constants/actionTypes';
 import {
   fetchWayBillsSuccess,
@@ -15,7 +17,6 @@ import {
 } from '../Actions/wayBillActions';
 import { generalRequest, generalRequestSuccess, generalRequestFailed } from '../Actions/generalRequestActions';
 
-import store from '../storeInstance';
 import { get, post } from '../Utils/api';
 
 export function fetchWayBills(action$) {
@@ -60,15 +61,19 @@ export function addingWayBill(action$) {
 
 export function urgentWayBill(action$) {
   return action$.ofType(ActionTypes.URGENT_WAYBILL)
-    .switchMap(async (action) => {
-      store.dispatch(generalRequest());
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
 
-      try {
-        await post('shipping/urgent', { shipping_no: action.shippingNo, logistic: action.logistic });
+        try {
+          await post('shipping/urgent', { shipping_no: action.shippingNo, logistic: action.logistic });
 
-        return generalRequestSuccess();
-      } catch (error) {
-        return generalRequestFailed(error);
-      }
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+
+        observer.complete();
+      });
     });
 }

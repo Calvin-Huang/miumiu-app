@@ -23,14 +23,18 @@ import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { showUserQRCode } from '../Actions';
 
 class WayBill extends NavigatorComponent {
-  static navRightButton({ data: { id } }, navigator, index, navState) {
-    return (
-      <TouchableOpacity onPress={() => { console.log(id); }}>
-        <Text style={NavigatorStyle.itemTextButton}>
-          刪除
-        </Text>
-      </TouchableOpacity>
-    );
+  static navRightButton({ data: { shippingNo, status } }, navigator, index, navState) {
+    if (status === WayBillState.CONFIRMING) {
+      return (
+        <TouchableOpacity onPress={() => { console.log(shippingNo); }}>
+          <Text style={NavigatorStyle.itemTextButton}>
+            刪除
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
   }
 
   constructor(props) {

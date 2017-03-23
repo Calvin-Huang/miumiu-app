@@ -101,7 +101,8 @@ class UrgentProcessing extends NavigatorComponent {
   }
 
   submitButtonClicked() {
-    const { isRequesting, shippingNo, logistic } = this.props;
+    const { isRequesting } = this.props;
+    const { shippingNo, logistic } = this.state;
     if (!isRequesting) {
       this.props.urgentWayBill(shippingNo, logistic);
     }

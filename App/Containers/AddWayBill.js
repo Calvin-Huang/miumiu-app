@@ -13,12 +13,14 @@ import {
 
 import dismissKeyboard from 'dismissKeyboard';
 
+import { connect } from 'react-redux';
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
+import { addWayBill } from '../Actions/wayBillActions';
 
-export default class AddWayBill extends NavigatorComponent {
+class AddWayBill extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => {
@@ -89,3 +91,17 @@ const styles = {
     marginTop: 27,
   },
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { wayBill } = state;
+  return {
+    ...ownProps,
+    isRequesting: wayBill.isRequesting,
+    error: wayBill.error,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { addWayBill },
+)(AddWayBill);

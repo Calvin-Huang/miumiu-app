@@ -45,3 +45,24 @@ export function refreshWayBillsFailed(error) {
     error,
   }
 }
+
+export function addWayBill(shippingNo) {
+  return {
+    type: Actions.ADD_WAYBILL,
+    shippingNo,
+  }
+}
+
+export function addWayBillSuccess(response) {
+  return {
+    type: Actions.ADD_WAYBILL_SUCCESS,
+    response,
+  }
+}
+
+export function addWayBillFailed(error) {
+  return {
+    type: Actions.ADD_WAYBILL_FAILED,
+    error,
+  }
+}

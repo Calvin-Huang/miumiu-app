@@ -20,7 +20,7 @@ import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { addWayBill } from '../Actions/wayBillActions';
+import { addWayBill, refreshWayBills } from '../Actions/wayBillActions';
 
 class AddWayBill extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
@@ -52,6 +52,7 @@ class AddWayBill extends NavigatorComponent {
 
         if (!props.error) {
           this.refs.HUD.flash(1.5, () => {
+            this.props.refreshWayBills();
             this.props.navigator.pop();
           });
         } else {
@@ -136,5 +137,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { addWayBill },
+  { addWayBill, refreshWayBills },
 )(AddWayBill);

@@ -17,6 +17,7 @@ export default class HUD extends Component {
     delay: PropTypes.number,
     visible: PropTypes.bool.isRequired,
     onHidden: PropTypes.func,
+    type: PropTypes.oneOf(['success']),
   };
 
   static defaultProps = {
@@ -60,7 +61,9 @@ export default class HUD extends Component {
       >
         <View style={styles.container}>
           <BlurView blurType="dark" blurAmount={20} style={styles.blurContainer}>
-            <Icon name="md-checkmark" color="white" size={30} />
+            { this.props.type === 'success' &&
+              <Icon name="md-checkmark" color="white" size={30} />
+            }
           </BlurView>
         </View>
       </Modal>

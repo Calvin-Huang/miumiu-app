@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
+  Alert,
+  ActivityIndicator,
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
@@ -16,7 +18,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import { connect } from 'react-redux';
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
-import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { addWayBill } from '../Actions/wayBillActions';
 
@@ -39,7 +41,33 @@ class AddWayBill extends NavigatorComponent {
 
     this.state = {
       shippingNo: '',
+      showSuccessHud: true,
     };
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.isRequesting !== props.isRequesting) {
+      if (!props.isRequesting && !props.error) {
+        dismissKeyboard();
+
+        if (!props.error) {
+          this.refs.HUD.flash(1.5, () => {
+            this.props.navigator.pop();
+          });
+        } else {
+          Alert.alert(
+            '發生了一點問題',
+            props.error.message,
+          );
+        }
+      }
+    }
+  }
+
+  submitButtonClicked() {
+    if (!this.props.isRequesting) {
+      this.props.addWayBill(this.state.shippingNo);
+    }
   }
 
   render() {
@@ -73,12 +101,17 @@ class AddWayBill extends NavigatorComponent {
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
-                onPress={() => { console.log(this.state.id); }}
+                onPress={this.submitButtonClicked.bind(this)}
               >
                 <Text style={MiumiuTheme.actionButtonText}>送出單號</Text>
+                { this.props.isRequesting &&
+                  <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+                }
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
+
+          <HUD ref="HUD" type="success" />
         </View>
       </TouchableWithoutFeedback>
     )

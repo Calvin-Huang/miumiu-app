@@ -73,7 +73,7 @@ class WayBill extends NavigatorComponent {
               amount: 65,
             };
         }
-      })(this.state.data.state);
+      })(this.state.data.status);
 
       this.setState({
         data: {
@@ -86,22 +86,22 @@ class WayBill extends NavigatorComponent {
 
   render() {
     const { data } = this.state;
-    const { icon, iconColor, title } = stateInfoMapping[data.state] || {};
+    const { icon, iconColor, title } = stateInfoMapping[data.status] || {};
 
     const sectionTitle = ((data) => {
-      switch (data.state) {
+      switch (data.status) {
         case WayBillState.CONFIRMING:
           return '待確認訂單，您可以申請加急服務';
         case WayBillState.SHIPPING:
           return (
             <Text style={styles.sectionText}>
-              往 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.destination || '-'}</Text> 貨運中
+              往 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.locationName || '-'}</Text> 貨運中
             </Text>
           );
         case WayBillState.ARRIVED:
           return (
             <Text style={styles.sectionText}>
-              已到 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.destination || '-'}</Text> 集貨中心，請儘速提領
+              已到 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.locationName || '-'}</Text> 集貨中心，請儘速提領
             </Text>
           );
       }
@@ -112,7 +112,7 @@ class WayBill extends NavigatorComponent {
         <MiumiuThemeNavigatorBackground>
           <View style={NavigatorStyle.titleView}>
             <Text style={NavigatorStyle.titleText}>
-              單號: { data.id }
+              單號: { data.shippingNo }
             </Text>
           </View>
         </MiumiuThemeNavigatorBackground>
@@ -139,14 +139,22 @@ class WayBill extends NavigatorComponent {
           </View>
           <View style={styles.listViewRow}>
             <Text style={MiumiuTheme.listViewText}>
-              金額
+              物流費用
             </Text>
             <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>
-              {data.amount ? `$${data.amount}` : '-'}
+              {data.fee ? `$${data.fee}` : '-'}
+            </Text>
+          </View>
+          <View style={styles.listViewRow}>
+            <Text style={MiumiuTheme.listViewText}>
+              倉儲費用
+            </Text>
+            <Text style={styles.infoFieldValueText}>
+              {data.stockFee ? `$${data.stockFee}` : '-'}
             </Text>
           </View>
         </View>
-        { data.state === WayBillState.CONFIRMING &&
+        { data.status === WayBillState.CONFIRMING &&
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
@@ -158,7 +166,7 @@ class WayBill extends NavigatorComponent {
           </View>
         }
 
-        { data.state === WayBillState.ARRIVED &&
+        { data.status === WayBillState.ARRIVED &&
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning }}

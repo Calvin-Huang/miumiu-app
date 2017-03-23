@@ -16,7 +16,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import store from '../storeInstance';
@@ -156,6 +156,8 @@ export default class UrgentProcessing extends NavigatorComponent {
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
+
+          <HUD ref="HUD" type="success" message="送出成功" />
         </View>
       </TouchableWithoutFeedback>
     );

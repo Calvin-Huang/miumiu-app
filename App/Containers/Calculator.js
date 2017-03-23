@@ -15,6 +15,7 @@ import {
 
 import dismissKeyboard from 'dismissKeyboard';
 
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
@@ -24,7 +25,7 @@ import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions';
 import store from '../storeInstance';
 
-export default class Calculator extends NavigatorComponent {
+class Calculator extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     if (route.index === 0) {
       return (
@@ -230,3 +231,12 @@ const styles = {
     fontSize: 28,
   },
 };
+
+const mapStateToProps = (state, ownProps) => {
+  return ownProps;
+};
+
+export default connect(
+  mapStateToProps,
+  {}
+)(Calculator);

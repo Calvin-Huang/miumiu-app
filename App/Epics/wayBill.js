@@ -62,18 +62,17 @@ export function addingWayBill(action$) {
 export function urgentWayBill(action$) {
   return action$.ofType(ActionTypes.URGENT_WAYBILL)
     .switchMap((action) => {
-      return new Observable(async (observer) => {
-        observer.next(generalRequest());
+      return Observable.concat(
+        Observable.of(generalRequest()),
+        (async () => {
+          try {
+            await post('shipping/urgent', { shipping_no: action.shippingNo, logistic: action.logistic });
 
-        try {
-          await post('shipping/urgent', { shipping_no: action.shippingNo, logistic: action.logistic });
-
-          observer.next(generalRequestSuccess());
-        } catch (error) {
-          observer.next(generalRequestFailed(error));
-        }
-
-        observer.complete();
-      });
+            return generalRequestSuccess();
+          } catch (error) {
+            return generalRequestFailed(error);
+          }
+        })(),
+      );
     });
 }

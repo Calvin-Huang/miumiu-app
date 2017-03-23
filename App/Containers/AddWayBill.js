@@ -47,7 +47,7 @@ class AddWayBill extends NavigatorComponent {
 
   componentWillReceiveProps(props) {
     if (this.props.isRequesting !== props.isRequesting) {
-      if (!props.isRequesting && !props.error) {
+      if (!props.isRequesting) {
         dismissKeyboard();
 
         if (!props.error) {

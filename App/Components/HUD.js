@@ -5,6 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import {
   View,
+  Text,
   Modal,
   StyleSheet,
 } from 'react-native';
@@ -18,6 +19,8 @@ export default class HUD extends Component {
     visible: PropTypes.bool.isRequired,
     onHidden: PropTypes.func,
     type: PropTypes.oneOf(['success']),
+    textStyle: PropTypes.object,
+    message: PropTypes.string,
   };
 
   static defaultProps = {
@@ -60,9 +63,12 @@ export default class HUD extends Component {
         visible={this.state.visible}
       >
         <View style={styles.container}>
-          <BlurView blurType="dark" blurAmount={20} style={styles.blurContainer}>
+          <BlurView blurType="dark" style={styles.blurContainer}>
             { this.props.type === 'success' &&
-              <Icon name="md-checkmark" color="white" size={30} />
+              <Icon name="md-checkmark" color="white" size={30} style={{ paddingHorizontal: 6 }} />
+            }
+            { this.props.message &&
+              <Text style={this.props.textStyle || styles.defaultTextStyle}>{this.props.message}</Text>
             }
           </BlurView>
         </View>
@@ -78,10 +84,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   blurContainer: {
-    width: 54,
-    height: 50,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
-  }
+  },
+  defaultTextStyle: {
+    fontSize: 14,
+    color: 'white',
+  },
 });

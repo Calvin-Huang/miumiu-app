@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
+  Alert,
+  ActivityIndicator,
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
@@ -13,15 +15,17 @@ import {
 
 import dismissKeyboard from 'dismissKeyboard';
 
+import { connect } from 'react-redux';
 import { MKTextField } from 'react-native-material-kit';
 import Color from 'color';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
+import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import store from '../storeInstance';
+import { urgentWayBill } from '../Actions/wayBillActions';
 
-export default class UrgentProcessing extends NavigatorComponent {
+class UrgentProcessing extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     if (route.index === 0) {
       return (
@@ -56,13 +60,57 @@ export default class UrgentProcessing extends NavigatorComponent {
   constructor(props) {
     super(props);
 
+    const { data } = props.route;
+    const { shippingNo } = data || {};
+
     this.state = {
-      data: props.route.data,
+      data,
+      disableShippingNoTextField: !shippingNo,
+      shippingNo: shippingNo,
+      logistic: '',
     };
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.isRequesting !== props.isRequesting) {
+      if (!props.isRequesting) {
+        dismissKeyboard();
+
+        if (!props.error) {
+          this.refs.HUD.flash(1.5, () => {
+            const { navigator, route, refreshWayBills } = this.props;
+
+            if (route.index > 0) {
+              refreshWayBills();
+              navigator.pop();
+            } else {
+              this.setState({
+                shippingNo: '',
+                logistic: '',
+              });
+            }
+          });
+        } else {
+          Alert.alert(
+            '發生了一點問題',
+            props.error.message,
+          );
+        }
+      }
+    }
+  }
+
+  submitButtonClicked() {
+    const { isRequesting } = this.props;
+    const { shippingNo, logistic } = this.state;
+    if (!isRequesting) {
+      this.props.urgentWayBill(shippingNo, logistic);
+    }
+  }
+
   render() {
-    const { data } = this.state;
+    const { data, shippingNo, logistic } = this.state;
+    const submittable = (shippingNo && logistic);
 
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
@@ -75,19 +123,20 @@ export default class UrgentProcessing extends NavigatorComponent {
             </View>
           </MiumiuThemeNavigatorBackground>
           <View style={styles.body}>
-            { (!data || !data.id) &&
-              <View style={MiumiuTheme.textFieldGroup}>
-                <MKTextField
-                  floatingLabelEnabled={true}
-                  textInputStyle={{ height: 31 }}
-                  underlineSize={1}
-                  highlightColor="#D8D8D8"
-                  placeholder="請輸入單號"
-                  placeholderTextColor="#9E9E9E"
-                  style={{ backgroundColor: 'white' }}
-                />
-              </View>
-            }
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="請輸入單號"
+                placeholderTextColor="#9E9E9E"
+                style={{ backgroundColor: 'white' }}
+                editable={this.state.disableShippingNoTextField}
+                onChangeText={(shippingNo) => this.setState({ shippingNo })}
+                value={shippingNo}
+              />
+            </View>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 floatingLabelEnabled={true}
@@ -97,6 +146,8 @@ export default class UrgentProcessing extends NavigatorComponent {
                 placeholder="請輸入貨運公司名稱"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
+                onChangeText={(logistic) => this.setState({ logistic })}
+                value={logistic}
               />
             </View>
 
@@ -141,12 +192,21 @@ export default class UrgentProcessing extends NavigatorComponent {
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
-                onPress={() => { console.log(data.id); } }
+                disabled={!submittable}
+                onPress={this.submitButtonClicked.bind(this)}
               >
-                <Text style={MiumiuTheme.actionButtonText}>申請加急</Text>
+                <Text style={{
+                  ...MiumiuTheme.actionButtonText,
+                  opacity: submittable ? 1 : 0.7,
+                }}>申請加急</Text>
+                { this.props.isRequesting &&
+                  <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+                }
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
+
+          <HUD ref="HUD" type="success" message="送出成功" />
         </View>
       </TouchableWithoutFeedback>
     );
@@ -166,3 +226,17 @@ const styles = {
     marginBottom: 18,
   },
 };
+
+const mapStateToProps = (state, ownProps) => {
+  const { generalRequest } = state;
+  return {
+    ...ownProps,
+    isRequesting: generalRequest.isRequesting,
+    error: generalRequest.error,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { urgentWayBill }
+)(UrgentProcessing);

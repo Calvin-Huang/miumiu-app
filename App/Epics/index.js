@@ -14,6 +14,7 @@ export default combineEpics(
   wayBillEpics.fetchWayBills,
   wayBillEpics.refreshingWayBills,
   wayBillEpics.addingWayBill,
+  wayBillEpics.urgentWayBill,
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
   userEpics.userSignOut,

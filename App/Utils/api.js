@@ -122,7 +122,7 @@ async function handleResponse(response) {
   const responseBody = await response.text();
 
   // Store Authorization to AsyncStorage
-  const { token } = JSON.parse(responseBody);
+  const { token } = JSON.parse(responseBody || '{}');
   if (token) {
     let oldJwtToken;
 

@@ -66,3 +66,11 @@ export function addWayBillFailed(error) {
     error,
   }
 }
+
+export function urgentWayBill(shippingNo, logistic) {
+  return {
+    type: Actions.URGENT_WAYBILL,
+    shippingNo,
+    logistic,
+  }
+}

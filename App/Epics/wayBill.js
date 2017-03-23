@@ -13,6 +13,9 @@ import {
   addWayBillSuccess,
   addWayBillFailed,
 } from '../Actions/wayBillActions';
+import { generalRequest, generalRequestSuccess, generalRequestFailed } from '../Actions/generalRequestActions';
+
+import store from '../storeInstance';
 import { get, post } from '../Utils/api';
 
 export function fetchWayBills(action$) {
@@ -51,6 +54,21 @@ export function addingWayBill(action$) {
         return addWayBillSuccess(response);
       } catch (error) {
         return addWayBillFailed(error);
+      }
+    });
+}
+
+export function urgentWayBill(action$) {
+  return action$.ofType(ActionTypes.URGENT_WAYBILL)
+    .switchMap(async (action) => {
+      store.dispatch(generalRequest());
+
+      try {
+        await post('shipping/urgent', { shipping_no: action.shippingNo, logistic: action.logistic });
+
+        return generalRequestSuccess();
+      } catch (error) {
+        return generalRequestFailed(error);
       }
     });
 }

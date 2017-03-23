@@ -109,7 +109,8 @@ class UrgentProcessing extends NavigatorComponent {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, shippingNo, logistic } = this.state;
+    const submittable = (shippingNo && logistic);
 
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
@@ -133,7 +134,7 @@ class UrgentProcessing extends NavigatorComponent {
                 style={{ backgroundColor: 'white' }}
                 editable={this.state.disableShippingNoTextField}
                 onChangeText={(shippingNo) => this.setState({ shippingNo })}
-                value={this.state.shippingNo}
+                value={shippingNo}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
@@ -146,7 +147,7 @@ class UrgentProcessing extends NavigatorComponent {
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
                 onChangeText={(logistic) => this.setState({ logistic })}
-                value={this.state.logistic}
+                value={logistic}
               />
             </View>
 
@@ -191,9 +192,13 @@ class UrgentProcessing extends NavigatorComponent {
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
+                disabled={!submittable}
                 onPress={this.submitButtonClicked.bind(this)}
               >
-                <Text style={MiumiuTheme.actionButtonText}>申請加急</Text>
+                <Text style={{
+                  ...MiumiuTheme.actionButtonText,
+                  opacity: submittable ? 1 : 0.7,
+                }}>申請加急</Text>
                 { this.props.isRequesting &&
                   <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
                 }

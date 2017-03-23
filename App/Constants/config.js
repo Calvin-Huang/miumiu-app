@@ -6,3 +6,4 @@ export const TIMEOUT = 6000;
 export const AUTHENTICATION_TOKEN_KEY = '';
 export const BASE_URL = '';
 export const REFRESH_TOKEN_PATH = 'auth/token';
+export const DATETIME_FORMAT = 'YYYY/MM/DD HH:mm';

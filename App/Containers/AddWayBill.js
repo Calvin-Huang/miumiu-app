@@ -112,7 +112,7 @@ class AddWayBill extends NavigatorComponent {
             </View>
           </KeyboardAvoidingView>
 
-          <HUD ref="HUD" type="success" />
+          <HUD ref="HUD" type="success" message="送出成功" />
         </View>
       </TouchableWithoutFeedback>
     )

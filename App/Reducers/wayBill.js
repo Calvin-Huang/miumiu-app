@@ -35,6 +35,7 @@ export default function wayBill(state = initialState, action) {
     case ADD_WAYBILL_FAILED:
       return {
         ...state,
+        isRequesting: false,
         error: action.error,
       };
     default:

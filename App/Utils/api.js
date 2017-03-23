@@ -120,9 +120,10 @@ async function handleResponse(response) {
   }
 
   const responseBody = await response.text();
+  const responseJSON = JSON.parse((!responseBody || responseBody === '') ? '{}' : responseBody);
 
   // Store Authorization to AsyncStorage
-  const { token } = JSON.parse(responseBody || '{}');
+  const { token } = responseJSON;
   if (token) {
     let oldJwtToken;
 
@@ -145,7 +146,7 @@ async function handleResponse(response) {
   return {
     status,
     headers,
-    body: JSON.parse(responseBody),
+    body: responseJSON,
   };
 }
 

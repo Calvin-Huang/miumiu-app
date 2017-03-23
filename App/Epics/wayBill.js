@@ -33,7 +33,7 @@ export function refreshingWayBills(action$) {
     .switchMap(async (_) => {
       try {
         // Reset to first page.
-        const response = await get(`shipping?page=${action.currentPage}`);
+        const response = await get(`shipping?page=1`);
 
         return refreshWayBillsSuccess(response);
       } catch (error) {

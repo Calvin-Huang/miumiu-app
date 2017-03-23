@@ -38,7 +38,7 @@ class AddWayBill extends NavigatorComponent {
     super(props);
 
     this.state = {
-      id: '',
+      shippingNo: '',
     };
   }
 
@@ -63,8 +63,8 @@ class AddWayBill extends NavigatorComponent {
                 placeholder="請輸入單號"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
-                onChangeText={(text) => { this.setState({ id: text }); }}
-                value={this.state.text}
+                onChangeText={(shippingNo) => { this.setState({ shippingNo }); }}
+                value={this.state.shippingNo}
               />
             </View>
           </View>

@@ -15,12 +15,14 @@ import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from 'color';
+import moment from 'moment';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { showUserQRCode } from '../Actions';
+import { DATETIME_FORMAT } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
   static navRightButton({ data: { shippingNo, status } }, navigator, index, navState) {
@@ -87,7 +89,7 @@ class WayBill extends NavigatorComponent {
               到貨日
             </Text>
             <Text style={styles.infoFieldValueText}>
-              {data.arrivedAt || '-'}
+              {data.arrivedAt ? moment(data.arrivedAt).format(DATETIME_FORMAT) : '-'}
             </Text>
           </View>
           <View style={styles.listViewRow}>
@@ -95,11 +97,11 @@ class WayBill extends NavigatorComponent {
               到期日
             </Text>
             <Text style={styles.infoFieldValueText}>
-              {data.expiredAt || '-'}
+              {data.expiredAt ? moment(data.expiredAt).format(DATETIME_FORMAT) : '-'}
             </Text>
           </View>
           <View style={styles.listViewRow}>
-            <Text style={MiumiuTheme.listViewText}>
+            <Text style={{ ...MiumiuTheme.listViewText, color: '#F6A623' }}>
               物流費用
             </Text>
             <Text style={{ ...styles.infoFieldValueText, color: '#F6A623' }}>

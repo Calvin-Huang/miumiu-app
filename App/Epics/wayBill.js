@@ -10,8 +10,10 @@ import {
   fetchWayBillsFailed,
   refreshWayBillsSuccess,
   refreshWayBillsFailed,
+  addWayBillSuccess,
+  addWayBillFailed,
 } from '../Actions/wayBillActions';
-import { get } from '../Utils/api';
+import { get, post } from '../Utils/api';
 
 export function fetchWayBills(action$) {
   return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
@@ -31,11 +33,24 @@ export function refreshingWayBills(action$) {
     .switchMap(async (_) => {
       try {
         // Reset to first page.
-        const response = await get(`shipping?page=${action.currentPage}`);
+        const response = await get(`shipping?page=1`);
 
         return refreshWayBillsSuccess(response);
       } catch (error) {
         return refreshWayBillsFailed(error);
+      }
+    });
+}
+
+export function addingWayBill(action$) {
+  return action$.ofType(ActionTypes.ADD_WAYBILL)
+    .switchMap(async (action) => {
+      try {
+        const response = await post('shipping', { shipping_no: action.shippingNo });
+
+        return addWayBillSuccess(response);
+      } catch (error) {
+        return addWayBillFailed(error);
       }
     });
 }

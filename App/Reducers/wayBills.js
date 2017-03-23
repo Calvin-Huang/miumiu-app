@@ -84,7 +84,7 @@ export default function wayBills(state = initialState, action) {
     case REFRESH_WAYBILLS_FAILED:
       return {
         data: [],
-        currentPage,
+        currentPage: 1,
         isRefreshing: false,
         isFetching: false,
         error: action.error,

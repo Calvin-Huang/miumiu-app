@@ -56,8 +56,14 @@ export default class UrgentProcessing extends NavigatorComponent {
   constructor(props) {
     super(props);
 
+    const { data } = props.route;
+    const { shippingNo } = data || {};
+
     this.state = {
-      data: props.route.data,
+      data,
+      disableShippingNoTextField: !shippingNo,
+      shippingNo: shippingNo,
+      logistic: '',
     };
   }
 
@@ -75,19 +81,20 @@ export default class UrgentProcessing extends NavigatorComponent {
             </View>
           </MiumiuThemeNavigatorBackground>
           <View style={styles.body}>
-            { (!data || !data.id) &&
-              <View style={MiumiuTheme.textFieldGroup}>
-                <MKTextField
-                  floatingLabelEnabled={true}
-                  textInputStyle={{ height: 31 }}
-                  underlineSize={1}
-                  highlightColor="#D8D8D8"
-                  placeholder="請輸入單號"
-                  placeholderTextColor="#9E9E9E"
-                  style={{ backgroundColor: 'white' }}
-                />
-              </View>
-            }
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="請輸入單號"
+                placeholderTextColor="#9E9E9E"
+                style={{ backgroundColor: 'white' }}
+                editable={this.state.disableShippingNoTextField}
+                onChangeText={(shippingNo) => this.setState({ shippingNo })}
+                value={this.state.shippingNo}
+              />
+            </View>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 floatingLabelEnabled={true}
@@ -97,6 +104,8 @@ export default class UrgentProcessing extends NavigatorComponent {
                 placeholder="請輸入貨運公司名稱"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
+                onChangeText={(logistic) => this.setState({ logistic })}
+                value={this.state.logistic}
               />
             </View>
 

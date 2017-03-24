@@ -44,6 +44,7 @@ import DeliveryInfoList from './DeliveryInfoList';
 import ServiceStores from './ServiceStores';
 import PickUpPassword from './PickUpPassword';
 import FAQ from './FAQ';
+import ContactUs from './ContactUs';
 import Settings from './Settings';
 import SignIn from './SignIn';
 import RegistrationCompleted from './RegistrationCompleted';
@@ -120,6 +121,13 @@ class Main extends Component {
           },
           name: '常見問題',
           component: FAQ,
+          isSelected: false,
+        }, {
+          icon: {
+            name: 'md-chatboxes',
+          },
+          name: '聯絡我們',
+          component: ContactUs,
           isSelected: false,
         }, {
           icon: {

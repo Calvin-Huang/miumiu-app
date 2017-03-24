@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   Modal,
+  ActivityIndicator,
   KeyboardAvoidingView,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -23,6 +24,7 @@ import Color from 'color';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions';
+import { calculateFee } from '../Actions/calculatorActions';
 import store from '../storeInstance';
 
 class Calculator extends NavigatorComponent {
@@ -61,7 +63,30 @@ class Calculator extends NavigatorComponent {
     };
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.isRequesting !== props.isRequesting) {
+      if (!props.isRequesting) {
+        dismissKeyboard();
+
+        if (!props.error) {
+          this.setState({ showModal: true });
+        } else {
+          Alert.alert(
+            '發生了一點問題',
+            props.error.message,
+          );
+        }
+      }
+    }
+  }
+
+  calculateButtonClicked() {
+    const { width, height, length, weight } = this.state;
+    this.props.calculateFee(width, height, length, weight);
+  }
+
   render() {
+    const { fee, isRequesting } = this.props;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
@@ -145,12 +170,12 @@ class Calculator extends NavigatorComponent {
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
-                onPress={() => {
-                  dismissKeyboard();
-                  this.setState({ showModal: true });
-                }}
+                onPress={this.calculateButtonClicked.bind(this)}
               >
                 <Text style={MiumiuTheme.actionButtonText}>開始試算</Text>
+                { isRequesting &&
+                  <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+                }
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -167,7 +192,7 @@ class Calculator extends NavigatorComponent {
               <TouchableWithoutFeedback>
                 <View style={MiumiuTheme.modalBody}>
                   <Text style={styles.heroText}>
-                    運費試算金額為 <Text style={styles.highlightHeroText}>$200</Text>
+                    運費試算金額為 <Text style={styles.highlightHeroText}>${fee}</Text>
                   </Text>
                   <View
                     style={{
@@ -233,10 +258,16 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { generalRequest, calculator } = state;
+  return {
+    ...ownProps,
+    isRequesting: generalRequest.isRequesting,
+    error: generalRequest.error,
+    fee: calculator.data.fee,
+  };
 };
 
 export default connect(
   mapStateToProps,
-  {}
+  { calculateFee }
 )(Calculator);

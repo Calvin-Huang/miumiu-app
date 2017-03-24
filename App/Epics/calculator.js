@@ -10,7 +10,7 @@ import { calculateFee, calculateFeeDone } from '../Actions/calculatorActions';
 
 import { get } from '../Utils/api';
 
-export function calculator(action$) {
+export function calculate(action$) {
   return action$.ofType(CALCULATE_FEE)
     .switchMap((action) => {
       return new Observable(async (observer) => {

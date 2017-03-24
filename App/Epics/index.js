@@ -7,6 +7,7 @@ import { combineEpics } from 'redux-observable';
 
 import * as userEpics from './user';
 import * as wayBillEpics from './wayBill';
+import * as calculator from './calculator';
 
 // export default combineEpics;
 
@@ -15,6 +16,7 @@ export default combineEpics(
   wayBillEpics.refreshingWayBills,
   wayBillEpics.addingWayBill,
   wayBillEpics.urgentWayBill,
+  calculator.calculate,
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
   userEpics.userSignOut,

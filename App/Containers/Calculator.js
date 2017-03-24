@@ -87,6 +87,8 @@ class Calculator extends NavigatorComponent {
 
   render() {
     const { fee, isRequesting } = this.props;
+    const { width, height, length, weight } = this.state;
+    const submittable = (width && height && length && weight);
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
@@ -170,9 +172,15 @@ class Calculator extends NavigatorComponent {
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
+                disabled={!submittable}
                 onPress={this.calculateButtonClicked.bind(this)}
               >
-                <Text style={MiumiuTheme.actionButtonText}>開始試算</Text>
+                <Text style={{
+                  ...MiumiuTheme.actionButtonText,
+                  opacity: submittable ? 1 : 0.7,
+                }}>
+                  開始試算
+                </Text>
                 { isRequesting &&
                   <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
                 }

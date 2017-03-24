@@ -6,3 +6,4 @@ export * from './navigationBarActions';
 export * from './sideDrawerActions';
 export * from './userActions';
 export * from './wayBillActions';
+export * from './calculatorActions';

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { CALCULATE_FEE } from '../Constants/actionTypes';
 import { generalRequest, generalRequestSuccess, generalRequestFailed } from '../Actions/generalRequestActions';
-import { calculateFee, calculateFeeDone } from '../Actions/calculatorActions';
+import { calculateFeeDone } from '../Actions/calculatorActions';
 
 import { get } from '../Utils/api';
 

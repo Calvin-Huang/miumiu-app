@@ -7,7 +7,7 @@ import humps from 'humps';
 import { CALCULATE_FEE_DONE } from '../Constants/actionTypes';
 
 const initialState = {
-  data: null,
+  data: {},
 };
 
 export default function calculate(state = initialState, action) {

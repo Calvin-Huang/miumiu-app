@@ -88,13 +88,13 @@ class Main extends Component {
           name: 'QRCode 取貨',
           component: Component,
           isSelected: false,
-        }, {
-          icon: {
-            name: 'md-lock',
-          },
-          name: '取貨鎖設定',
-          component: PickUpPassword,
-          isSelected: false,
+        // }, {
+        //   icon: {
+        //     name: 'md-lock',
+        //   },
+        //   name: '取貨鎖設定',
+        //   component: PickUpPassword,
+        //   isSelected: false,
         }, {
           icon: {
             name: 'md-flag',

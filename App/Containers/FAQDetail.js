@@ -58,10 +58,12 @@ class FAQDetail extends NavigatorComponent {
                 <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
               </TouchableOpacity>
             }
-            <HtmlRender
-              value={content}
-              onLinkPress={this.onLinkPress.bind(this)}
-            />
+            { !isFetching && !error &&
+              <HtmlRender
+                value={content}
+                onLinkPress={this.onLinkPress.bind(this)}
+              />
+            }
           </View>
         </ScrollView>
       </View>

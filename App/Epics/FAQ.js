@@ -5,7 +5,13 @@
 import { Observable } from 'rxjs';
 
 import * as ActionTypes from '../Constants/actionTypes';
-import { fetchFAQsSuccess, fetchFAQsFailed, refreshFAQsSuccess } from '../Actions/FAQActions';
+import {
+  fetchFAQsSuccess,
+  fetchFAQsFailed,
+  refreshFAQsSuccess,
+  fetchFAQSuccess,
+  fetchFAQFailed,
+} from '../Actions/FAQActions';
 
 import { get } from '../Utils/api';
 
@@ -31,6 +37,19 @@ export function refreshFAQs(action$) {
         return refreshFAQsSuccess(response);
       } catch (error) {
         return fetchFAQsFailed(error);
+      }
+    });
+}
+
+export function fetchFAQ(action$) {
+  return action$.ofType(ActionTypes.FETCH_FAQ)
+    .switchMap(async (action) => {
+      try {
+        const response = await get(`faq/${action.FAQ.id}`);
+
+        return fetchFAQSuccess(response);
+      } catch (error) {
+        return fetchFAQFailed(error);
       }
     });
 }

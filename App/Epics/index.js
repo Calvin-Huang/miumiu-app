@@ -22,4 +22,5 @@ export default combineEpics(
   userEpics.userSignIn,
   userEpics.userSignOut,
   FAQ.fetchFAQs,
+  FAQ.refreshFAQs,
 );

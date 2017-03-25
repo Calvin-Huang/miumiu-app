@@ -10,8 +10,29 @@ export function fetchFAQs() {
   };
 }
 
-export function fetchFAQsDone(response) {
+export function fetchFAQsSuccess(response) {
   return {
-    type: Actions.FETCH_FAQS_DONE,
+    type: Actions.FETCH_FAQS_SUCCESS,
+    response,
+  };
+}
+
+export function fetchFAQsFailed(error) {
+  return {
+    type: Actions.FETCH_FAQS_FAILED,
+    error,
+  };
+}
+
+export function refreshFAQs() {
+  return {
+    type: Actions.REFRESH_FAQS,
+  };
+}
+
+export function refreshFAQsSuccess(response) {
+  return {
+    type: Actions.REFRESH_WAYBILLS_SUCCESS,
+    response,
   };
 }

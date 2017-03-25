@@ -35,7 +35,7 @@ class FAQDetail extends NavigatorComponent {
   }
 
   render() {
-    const { FAQ, isFetching, error } = this.props;
+    const { route: { data }, FAQ, isFetching, error } = this.props;
     const { title, content } = FAQ;
 
     return (
@@ -57,7 +57,7 @@ class FAQDetail extends NavigatorComponent {
             { error &&
               <TouchableOpacity
                 style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-                onPress={() => { this.props.fetchFAQ(data); }}
+                onPress={() => { this.props.fetchFAQ(data.id); }}
               >
                 <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
               </TouchableOpacity>

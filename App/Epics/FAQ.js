@@ -5,27 +5,32 @@
 import { Observable } from 'rxjs';
 
 import * as ActionTypes from '../Constants/actionTypes';
-import { fetchFAQs, fetchFAQsDone } from '../Actions/FAQActions';
-import { generalRequest, generalRequestSuccess, generalRequestFailed } from '../Actions/generalRequestActions';
+import { fetchFAQsSuccess, fetchFAQsFailed, refreshFAQsSuccess } from '../Actions/FAQActions';
 
 import { get } from '../Utils/api';
 
 export function fetchFAQs(action$) {
   return action$.ofType(ActionTypes.FETCH_FAQS)
-    .switchMap((_) => {
-      return new Object(async (observer) => {
-        observer.next(generalRequest());
+    .switchMap(async (_) => {
+      try {
+        const response = await get('faq');
 
-        try {
-          const response = await get('faq');
-          observer.next(fetchFAQsDone(response));
+        return fetchFAQsSuccess(response);
+      } catch (error) {
+        return fetchFAQsFailed(error);
+      }
+    });
+}
 
-          observer.next(generalRequestSuccess());
-        } catch (error) {
-          observer(generalRequestFailed(error));
-        }
+export function refreshFAQs(action$) {
+  return action$.ofType(ActionTypes.REFRESH_FAQS)
+    .switchMap(async (_) => {
+      try {
+        const response = await get('faq');
 
-        observer.complete();
-      });
+        return refreshFAQsSuccess(response);
+      } catch (error) {
+        return fetchFAQsFailed(error);
+      }
     });
 }

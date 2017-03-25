@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Linking,
+  TouchableOpacity,
 } from 'react-native';
 
 import { connect } from 'react-redux';

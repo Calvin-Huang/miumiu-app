@@ -25,7 +25,9 @@ class FAQDetail extends NavigatorComponent {
   }
 
   componentWillMount() {
-    this.props.fetchFAQ(this.props.route.data);
+    if (!this.props.FAQ.content) {
+      this.props.fetchFAQ(this.props.route.data.id);
+    }
   }
 
   onLinkPress(url) {
@@ -33,8 +35,9 @@ class FAQDetail extends NavigatorComponent {
   }
 
   render() {
-    const { route: { data }, isFetching, error } = this.props;
-    const { title, content } = data;
+    const { FAQ, isFetching, error } = this.props;
+    const { title, content } = FAQ;
+
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
@@ -83,21 +86,16 @@ const styles = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { FAQ } = state;
-  if (FAQ.data || FAQ.error) {
-    return {
-      ...ownProps,
-      isFetching: state.FAQ.isFetching,
-      route: {
-        data: {
-          ...state.FAQ.data,
-        }
-      },
-      error: state.FAQ.error,
-    };
-  } else {
-    return ownProps;
-  }
+  const { FAQ, FAQs } = state;
+  const { data } = ownProps.route;
+  const faq = FAQs.data.find((object) => object.id === data.id);
+
+  return {
+    ...ownProps,
+    isFetching: FAQ.isFetching,
+    error: FAQ.error,
+    FAQ: faq,
+  };
 };
 
 export default connect(

@@ -34,7 +34,7 @@ export default function FAQ(state = initialState, action) {
       return {
         ...state,
         isFetching: false,
-        error: null,
+        error: action.error,
       };
     default:
       return state;

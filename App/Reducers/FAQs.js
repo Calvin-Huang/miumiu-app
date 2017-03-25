@@ -8,6 +8,7 @@ import {
   FETCH_FAQS_FAILED,
   REFRESH_FAQS,
   REFRESH_FAQS_SUCCESS,
+  FETCH_FAQ_SUCCESS,
 } from '../Constants/actionTypes';
 
 const initialState = {
@@ -53,6 +54,18 @@ export default function FAQs(state = initialState, action) {
         isRefreshing: false,
         data: action.response,
         error: null,
+      };
+    case FETCH_FAQ_SUCCESS:
+      const { data } = state;
+      const { response } = action;
+
+      const faq = data.find((eachData) => eachData.id === response.id);
+
+      data[data.indexOf(faq)] = { ...faq, ...response };
+
+      return {
+        ...state,
+        data,
       };
     default:
       return state;

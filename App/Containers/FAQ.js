@@ -7,6 +7,9 @@ import {
   View,
   Text,
   TextInput,
+  ListView,
+  ActivityIndicator,
+  RefreshControl,
   Animated,
   Easing,
   TouchableWithoutFeedback,
@@ -14,7 +17,6 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import GiftedListView from 'react-native-gifted-listview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
@@ -22,7 +24,9 @@ import dismissKeyboard from 'dismissKeyboard';
 import { NavigatorComponent } from '../Components';
 import FAQDetail from './FAQDetail';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer } from '../Actions';
+import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchFAQs, refreshFAQs } from '../Actions';
+
+const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class FAQ extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -45,7 +49,18 @@ class FAQ extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
+      FAQs: dataSource.cloneWithRows(props.FAQs),
     }
+  }
+
+  componentDidMount() {
+    this.props.fetchFAQs();
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      FAQs: dataSource.cloneWithRows(props.FAQs),
+    });
   }
 
   showSearchBar() {
@@ -157,16 +172,25 @@ class FAQ extends NavigatorComponent {
     );
   }
 
-  renderPaginationFetchingView(paginateCallback) {
-    return (
-      <View style={MiumiuTheme.paginationFetchingView}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
+  renderFooter() {
+    if (this.props.error) {
+      return (
+        <TouchableOpacity
+          style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+          onPress={() => { this.props.fetchFAQs(); }}
+        >
+          <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
+        </TouchableOpacity>
+      );
 
-  renderPaginationAllLoadedView() {
-    return null;
+    } else if (this.props.isFetching) {
+      return (
+        <View style={styles.paginationView}>
+          <ActivityIndicator />
+        </View>
+      );
+
+    }
   }
 
   render() {
@@ -228,22 +252,18 @@ class FAQ extends NavigatorComponent {
           </LinearGradient>
         </Animated.View>
 
-        <GiftedListView
-          ref="listView"
-          style={styles.wayBills}
-          rowView={this.renderRowView.bind(this)}
-          onFetch={this.fetchDeliveryAddresses.bind(this)}
-          paginationWaitingView={this.renderPaginationFetchingView.bind(this)}
-          paginationAllLoadedView={this.renderPaginationAllLoadedView.bind(this)}
-          onEndReached={() => { this.refs.listView._onPaginate(); }}
-          customStyles={{
-            paginationView: {
-              height: 60,
-            },
-          }}
-        >
-
-        </GiftedListView>
+        <ListView
+          dataSource={this.state.FAQs}
+          renderRow={this.renderRowView.bind(this)}
+          renderFooter={this.renderFooter.bind(this)}
+          enableEmptySections={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.isRefreshing}
+              onRefresh={this.props.refreshFAQs.bind(this)}
+            />
+          }
+        />
       </View>
     );
   }
@@ -255,13 +275,25 @@ const styles = {
     paddingVertical: 16,
     paddingLeft: 17,
   },
+  paginationView: {
+    height: 60,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { FAQs } = state;
+  return {
+    ...ownProps,
+    isFetching: FAQs.isFetching,
+    isRefreshing: FAQs.isRefreshing,
+    FAQs: FAQs.data,
+    error: FAQs.error,
+  };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar }
+  { showNavigationBar, hideNavigationBar, fetchFAQs, refreshFAQs }
 )(FAQ);

@@ -8,6 +8,7 @@ import generalRequest from './generalRequest';
 import wayBill from './wayBill';
 import wayBills from './wayBills';
 import calculator from './calculator';
+import FAQs from './FAQs';
 import navigationBar from './navigationBar';
 import sideDrawer from './sideDrawer';
 import user, { userQRCodeModal } from './user';
@@ -17,6 +18,7 @@ export default combineReducers({
   wayBill,
   wayBills,
   calculator,
+  FAQs,
   navigationBar,
   sideDrawer,
   user,

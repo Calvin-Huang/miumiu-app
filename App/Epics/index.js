@@ -8,6 +8,7 @@ import { combineEpics } from 'redux-observable';
 import * as userEpics from './user';
 import * as wayBillEpics from './wayBill';
 import * as calculator from './calculator';
+import * as FAQ from './FAQ';
 
 // export default combineEpics;
 
@@ -20,4 +21,6 @@ export default combineEpics(
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
   userEpics.userSignOut,
+  FAQ.fetchFAQs,
+  FAQ.refreshFAQs,
 );

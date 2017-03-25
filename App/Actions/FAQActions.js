@@ -37,10 +37,10 @@ export function refreshFAQsSuccess(response) {
   };
 }
 
-export function fetchFAQ(previousFAQ) {
+export function fetchFAQ(id) {
   return {
     type: Actions.FETCH_FAQ,
-    FAQ: previousFAQ,
+    id,
   };
 }
 

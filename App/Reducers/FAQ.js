@@ -5,8 +5,8 @@
 import { FETCH_FAQ, FETCH_FAQ_SUCCESS, FETCH_FAQ_FAILED } from '../Constants/actionTypes';
 
 const initialState = {
+  id: null,
   isFetching: false,
-  data: null,
   error: null,
 };
 
@@ -16,18 +16,14 @@ export default function FAQ(state = initialState, action) {
     // Concat existed FAQ.
     case FETCH_FAQ:
       return {
+        id: action.id,
         isFetching: true,
-        data: {
-          ...action.FAQ,
-        },
         error: null,
       };
     case FETCH_FAQ_SUCCESS:
       return {
+        ...state,
         isFetching: false,
-        data: {
-          ...action.response,
-        },
         error: null,
       };
     case FETCH_FAQ_FAILED:

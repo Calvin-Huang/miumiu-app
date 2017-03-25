@@ -45,7 +45,7 @@ export function fetchFAQ(action$) {
   return action$.ofType(ActionTypes.FETCH_FAQ)
     .switchMap(async (action) => {
       try {
-        const response = await get(`faq/${action.FAQ.id}`);
+        const response = await get(`faq/${action.id}`);
 
         return fetchFAQSuccess(response);
       } catch (error) {

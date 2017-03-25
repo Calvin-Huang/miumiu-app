@@ -6,22 +6,25 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
+  ActivityIndicator,
   ScrollView,
   Linking,
 } from 'react-native';
 
+import { connect } from 'react-redux';
 import HtmlRender from 'react-native-html-render';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
+import { fetchFAQ } from '../Actions/FAQActions';
 
-export default class FAQDetail extends NavigatorComponent {
+class FAQDetail extends NavigatorComponent {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      data: props.route.data,
-    };
+  componentWillMount() {
+    this.props.fetchFAQ(this.props.route.data);
   }
 
   onLinkPress(url) {
@@ -29,7 +32,8 @@ export default class FAQDetail extends NavigatorComponent {
   }
 
   render() {
-    const { title, content } = this.state.data;
+    const { route: { data }, isFetching, error } = this.props;
+    const { title, content } = data;
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
@@ -41,6 +45,19 @@ export default class FAQDetail extends NavigatorComponent {
         </MiumiuThemeNavigatorBackground>
         <ScrollView>
           <View style={styles.body}>
+            { isFetching &&
+              <View style={MiumiuTheme.paginationView}>
+                <ActivityIndicator />
+              </View>
+            }
+            { error &&
+              <TouchableOpacity
+                style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+                onPress={() => { this.props.fetchFAQ(data); }}
+              >
+                <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
+              </TouchableOpacity>
+            }
             <HtmlRender
               value={content}
               onLinkPress={this.onLinkPress.bind(this)}
@@ -61,3 +78,26 @@ const styles = {
     backgroundColor: 'white',
   },
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { FAQ } = state;
+  if (FAQ.data || FAQ.error) {
+    return {
+      ...ownProps,
+      isFetching: state.FAQ.isFetching,
+      route: {
+        data: {
+          ...state.FAQ.data,
+        }
+      },
+      error: state.FAQ.error,
+    };
+  } else {
+    return ownProps;
+  }
+};
+
+export default connect(
+  mapStateToProps,
+  { fetchFAQ }
+)(FAQDetail);

@@ -275,7 +275,7 @@ class WayBills extends NavigatorComponent {
 
     } else if (this.props.isFetching) {
       return (
-        <View style={styles.paginationView}>
+        <View style={MiumiuTheme.paginationView}>
           <ActivityIndicator />
         </View>
       );
@@ -448,11 +448,6 @@ const styles = {
   wayBillState: {
     marginLeft: 12,
     marginRight: 29,
-  },
-  paginationView: {
-    height: 60,
-    justifyContent: 'center',
-    backgroundColor: 'white',
   },
   emptyStateView: {
     flexDirection: 'column',

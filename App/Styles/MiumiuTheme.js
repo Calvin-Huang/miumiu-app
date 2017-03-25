@@ -197,4 +197,9 @@ export default style = {
     flex: 1,
     flexDirection: 'column',
   },
+  paginationView: {
+    height: 60,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
 };

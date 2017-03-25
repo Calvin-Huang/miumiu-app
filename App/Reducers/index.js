@@ -8,6 +8,7 @@ import generalRequest from './generalRequest';
 import wayBill from './wayBill';
 import wayBills from './wayBills';
 import calculator from './calculator';
+import FAQ from './FAQ';
 import FAQs from './FAQs';
 import navigationBar from './navigationBar';
 import sideDrawer from './sideDrawer';
@@ -18,6 +19,7 @@ export default combineReducers({
   wayBill,
   wayBills,
   calculator,
+  FAQ,
   FAQs,
   navigationBar,
   sideDrawer,

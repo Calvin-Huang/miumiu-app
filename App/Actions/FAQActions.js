@@ -36,3 +36,24 @@ export function refreshFAQsSuccess(response) {
     response,
   };
 }
+
+export function fetchFAQ(previousFAQ) {
+  return {
+    type: Actions.FETCH_FAQ,
+    FAQ: previousFAQ,
+  };
+}
+
+export function fetchFAQSuccess(response) {
+  return {
+    type: Actions.FETCH_FAQ_SUCCESS,
+    response,
+  };
+}
+
+export function fetchFAQFailed(error) {
+  return {
+    type: Actions.FETCH_FAQ_FAILED,
+    error,
+  };
+}

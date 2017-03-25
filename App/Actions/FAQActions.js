@@ -32,7 +32,7 @@ export function refreshFAQs() {
 
 export function refreshFAQsSuccess(response) {
   return {
-    type: Actions.REFRESH_WAYBILLS_SUCCESS,
+    type: Actions.REFRESH_FAQS_SUCCESS,
     response,
   };
 }

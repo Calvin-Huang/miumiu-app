@@ -7,7 +7,7 @@
 
 import HttpError from 'standard-http-error';
 
-import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH } from '../Constants/config';
+import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH, API_DEV_MODE } from '../Constants/config';
 import { getAuthenticationToken, setAuthenticationToken } from './authentication';
 import { JWTExpiredError } from './errors';
 
@@ -36,7 +36,7 @@ export function url(path) {
   return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 
-async function request(method, path, body, suppressRedBox = true) {
+async function request(method, path, body, suppressRedBox = API_DEV_MODE) {
   const endPoint = url(path);
 
   let token;

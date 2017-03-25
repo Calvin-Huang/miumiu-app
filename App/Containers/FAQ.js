@@ -185,7 +185,7 @@ class FAQ extends NavigatorComponent {
 
     } else if (this.props.isFetching) {
       return (
-        <View style={styles.paginationView}>
+        <View style={MiumiuTheme.paginationView}>
           <ActivityIndicator />
         </View>
       );
@@ -274,11 +274,6 @@ const styles = {
     ...MiumiuTheme.listViewRow,
     paddingVertical: 16,
     paddingLeft: 17,
-  },
-  paginationView: {
-    height: 60,
-    justifyContent: 'center',
-    backgroundColor: 'white',
   },
 };
 

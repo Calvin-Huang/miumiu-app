@@ -9,6 +9,7 @@ import {
   ScrollView,
   Image,
   Text,
+  Modal,
   KeyboardAvoidingView,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -24,7 +25,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MKTextField } from 'react-native-material-kit';
 
-import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Components';
+import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD, PhotoView } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
 class ServiceStore extends NavigatorComponent {
@@ -38,6 +39,7 @@ class ServiceStore extends NavigatorComponent {
     this.state = {
       width: 0,
       width: 0,
+      showPhotoView: false,
     };
   }
 
@@ -73,7 +75,7 @@ class ServiceStore extends NavigatorComponent {
 
   render() {
     const { data } = this.props;
-    const { width, height } = this.state;
+    const { width, height, showPhotoView } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
@@ -127,19 +129,35 @@ class ServiceStore extends NavigatorComponent {
                     </TouchableWithoutFeedback>
                   </View>
                 </View>
-                <Image
-                  style={{
-                    marginTop: 10,
-                    width: width,
-                    height: height,
-                    flex: 1,
-                  }}
-                  source={{ uri: data.image }}
-                />
+                <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: true })}>
+                  <Image
+                    style={{
+                      marginTop: 10,
+                      width: width,
+                      height: height,
+                      flex: 1,
+                    }}
+                    source={{ uri: data.image }}
+                  />
+                </TouchableWithoutFeedback>
               </View>
             </TouchableWithoutFeedback>
           </ScrollView>
           <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
+          <Modal visible={showPhotoView} animationType="fade" transparent={true}>
+            <View style={styles.photoViewContainer}>
+              <PhotoView
+                minimumZoomScale={1}
+                maximumZoomScale={3}
+                androidScaleType="center"
+                style={{ width: width, height: width }}
+                source={{ uri: data.image }}
+              />
+              <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: false })}>
+                <Icon name="md-close" size={24} color="white" style={styles.dismissButton} />
+              </TouchableWithoutFeedback>
+            </View>
+          </Modal>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -159,6 +177,15 @@ const styles = {
     right: 0,
     bottom: 0,
     left: 0,
+  },
+  photoViewContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)'
+  },
+  dismissButton: {
+    position: 'absolute',
+    top: 29,
+    right: 21,
   },
 };
 

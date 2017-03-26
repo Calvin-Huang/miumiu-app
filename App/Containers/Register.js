@@ -8,6 +8,8 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -19,20 +21,48 @@ import { MKTextField, MKCheckbox } from 'react-native-material-kit';
 import { NavigatorComponent } from '../Components';
 import ConfirmRegistrationCode from './ConfirmRegistrationCode';
 import { MiumiuTheme } from '../Styles';
+import { generalRequestFailed, userRegister } from '../Actions';
 
-export default class Register extends NavigatorComponent {
+class Register extends NavigatorComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      areaCode: '+853',
       email: null,
       phone: null,
       password: null,
+      passwordConfirmation: null,
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if (!props.isRequesting && !props.error && props.timestamp) {
+      const { timestamp } = this.props;
+      const { account } = this.state;
+
+      this.pushToNextComponent(ConfirmRegistrationCode, { account, timestamp });
+    }
+  }
+
+  submitRegistration() {
+    if (this.props.isRequesting) {
+      return;
+    }
+
+    const { account, password, passwordConfirmation, checkedServiceTerm } = this.state;
+    if (password !== passwordConfirmation) {
+      this.props.generalRequestFailed(new Error('密碼確認錯誤，請檢查密碼'));
+    } else if (!checkedServiceTerm) {
+      this.props.generalRequestFailed(new Error('請同意使用協議'));
+    } else {
+      this.props.userRegister(account, password, passwordConfirmation);
     }
   }
 
   render() {
+    const { account, password, passwordConfirmation } = this.state;
+    const { isRequesting, error } = this.props;
+
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <LinearGradient
@@ -42,35 +72,19 @@ export default class Register extends NavigatorComponent {
           style={styles.container}
         >
           <View style={styles.body}>
-            <Text style={styles.registerHintText}>
-              手機或信箱可以擇一填寫
-            </Text>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
-                keyboardType="numeric"
-                floatingLabelEnabled={true}
-                textInputStyle={{ height: 31 }}
-                underlineSize={1}
-                highlightColor="#D8D8D8"
-                placeholder="手機號碼"
-                placeholderTextColor="#9E9E9E"
-                style={styles.textField}
-                onChangeText={(text) => { this.setState({ width: text }); }}
-                value={this.state.phone}
-              />
-            </View>
-            <View style={MiumiuTheme.textFieldGroup}>
-              <MKTextField
+                autoCapitalize="none"
                 keyboardType="email-address"
                 floatingLabelEnabled={true}
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
                 highlightColor="#D8D8D8"
-                placeholder="Email"
+                placeholder="手機號碼或Email信箱"
                 placeholderTextColor="#9E9E9E"
                 style={styles.textField}
-                onChangeText={(text) => { this.setState({ width: text }); }}
-                value={this.state.email}
+                onChangeText={(account) => { this.setState({ account }); }}
+                value={account}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
@@ -83,10 +97,31 @@ export default class Register extends NavigatorComponent {
                 placeholder="密碼"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
-                onChangeText={(text) => { this.setState({ weight: text }); }}
-                value={this.state.password}
+                onChangeText={(password) => { this.setState({ password }); }}
+                value={password}
               />
             </View>
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                password={true}
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="再次確認密碼"
+                placeholderTextColor="#9E9E9E"
+                style={{ backgroundColor: 'white' }}
+                onChangeText={(passwordConfirmation) => { this.setState({ passwordConfirmation }); }}
+                value={passwordConfirmation}
+              />
+            </View>
+            { error &&
+              <View style={MiumiuTheme.textFieldGroup}>
+                <Text style={MiumiuTheme.errorText}>
+                  {error.message}
+                </Text>
+              </View>
+            }
             <View style={styles.serviceTermGroup}>
               <MKCheckbox
                 fillColor="white"
@@ -105,7 +140,7 @@ export default class Register extends NavigatorComponent {
           </View>
           <TouchableOpacity
             style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
-            onPress={() => { this.pushToNextComponent(ConfirmRegistrationCode); }}
+            onPress={this.submitRegistration.bind(this)}
           >
             <LinearGradient
               start={{ x: 0.485544682, y: 1.44908902 }} end={{ x: 0.485544682, y: -0.811377672 }}
@@ -116,6 +151,9 @@ export default class Register extends NavigatorComponent {
             <Text style={MiumiuTheme.buttonText}>
               註冊
             </Text>
+            { isRequesting &&
+              <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+            }
           </TouchableOpacity>
         </LinearGradient>
       </TouchableWithoutFeedback>
@@ -128,7 +166,7 @@ const styles = {
     flex: 1,
   },
   body: {
-    marginTop: 64,
+    marginTop: 74,
   },
   inlineFieldGroup: {
     flexDirection: 'row',
@@ -166,3 +204,20 @@ const styles = {
     left: 0,
   },
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { register, generalRequest } = state;
+  console.log('>>>>> mapStateToProps >>>>>');
+  console.log(register);
+  return {
+    ...ownProps,
+    timestamp: register.timestamp,
+    isRequesting: generalRequest.isRequesting,
+    error: generalRequest.error,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  { generalRequestFailed, userRegister }
+)(Register);

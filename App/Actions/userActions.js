@@ -32,6 +32,22 @@ export function userSignInFailed(error) {
   };
 }
 
+export function userRegister(account, password, passwordConfirmation) {
+  return {
+    type: ActionTypes.USER_REGISTER,
+    account,
+    password,
+    passwordConfirmation,
+  };
+}
+
+export function userRegisterSuccess(response) {
+  return {
+    type: ActionTypes.USER_REGISTER_SUCCESS,
+    response,
+  };
+}
+
 export function userSignOut() {
   return {
     type: ActionTypes.USER_SIGN_OUT,

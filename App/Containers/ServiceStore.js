@@ -27,13 +27,14 @@ import { MKTextField } from 'react-native-material-kit';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD, PhotoView } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
+import { fetchServiceStore } from '../Actions';
 
 class ServiceStore extends NavigatorComponent {
   constructor(props) {
     super(props);
 
-    if (props.data.image) {
-      this.resizeImage(props.data.image);
+    if (props.serviceStore.imageUrl) {
+      this.resizeImage(props.serviceStore.imageUrl);
     }
 
     this.state = {
@@ -43,16 +44,22 @@ class ServiceStore extends NavigatorComponent {
     };
   }
 
+  componentWillMount() {
+    if (!this.props.serviceStore.imageUrl) {
+      this.props.fetchServiceStore(this.props.route.data.id);
+    }
+  }
+
   componentWillReceiveProps(props) {
-    if (this.props.data.image !== props.data.image) {
-      this.resizeImage(props.data.image);
+    if (this.props.serviceStore.imageUrl !== props.serviceStore.imageUrl) {
+      this.resizeImage(props.serviceStore.imageUrl);
     }
   }
 
   copyText(fieldName) {
-    const copyString = this.props.data[fieldName];
+    const copyString = this.props.serviceStore[fieldName];
     if (copyString) {
-      Clipboard.setString(this.props.data[fieldName]);
+      Clipboard.setString(this.props.serviceStore[fieldName]);
 
       this.refs.HUD.flash(2);
     }
@@ -61,7 +68,7 @@ class ServiceStore extends NavigatorComponent {
   phoneCall() {
     // Do nothing wen user cancel phone call.
     Linking
-      .openURL(`${Platform.OS !== 'android' ? 'telprompt' : 'tel'}:${this.props.data.phone}`)
+      .openURL(`${Platform.OS !== 'android' ? 'telprompt' : 'tel'}:${this.props.serviceStore.phone}`)
       .catch(() => {});
   }
 
@@ -74,75 +81,84 @@ class ServiceStore extends NavigatorComponent {
   }
 
   render() {
-    const { data } = this.props;
+    const { route: { data }, serviceStore, isFetching, error } = this.props;
+    const { name, address, phone, openFrom, openTo, imageUrl } = serviceStore;
     const { width, height, showPhotoView } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
           <MiumiuThemeNavigatorBackground>
             <View style={NavigatorStyle.titleView}>
-              <Text style={NavigatorStyle.titleText}>{data.name}收貨地址</Text>
+              <Text style={NavigatorStyle.titleText}>{name}門市資訊</Text>
             </View>
           </MiumiuThemeNavigatorBackground>
-          <ScrollView>
-            <TouchableWithoutFeedback>
-              <View>
-                <Text style={MiumiuTheme.sectionText}>* 營業時間：{data.openFrom}～{data.openTo}</Text>
-                <View
-                  style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
-                >
-                  <View style={MiumiuTheme.fixMKTextFieldStyleError}>
-                    <MKTextField
-                      floatingLabelEnabled={true}
-                      multiline={true}
-                      textInputStyle={{ height: 50 }}
-                      underlineSize={1}
-                      highlightColor="#9E9E9E"
-                      placeholder="門市地址"
-                      placeholderTextColor="#9E9E9E"
-                      style={{ backgroundColor: 'white' }}
-                      onChangeText={(address) => { this.setState({ data: { ...data, address } }); }}
-                      value={data.address}
-                    />
-                    <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'address')}>
-                      <View style={styles.textInputTouchReceiver} />
-                    </TouchableWithoutFeedback>
+          { error &&
+            <TouchableOpacity
+              style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+              onPress={() => { this.props.fetchServiceStore(data.id); }}
+            >
+              <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
+            </TouchableOpacity>
+          }
+          { !error &&
+            <ScrollView>
+              <TouchableWithoutFeedback>
+                <View>
+                  <Text style={MiumiuTheme.sectionText}>* 營業時間：{openFrom}～{openTo}</Text>
+                  <View
+                    style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
+                  >
+                    <View style={MiumiuTheme.fixMKTextFieldStyleError}>
+                      <MKTextField
+                        floatingLabelEnabled={true}
+                        multiline={true}
+                        textInputStyle={{ height: 50 }}
+                        underlineSize={1}
+                        highlightColor="#9E9E9E"
+                        placeholder="門市地址"
+                        placeholderTextColor="#9E9E9E"
+                        style={{ backgroundColor: 'white' }}
+                        value={address}
+                      />
+                      <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'address')}>
+                        <View style={styles.textInputTouchReceiver} />
+                      </TouchableWithoutFeedback>
+                    </View>
                   </View>
-                </View>
-                <View
-                  style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
-                >
-                  <View style={MiumiuTheme.fixMKTextFieldStyleError}>
-                    <MKTextField
-                      floatingLabelEnabled={true}
-                      textInputStyle={{ height: 31 }}
-                      underlineSize={1}
-                      highlightColor="#9E9E9E"
-                      placeholder="門市電話"
-                      placeholderTextColor="#9E9E9E"
-                      style={{ backgroundColor: 'white' }}
-                      onChangeText={(phone) => { this.setState({ data: { ...data, phone } }); }}
-                      value={data.phone}
-                    />
-                    <TouchableWithoutFeedback onPress={this.phoneCall.bind(this)}>
-                      <View style={styles.textInputTouchReceiver} />
-                    </TouchableWithoutFeedback>
+                  <View
+                    style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
+                  >
+                    <View style={MiumiuTheme.fixMKTextFieldStyleError}>
+                      <MKTextField
+                        floatingLabelEnabled={true}
+                        textInputStyle={{ height: 31 }}
+                        underlineSize={1}
+                        highlightColor="#9E9E9E"
+                        placeholder="門市電話"
+                        placeholderTextColor="#9E9E9E"
+                        style={{ backgroundColor: 'white' }}
+                        value={phone}
+                      />
+                      <TouchableWithoutFeedback onPress={this.phoneCall.bind(this)}>
+                        <View style={styles.textInputTouchReceiver} />
+                      </TouchableWithoutFeedback>
+                    </View>
                   </View>
+                  <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: true })}>
+                    <Image
+                      style={{
+                        marginTop: 10,
+                        width: width,
+                        height: height,
+                        flex: 1,
+                      }}
+                      source={{ uri: imageUrl }}
+                    />
+                  </TouchableWithoutFeedback>
                 </View>
-                <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: true })}>
-                  <Image
-                    style={{
-                      marginTop: 10,
-                      width: width,
-                      height: height,
-                      flex: 1,
-                    }}
-                    source={{ uri: data.image }}
-                  />
-                </TouchableWithoutFeedback>
-              </View>
-            </TouchableWithoutFeedback>
-          </ScrollView>
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          }
           <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
           <Modal visible={showPhotoView} animationType="fade" transparent={true}>
             <View style={styles.photoViewContainer}>
@@ -151,7 +167,7 @@ class ServiceStore extends NavigatorComponent {
                 maximumZoomScale={3}
                 androidScaleType="center"
                 style={{ width: width, height: width }}
-                source={{ uri: data.image }}
+                source={{ uri: imageUrl }}
               />
               <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: false })}>
                 <Icon name="md-close" size={24} color="white" style={styles.dismissButton} />
@@ -190,22 +206,18 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const data = {
-    name: '園子店',
-    openFrom: '09:00',
-    openTo: '18:00',
-    receiver: '官承翰',
-    address: '九州大道中2131號格利廣場4期16棟1207房(2017)',
-    phone: '0988008752',
-    image: 'https://beta.miumiumacau.com/image/a48cddc0ca27bbc265fa6a24dafc62c4',
-  };
+  const { serviceStore, serviceStores } = state;
+  const { data } = ownProps.route;
+  const store = serviceStores.data.find((object) => object.id === data.id);
   return {
     ...ownProps,
-    data,
+    isFetching: serviceStore.isFetching,
+    error: serviceStore.error,
+    serviceStore: store,
   };
 };
 
 export default connect(
   mapStateToProps,
-  {}
+  { fetchServiceStore }
 )(ServiceStore);

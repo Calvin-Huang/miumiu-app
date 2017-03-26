@@ -39,21 +39,21 @@ export function refreshServiceStoresSuccess(response) {
 
 export function fetchServiceStore(id) {
   return {
-    type: Actions.FETCH_FAQ,
+    type: Actions.FETCH_SERVICE_STORE,
     id,
   };
 }
 
 export function fetchServiceStoreSuccess(response) {
   return {
-    type: Actions.FETCH_FAQ_SUCCESS,
+    type: Actions.FETCH_SERVICE_STORE_SUCCESS,
     response,
   };
 }
 
 export function fetchServiceStoreFailed(error) {
   return {
-    type: Actions.FETCH_FAQ_FAILED,
+    type: Actions.FETCH_SERVICE_STORE_FAILED,
     error,
   };
 }

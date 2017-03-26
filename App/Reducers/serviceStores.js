@@ -8,7 +8,7 @@ import {
   FETCH_SERVICE_STORES_FAILED,
   REFRESH_SERVICE_STORES,
   REFRESH_SERVICE_STORES_SUCCESS,
-  FETCH_SERVICE_STORE,
+  FETCH_SERVICE_STORE_SUCCESS,
 } from '../Constants/actionTypes';
 
 const initialState = {
@@ -55,7 +55,7 @@ export default function serviceStores(state = initialState, action) {
         data: action.response,
         error: null,
       };
-    case FETCH_SERVICE_STORE:
+    case FETCH_SERVICE_STORE_SUCCESS:
       const { data } = state;
       const { response } = action;
 

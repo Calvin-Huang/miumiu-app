@@ -7,8 +7,8 @@ import {
   fetchServiceStoresSuccess,
   fetchServiceStoresFailed,
   refreshServiceStoresSuccess,
-
-  fetchFAQFailed,
+  fetchServiceStoreSuccess,
+  fetchServiceStoreFailed,
 } from '../Actions/serviceStoreActions';
 
 import { get } from '../Utils/api';
@@ -45,9 +45,9 @@ export function fetchServiceStore(action$) {
       try {
         const response = await get(`location/${action.id}`);
 
-        return fetchFAQSuccess(response);
+        return fetchServiceStoreSuccess(response);
       } catch (error) {
-        return fetchFAQFailed(error);
+        return fetchServiceStoreFailed(error);
       }
     });
 }

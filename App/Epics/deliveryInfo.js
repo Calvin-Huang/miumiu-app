@@ -19,9 +19,6 @@ export function fetchDeliveryInfoList(action$) {
       try {
         const response = await get('store');
 
-        console.log('>>>>>>>>>>>>>.');
-        console.log(response);
-
         return fetchDeliveryInfoListSuccess(response);
       } catch (error) {
         return fetchDeliveryInfoListFailed(error);

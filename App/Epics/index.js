@@ -18,10 +18,10 @@ export default combineEpics(
   wayBillEpics.addingWayBill,
   wayBillEpics.urgentWayBill,
   calculator.calculate,
-  userEpics.checkUserSignedIn,
-  userEpics.userSignIn,
-  userEpics.userSignOut,
   FAQ.fetchFAQs,
   FAQ.refreshFAQs,
   FAQ.fetchFAQ,
+  userEpics.checkUserSignedIn,
+  userEpics.userSignIn,
+  userEpics.userSignOut,
 );

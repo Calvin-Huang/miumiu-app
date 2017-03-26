@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Clipboard,
+  Linking,
+  Platform,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -52,6 +54,13 @@ class ServiceStore extends NavigatorComponent {
 
       this.refs.HUD.flash(2);
     }
+  }
+
+  phoneCall() {
+    // Do nothing wen user cancel phone call.
+    Linking
+      .openURL(`${Platform.OS !== 'android' ? 'telprompt' : 'tel'}:${this.props.data.phone}`)
+      .catch(() => {});
   }
 
   resizeImage(imageSource) {
@@ -113,7 +122,7 @@ class ServiceStore extends NavigatorComponent {
                       onChangeText={(phone) => { this.setState({ data: { ...data, phone } }); }}
                       value={data.phone}
                     />
-                    <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'phone')}>
+                    <TouchableWithoutFeedback onPress={this.phoneCall.bind(this)}>
                       <View style={styles.textInputTouchReceiver} />
                     </TouchableWithoutFeedback>
                   </View>

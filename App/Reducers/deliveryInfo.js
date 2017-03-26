@@ -13,7 +13,7 @@ const initialState = {
 export default function deliveryInfo(state = initialState, action) {
   switch (action.type) {
 
-    // Concat existed ServiceStore.
+    // Concat existed DeliveryInfo.
     case FETCH_DELIVERY_INFO:
       return {
         id: action.id,

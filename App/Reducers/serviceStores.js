@@ -11,6 +11,8 @@ import {
   FETCH_SERVICE_STORE_SUCCESS,
 } from '../Constants/actionTypes';
 
+import humps from 'humps';
+
 const initialState = {
   isFetching: false,
   isRefreshing: false,
@@ -61,7 +63,7 @@ export default function serviceStores(state = initialState, action) {
 
       const serviceStore = data.find((eachData) => eachData.id === response.id);
 
-      data[data.indexOf(serviceStore)] = { ...serviceStore, ...response };
+      data[data.indexOf(serviceStore)] = { ...serviceStore, ...humps.camelizeKeys(response) };
 
       return {
         ...state,

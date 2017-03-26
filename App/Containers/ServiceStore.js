@@ -74,57 +74,61 @@ class ServiceStore extends NavigatorComponent {
             </View>
           </MiumiuThemeNavigatorBackground>
           <ScrollView>
-            <Text style={MiumiuTheme.sectionText}>* 營業時間：{data.openFrom}～{data.openTo}</Text>
-            <View
-              style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
-            >
-              <View style={MiumiuTheme.fixMKTextFieldStyleError}>
-                <MKTextField
-                  floatingLabelEnabled={true}
-                  multiline={true}
-                  textInputStyle={{ height: 50 }}
-                  underlineSize={1}
-                  highlightColor="#9E9E9E"
-                  placeholder="門市地址"
-                  placeholderTextColor="#9E9E9E"
-                  style={{ backgroundColor: 'white' }}
-                  onChangeText={(address) => { this.setState({ data: { ...data, address } }); }}
-                  value={data.address}
+            <TouchableWithoutFeedback>
+              <View>
+                <Text style={MiumiuTheme.sectionText}>* 營業時間：{data.openFrom}～{data.openTo}</Text>
+                <View
+                  style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
+                >
+                  <View style={MiumiuTheme.fixMKTextFieldStyleError}>
+                    <MKTextField
+                      floatingLabelEnabled={true}
+                      multiline={true}
+                      textInputStyle={{ height: 50 }}
+                      underlineSize={1}
+                      highlightColor="#9E9E9E"
+                      placeholder="門市地址"
+                      placeholderTextColor="#9E9E9E"
+                      style={{ backgroundColor: 'white' }}
+                      onChangeText={(address) => { this.setState({ data: { ...data, address } }); }}
+                      value={data.address}
+                    />
+                    <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'address')}>
+                      <View style={styles.textInputTouchReceiver} />
+                    </TouchableWithoutFeedback>
+                  </View>
+                </View>
+                <View
+                  style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
+                >
+                  <View style={MiumiuTheme.fixMKTextFieldStyleError}>
+                    <MKTextField
+                      floatingLabelEnabled={true}
+                      textInputStyle={{ height: 31 }}
+                      underlineSize={1}
+                      highlightColor="#9E9E9E"
+                      placeholder="門市電話"
+                      placeholderTextColor="#9E9E9E"
+                      style={{ backgroundColor: 'white' }}
+                      onChangeText={(phone) => { this.setState({ data: { ...data, phone } }); }}
+                      value={data.phone}
+                    />
+                    <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'phone')}>
+                      <View style={styles.textInputTouchReceiver} />
+                    </TouchableWithoutFeedback>
+                  </View>
+                </View>
+                <Image
+                  style={{
+                    marginTop: 10,
+                    width: width,
+                    height: height,
+                    flex: 1,
+                  }}
+                  source={{ uri: data.image }}
                 />
-                <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'address')}>
-                  <View style={styles.textInputTouchReceiver} />
-                </TouchableWithoutFeedback>
               </View>
-            </View>
-            <View
-              style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
-            >
-              <View style={MiumiuTheme.fixMKTextFieldStyleError}>
-                <MKTextField
-                  floatingLabelEnabled={true}
-                  textInputStyle={{ height: 31 }}
-                  underlineSize={1}
-                  highlightColor="#9E9E9E"
-                  placeholder="門市電話"
-                  placeholderTextColor="#9E9E9E"
-                  style={{ backgroundColor: 'white' }}
-                  onChangeText={(phone) => { this.setState({ data: { ...data, phone } }); }}
-                  value={data.phone}
-                />
-                <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'phone')}>
-                  <View style={styles.textInputTouchReceiver} />
-                </TouchableWithoutFeedback>
-              </View>
-            </View>
-            <Image
-              style={{
-                marginTop: 10,
-                width: width,
-                height: height,
-                flex: 1,
-              }}
-              source={{ uri: data.image }}
-            />
+            </TouchableWithoutFeedback>
           </ScrollView>
           <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
         </View>
@@ -150,7 +154,15 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { data } = state;
+  const data = {
+    name: '園子店',
+    openFrom: '09:00',
+    openTo: '18:00',
+    receiver: '官承翰',
+    address: '九州大道中2131號格利廣場4期16棟1207房(2017)',
+    phone: '0988008752',
+    image: 'https://beta.miumiumacau.com/image/a48cddc0ca27bbc265fa6a24dafc62c4',
+  };
   return {
     ...ownProps,
     data,

@@ -7,6 +7,7 @@ import {
   USER_SIGN_IN_SUCCESS,
   USER_SIGN_IN_FAILED,
   USER_SIGN_OUT,
+  USER_REGISTER_SUCCESS,
   SHOW_USER_QRCODE,
   HIDE_USER_QRCODE,
 } from '../Constants/actionTypes';
@@ -54,6 +55,17 @@ export default function user(state = initialState, action) {
         isSigningIn: false,
         currentUser: null,
       };
+    default:
+      return state;
+  }
+}
+
+export function register(state = { timestamp: null }, action) {
+  switch (action.type) {
+    case USER_REGISTER_SUCCESS:
+      return {
+        timestamp: action.response.timestamp,
+      }
     default:
       return state;
   }

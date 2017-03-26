@@ -16,7 +16,7 @@ import FAQ from './FAQ';
 import FAQs from './FAQs';
 import navigationBar from './navigationBar';
 import sideDrawer from './sideDrawer';
-import user, { userQRCodeModal } from './user';
+import user, { register, userQRCodeModal } from './user';
 
 export default combineReducers({
   generalRequest,
@@ -32,5 +32,6 @@ export default combineReducers({
   navigationBar,
   sideDrawer,
   user,
+  register,
   userQRCodeModal,
 });

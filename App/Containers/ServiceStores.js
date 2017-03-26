@@ -146,9 +146,11 @@ class ServiceStores extends NavigatorComponent {
           <Text style={MiumiuTheme.listViewText}>
             { rowData.name }
           </Text>
-          <Text style={styles.subtitleText}>
-            { rowData.address }
-          </Text>
+          { rowData.address && rowData !== '' &&
+            <Text style={styles.subtitleText}>
+              { rowData.address }
+            </Text>
+          }
         </View>
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
@@ -266,7 +268,7 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { stores } = state;
+  const { serviceStores: stores } = state;
   return {
     ...ownProps,
     isFetching: stores.isFetching,

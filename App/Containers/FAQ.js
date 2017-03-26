@@ -136,28 +136,6 @@ class FAQ extends NavigatorComponent {
 
   }
 
-  fetchDeliveryAddresses(page = 1, callback, option) {
-    setTimeout(() => {
-      callback([
-        {
-          id: '5012381293511238',
-          title: '顯示在珠海$2是什麼意思？',
-        }, {
-          id: '5012381293511239',
-          title: '如何查看收貨地址?',
-        }, {
-          id: '5012381293511239',
-          title: '可以放幾多日免費?其後倉存..?',
-        }, {
-          id: '5012381293511239',
-          title: '<禁運清單>有什麼物品你們不會收?這會不會影響我訂貨?',
-        }
-      ], {
-        allLoaded: true,
-      });
-    }, 100);
-  }
-
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {

@@ -207,8 +207,6 @@ const styles = {
 
 const mapStateToProps = (state, ownProps) => {
   const { register, generalRequest } = state;
-  console.log('>>>>> mapStateToProps >>>>>');
-  console.log(register);
   return {
     ...ownProps,
     timestamp: register.timestamp,

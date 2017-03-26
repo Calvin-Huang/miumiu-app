@@ -7,6 +7,9 @@ import {
   View,
   Text,
   TextInput,
+  ListView,
+  ActivityIndicator,
+  RefreshControl,
   Animated,
   Easing,
   TouchableWithoutFeedback,
@@ -14,7 +17,6 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import GiftedListView from 'react-native-gifted-listview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
@@ -22,7 +24,9 @@ import dismissKeyboard from 'dismissKeyboard';
 import { NavigatorComponent } from '../Components';
 import DeliveryInfo from './DeliveryInfo';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer } from '../Actions';
+import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchDeliveryInfoList, refreshDeliveryInfoList } from '../Actions';
+
+const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 class DeliveryInfoList extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -45,7 +49,18 @@ class DeliveryInfoList extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
+      deliveryInfoList: dataSource.cloneWithRows(props.deliveryInfoList),
     }
+  }
+
+  componentDidMount() {
+    this.props.fetchDeliveryInfoList();
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      deliveryInfoList: dataSource.cloneWithRows(props.deliveryInfoList),
+    });
   }
 
   showSearchBar() {
@@ -121,22 +136,6 @@ class DeliveryInfoList extends NavigatorComponent {
 
   }
 
-  fetchDeliveryAddresses(page = 1, callback, option) {
-    setTimeout(() => {
-      callback([
-        {
-          id: '5012381293511238',
-          name: '澳門店',
-        }, {
-          id: '5012381293511239',
-          name: '廈門店',
-        }
-      ], {
-        allLoaded: true,
-      });
-    }, 100);
-  }
-
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
@@ -151,16 +150,25 @@ class DeliveryInfoList extends NavigatorComponent {
     );
   }
 
-  renderPaginationFetchingView(paginateCallback) {
-    return (
-      <View style={MiumiuTheme.paginationFetchingView}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
+  renderFooter() {
+    if (this.props.error) {
+      return (
+        <TouchableOpacity
+          style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+          onPress={() => { this.props.fetchDeliveryInfoList(); }}
+        >
+          <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
+        </TouchableOpacity>
+      );
 
-  renderPaginationAllLoadedView() {
-    return null;
+    } else if (this.props.isFetching) {
+      return (
+        <View style={MiumiuTheme.paginationView}>
+          <ActivityIndicator />
+        </View>
+      );
+
+    }
   }
 
   render() {
@@ -222,22 +230,18 @@ class DeliveryInfoList extends NavigatorComponent {
           </LinearGradient>
         </Animated.View>
 
-        <GiftedListView
-          ref="listView"
-          style={styles.wayBills}
-          rowView={this.renderRowView.bind(this)}
-          onFetch={this.fetchDeliveryAddresses.bind(this)}
-          paginationWaitingView={this.renderPaginationFetchingView.bind(this)}
-          paginationAllLoadedView={this.renderPaginationAllLoadedView.bind(this)}
-          onEndReached={() => { this.refs.listView._onPaginate(); }}
-          customStyles={{
-            paginationView: {
-              height: 60,
-            },
-          }}
-        >
-
-        </GiftedListView>
+        <ListView
+          dataSource={this.state.deliveryInfoList}
+          renderRow={this.renderRowView.bind(this)}
+          renderFooter={this.renderFooter.bind(this)}
+          enableEmptySections={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.isRefreshing}
+              onRefresh={this.props.refreshDeliveryInfoList.bind(this)}
+            />
+          }
+        />
       </View>
     );
   }
@@ -252,10 +256,17 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { deliveryInfoList } = state;
+  return {
+    ...ownProps,
+    isFetching: deliveryInfoList.isFetching,
+    isRefreshing: deliveryInfoList.isRefreshing,
+    deliveryInfoList: deliveryInfoList.data,
+    error: deliveryInfoList.error,
+  };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar }
+  { showNavigationBar, hideNavigationBar, fetchDeliveryInfoList, refreshDeliveryInfoList }
 )(DeliveryInfoList);

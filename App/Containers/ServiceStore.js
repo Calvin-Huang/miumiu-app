@@ -60,7 +60,7 @@ class ServiceStore extends NavigatorComponent {
   copyText(fieldName) {
     const copyString = this.props.serviceStore[fieldName];
     if (copyString) {
-      Clipboard.setString(this.props.serviceStore[fieldName]);
+      Clipboard.setString(copyString);
 
       this.refs.HUD.flash(2);
     }

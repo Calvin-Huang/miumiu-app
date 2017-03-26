@@ -9,3 +9,4 @@ export * from './wayBillActions';
 export * from './calculatorActions';
 export * from './serviceStoreActions';
 export * from './FAQActions';
+export * from './deliveryInfoActions';

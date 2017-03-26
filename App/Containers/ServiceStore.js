@@ -10,6 +10,7 @@ import {
   Image,
   Text,
   Modal,
+  ActivityIndicator,
   KeyboardAvoidingView,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -155,6 +156,11 @@ class ServiceStore extends NavigatorComponent {
                       source={{ uri: imageUrl }}
                     />
                   </TouchableWithoutFeedback>
+                  { isFetching &&
+                    <View style={MiumiuTheme.paginationView}>
+                      <ActivityIndicator />
+                    </View>
+                  }
                 </View>
               </TouchableWithoutFeedback>
             </ScrollView>

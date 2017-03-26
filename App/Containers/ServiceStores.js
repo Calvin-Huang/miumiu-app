@@ -22,7 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import { NavigatorComponent } from '../Components';
-import DeliveryInfo from './DeliveryInfo';
+import ServiceStore from './ServiceStore';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchServiceStores, refreshServiceStores } from '../Actions';
 
@@ -140,7 +140,7 @@ class ServiceStores extends NavigatorComponent {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
         this.hideSearchBar();
-        this.pushToNextComponent(DeliveryInfo, rowData);
+        this.pushToNextComponent(ServiceStore, rowData);
       }}>
         <View style={{ flex: 1 }}>
           <Text style={MiumiuTheme.listViewText}>

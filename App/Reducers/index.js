@@ -8,6 +8,8 @@ import generalRequest from './generalRequest';
 import wayBill from './wayBill';
 import wayBills from './wayBills';
 import calculator from './calculator';
+import deliveryInfo from './deliveryInfo';
+import deliveryInfoList from './deliveryInfoList';
 import serviceStore from './serviceStore';
 import serviceStores from './serviceStores';
 import FAQ from './FAQ';
@@ -21,6 +23,8 @@ export default combineReducers({
   wayBill,
   wayBills,
   calculator,
+  deliveryInfo,
+  deliveryInfoList,
   serviceStore,
   serviceStores,
   FAQ,

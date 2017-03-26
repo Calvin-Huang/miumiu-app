@@ -32,4 +32,5 @@ export default combineEpics(
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
   userEpics.userSignOut,
+  userEpics.userRegister,
 );

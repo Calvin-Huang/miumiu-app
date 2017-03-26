@@ -4,10 +4,20 @@
 
 import { AsyncStorage } from 'react-native';
 
+import { Observable } from 'rxjs';
+
 import HttpError from 'standard-http-error';
 
 import * as ActionTypes from '../Constants/actionTypes';
-import { userSignInSuccess, userSignInFailed, userSignOutSuccess } from '../Actions';
+import {
+  userSignInSuccess,
+  userSignInFailed,
+  userSignOutSuccess,
+  userRegisterSuccess,
+  generalRequest,
+  generalRequestSuccess,
+  generalRequestFailed,
+} from '../Actions';
 import { currentUser, signOut } from '../Utils/authentication';
 
 import { post } from '../Utils/api';
@@ -49,4 +59,25 @@ export function userSignOut(action$) {
 
       return userSignOutSuccess();
     })
+}
+
+export function userRegister(action$) {
+  return action$.ofType(ActionTypes.USER_REGISTER)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { account, password, passwordConfirmation: confirm } = action;
+          const response = await post('auth/register', { account, password, confirm });
+
+          observer.next(userRegisterSuccess(response));
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+
+        observer.complete();
+      });
+    });
 }

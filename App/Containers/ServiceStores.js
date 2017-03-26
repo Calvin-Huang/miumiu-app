@@ -17,7 +17,6 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import GiftedListView from 'react-native-gifted-listview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
@@ -25,7 +24,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import { NavigatorComponent } from '../Components';
 import DeliveryInfo from './DeliveryInfo';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer } from '../Actions';
+import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchServiceStores, refreshServiceStores } from '../Actions';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -55,7 +54,7 @@ class ServiceStores extends NavigatorComponent {
   }
 
   componentDidMount() {
-
+    this.props.fetchServiceStores();
   }
 
   componentWillReceiveProps(props) {
@@ -244,7 +243,7 @@ class ServiceStores extends NavigatorComponent {
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={() => {}}
+              onRefresh={this.props.refreshServiceStores.bind(this)}
             />
           }
         />
@@ -270,11 +269,14 @@ const mapStateToProps = (state, ownProps) => {
   const { stores } = state;
   return {
     ...ownProps,
-    stores,
+    isFetching: stores.isFetching,
+    isRefreshing: stores.isRefreshing,
+    stores: stores.data,
+    error: stores.error,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar }
+  { showNavigationBar, hideNavigationBar, fetchServiceStores, refreshServiceStores }
 )(ServiceStores);

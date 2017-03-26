@@ -83,6 +83,7 @@ class SignIn extends NavigatorComponent {
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 autoCapitalize="none"
+                keyboardType="email-address"
                 floatingLabelEnabled={true}
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}

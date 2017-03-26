@@ -19,7 +19,7 @@ export function fetchServiceStoresSuccess(response) {
 
 export function fetchServiceStoresFailed(error) {
   return {
-    type: Actions.FETCH_SERVICE_STORES_SUCCESS,
+    type: Actions.FETCH_SERVICE_STORES_FAILED,
     error,
   };
 }
@@ -34,5 +34,26 @@ export function refreshServiceStoresSuccess(response) {
   return {
     type: Actions.REFRESH_SERVICE_STORES_SUCCESS,
     response,
+  };
+}
+
+export function fetchServiceStore(id) {
+  return {
+    type: Actions.FETCH_FAQ,
+    id,
+  };
+}
+
+export function fetchServiceStoreSuccess(response) {
+  return {
+    type: Actions.FETCH_FAQ_SUCCESS,
+    response,
+  };
+}
+
+export function fetchServiceStoreFailed(error) {
+  return {
+    type: Actions.FETCH_FAQ_FAILED,
+    error,
   };
 }

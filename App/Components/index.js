@@ -5,3 +5,4 @@ export { default as MiumiuThemeNavigatorBackground } from './MiumiuThemeNavigato
 export { default as IconFasterShipping } from './IconFasterShipping';
 export { default as WayBillStateView } from './WayBillStateView';
 export { default as HUD } from './HUD';
+export { default as PhotoView } from './PhotoView';

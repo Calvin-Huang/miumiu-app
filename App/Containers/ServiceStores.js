@@ -1,5 +1,5 @@
 /**
- * Created by Calvin Huang on 3/7/17.
+ * Created by calvin.huang on 26/03/2017.
  */
 
 import React, { Component } from 'react';
@@ -22,13 +22,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import { NavigatorComponent } from '../Components';
-import FAQDetail from './FAQDetail';
+import ServiceStore from './ServiceStore';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchFAQs, refreshFAQs } from '../Actions';
+import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchServiceStores, refreshServiceStores } from '../Actions';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-class FAQ extends NavigatorComponent {
+class ServiceStores extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
@@ -49,17 +49,17 @@ class FAQ extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
-      FAQs: dataSource.cloneWithRows(props.FAQs),
+      stores: dataSource.cloneWithRows(props.stores),
     }
   }
 
   componentDidMount() {
-    this.props.fetchFAQs();
+    this.props.fetchServiceStores();
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      FAQs: dataSource.cloneWithRows(props.FAQs),
+      stores: dataSource.cloneWithRows(props.stores),
     });
   }
 
@@ -140,11 +140,18 @@ class FAQ extends NavigatorComponent {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
         this.hideSearchBar();
-        this.pushToNextComponent(FAQDetail, rowData);
+        this.pushToNextComponent(ServiceStore, rowData);
       }}>
-        <Text style={MiumiuTheme.listViewText}>
-          { rowData.title }
-        </Text>
+        <View style={{ flex: 1 }}>
+          <Text style={MiumiuTheme.listViewText}>
+            { rowData.name }
+          </Text>
+          { rowData.address && rowData !== '' &&
+            <Text style={styles.subtitleText}>
+              { rowData.address }
+            </Text>
+          }
+        </View>
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
     );
@@ -187,11 +194,11 @@ class FAQ extends NavigatorComponent {
             style={MiumiuTheme.navBackgroundWithSearchBar}
           >
             { !this.state.isSearching &&
-              <View style={NavigatorStyle.titleView}>
-                <Text style={NavigatorStyle.titleText}>
-                  常見問題
-                </Text>
-              </View>
+            <View style={NavigatorStyle.titleView}>
+              <Text style={NavigatorStyle.titleText}>
+                門市資訊
+              </Text>
+            </View>
             }
             <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
               <Animated.View
@@ -205,7 +212,7 @@ class FAQ extends NavigatorComponent {
                   ref="searchBar"
                   style={{ ...MiumiuTheme.buttonText, flex: 1 }}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
-                  placeholder="查詢問題"
+                  placeholder="查詢離你最近的據點"
                   onFocus={this.showSearchBar.bind(this)}
                   onChangeText={this.searchBarTextChanged.bind(this)}
                 />
@@ -231,14 +238,14 @@ class FAQ extends NavigatorComponent {
         </Animated.View>
 
         <ListView
-          dataSource={this.state.FAQs}
+          dataSource={this.state.stores}
           renderRow={this.renderRowView.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
           enableEmptySections={true}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={this.props.refreshFAQs.bind(this)}
+              onRefresh={this.props.refreshServiceStores.bind(this)}
             />
           }
         />
@@ -253,20 +260,25 @@ const styles = {
     paddingVertical: 16,
     paddingLeft: 17,
   },
+  subtitleText: {
+    marginTop: 2,
+    fontSize: 10,
+    color: '#757575'
+  },
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { FAQs } = state;
+  const { serviceStores: stores } = state;
   return {
     ...ownProps,
-    isFetching: FAQs.isFetching,
-    isRefreshing: FAQs.isRefreshing,
-    FAQs: FAQs.data,
-    error: FAQs.error,
+    isFetching: stores.isFetching,
+    isRefreshing: stores.isRefreshing,
+    stores: stores.data,
+    error: stores.error,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchFAQs, refreshFAQs }
-)(FAQ);
+  { showNavigationBar, hideNavigationBar, fetchServiceStores, refreshServiceStores }
+)(ServiceStores);

@@ -40,6 +40,7 @@ import WayBills from './WayBills';
 import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
 import DeliveryInfoList from './DeliveryInfoList';
+import ServiceStores from './ServiceStores';
 import PickUpPassword from './PickUpPassword';
 import FAQ from './FAQ';
 import Settings from './Settings';
@@ -101,6 +102,13 @@ class Main extends Component {
           },
           name: '收貨地址',
           component: DeliveryInfoList,
+          isSelected: false,
+        }, {
+          icon: {
+            name: 'md-home',
+          },
+          name: '門市資訊',
+          component: ServiceStores,
           isSelected: false,
         }, {
           icon: {

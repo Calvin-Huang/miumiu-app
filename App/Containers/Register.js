@@ -38,9 +38,9 @@ class Register extends NavigatorComponent {
   componentWillReceiveProps(props) {
     if (!props.isRequesting && !props.error && props.timestamp) {
       const { timestamp } = this.props;
-      const { account } = this.state;
+      const { account, password } = this.state;
 
-      this.pushToNextComponent(ConfirmRegistrationCode, { account, timestamp });
+      this.pushToNextComponent(ConfirmRegistrationCode, { account, password, timestamp });
     }
   }
 

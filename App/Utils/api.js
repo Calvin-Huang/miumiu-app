@@ -11,6 +11,13 @@ import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH, API_DEV_MODE } from '../Constant
 import { getAuthenticationToken, setAuthenticationToken } from './authentication';
 import { JWTExpiredError } from './errors';
 
+import EventEmitter from 'event-emitter';
+
+/**
+ * All API errors are emitted on this channel for interested listeners.
+ */
+export const errors = new EventEmitter();
+
 export async function get(path, body) {
   let pathQuery = path;
   if (body) {
@@ -71,6 +78,8 @@ async function request(method, path, body, suppressRedBox = API_DEV_MODE) {
           console.log('❌  Refresh expired token failed ❌');
           console.log(error);
         }
+
+        errors.emit('JWTRefresh', error);
       }
     }
   }
@@ -115,8 +124,11 @@ async function handleResponse(response) {
   const { status, headers } = response;
   if (status >= 400) {
     const message = await getErrorMessageSafely(response);
+    const error = new HttpError(status, message);
 
-    throw new HttpError(status, message);
+    errors.emit(`${status}`, error);
+
+    throw error;
   }
 
   const responseBody = await response.text();

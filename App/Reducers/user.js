@@ -11,6 +11,7 @@ import {
   USER_RESEND_CONFIRM_CODE,
   USER_RESEND_CONFIRM_CODE_SUCCESS,
   USER_RESEND_CONFIRM_CODE_FAILED,
+  USER_REQUEST_RESET_PASSWORD_SUCCESS,
   SHOW_USER_QRCODE,
   HIDE_USER_QRCODE,
 } from '../Constants/actionTypes';
@@ -94,6 +95,17 @@ export function resendConfirmCode(state = { isRequesting: false, timestamp: null
         timestamp: null,
         error: action.error,
       };
+    default:
+      return state;
+  }
+}
+
+export function requestResetPassword(state = { timestamp: null }, action) {
+  switch (action.type) {
+    case USER_REQUEST_RESET_PASSWORD_SUCCESS:
+      return {
+        timestamp: action.response.timestamp,
+      }
     default:
       return state;
   }

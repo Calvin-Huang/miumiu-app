@@ -47,6 +47,7 @@ import FAQ from './FAQ';
 import Settings from './Settings';
 import SignIn from './SignIn';
 import RegistrationCompleted from './RegistrationCompleted';
+import ResetPasswordCompleted from './ResetPasswordCompleted';
 import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
@@ -224,7 +225,11 @@ class Main extends Component {
           ...object,
         };
       });
-    if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
+    let componentMap = {};
+    componentMap[`${DEEP_LINK_PROTOCOL}://register/complete`] = RegistrationCompleted;
+    componentMap[`${DEEP_LINK_PROTOCOL}://forgot/complete`] = ResetPasswordCompleted;
+
+    if (componentMap[domain]) {
       const { token } = queries;
       if (token) {
 
@@ -235,7 +240,7 @@ class Main extends Component {
             component: WayBills,
           }, {
             index: 1,
-            component: RegistrationCompleted,
+            component: componentMap[domain],
             data: { token },
             transition: { ...Navigator.SceneConfigs.FloatFromBottom, gestures: {} },
           }

@@ -48,6 +48,35 @@ export function userRegisterSuccess(response) {
   };
 }
 
+export function userConfirmRegistration(phone, confirmCode) {
+  return {
+    type: ActionTypes.USER_CONFIRM_REGISTRATION_CODE,
+    phone,
+    confirmCode,
+  };
+}
+
+export function userResendConfirmCode(account) {
+  return {
+    type: ActionTypes.USER_RESEND_CONFIRM_CODE,
+    account,
+  };
+}
+
+export function userResendConfirmCodeSuccess(response) {
+  return {
+    type: ActionTypes.USER_RESEND_CONFIRM_CODE_SUCCESS,
+    response,
+  };
+}
+
+export function userResendConfirmCodeFailed(error) {
+  return {
+    type: ActionTypes.USER_RESEND_CONFIRM_CODE_FAILED,
+    error,
+  };
+}
+
 export function userSignOut() {
   return {
     type: ActionTypes.USER_SIGN_OUT,

@@ -23,6 +23,7 @@ import { userSignIn } from '../Actions/userActions';
 import { NavigatorComponent } from '../Components';
 import WayBills from './WayBills';
 import Register from './Register';
+import ForgetPassword from './ForgetPassword';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
 const SignInType = {
@@ -141,7 +142,10 @@ class SignIn extends NavigatorComponent {
               }
             </TouchableOpacity>
             <View style={style.otherWays}>
-              <TouchableOpacity style={styles.forgetButton}>
+              <TouchableOpacity
+                style={styles.forgetButton}
+                onPress={() => { dismissKeyboard(); this.pushToNextComponent(ForgetPassword); }}
+              >
                 <Text style={styles.forgetButtonText}>
                   忘記帳號密碼了嗎？
                 </Text>

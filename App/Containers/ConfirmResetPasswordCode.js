@@ -26,7 +26,7 @@ import leftPad from 'left-pad';
 import { NavigatorComponent, HUD } from '../Components';
 import ResetPasswordCompleted from './ResetPasswordCompleted';
 import { MiumiuTheme } from '../Styles';
-import { userRequestResetPassword, userConfirmResetPasswordCode } from '../Actions/userActions';
+import { userResendResetPasswordConfirmCode, userConfirmResetPasswordCode } from '../Actions/userActions';
 import { validateEmail } from '../Utils/validator';
 import { COUNTDOWN_SECONDS } from '../Constants/config';
 
@@ -58,17 +58,17 @@ class ConfirmResetPasswordCode extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    const { route: { data: { account } }, confirmState, requestResetPassword } = props;
+    const { route: { data: { account } }, confirmState, resendResetPasswordConfirmCode } = props;
     const { password } = this.state;
-    if ((this.props.requestResetPassword.isRequesting !== requestResetPassword.isRequesting) && !requestResetPassword.isRequesting) {
-      if (resendConfirmCode.error) {
+    if ((this.props.resendResetPasswordConfirmCode.isRequesting !== resendResetPasswordConfirmCode.isRequesting) && !resendResetPasswordConfirmCode.isRequesting) {
+      if (resendResetPasswordConfirmCode.error) {
         Alert.alert(
           '發生了一點問題',
           props.error.message,
         );
 
-      } else if (requestResetPassword.timestamp && this.state.timestamp !== requestResetPassword.timestamp) {
-        this.setState({ canRetry: false, timestamp: requestResetPassword.timestamp });
+      } else if (resendResetPasswordConfirmCode.timestamp && this.state.timestamp !== resendResetPasswordConfirmCode.timestamp) {
+        this.setState({ canRetry: false, timestamp: resendResetPasswordConfirmCode.timestamp });
 
         this.timer = setInterval(() => {
           this.countDown();
@@ -117,14 +117,14 @@ class ConfirmResetPasswordCode extends NavigatorComponent {
   }
 
   resendResetPasswordConfirmCode() {
-    const { requestResetPassword, route: { data: { account } } } = this.props;
+    const { resendResetPasswordConfirmCode, route: { data: { account } } } = this.props;
     const { canRetry } = this.state;
 
-    if (!canRetry || requestResetPassword.isRequesting) {
+    if (!canRetry || resendResetPasswordConfirmCode.isRequesting) {
       return;
     }
 
-    this.props.userRequestResetPassword(account);
+    this.props.userResendResetPasswordConfirmCode(account);
   }
 
   submitConfirmCode() {
@@ -139,11 +139,11 @@ class ConfirmResetPasswordCode extends NavigatorComponent {
       this.props.generalRequestFailed(new Error('密碼確認錯誤，請檢查密碼'));
     }
 
-    this.props.userConfirmRegistration(phone, codes.join(''));
+    this.props.userConfirmResetPasswordCode(phone, codes.join(''), password, passwordConfirmation);
   }
 
   render() {
-    const { route: { data: { account, timestamp } }, confirmState, requestResetPassword } = this.props;
+    const { route: { data: { account, timestamp } }, confirmState, resendResetPasswordConfirmCode } = this.props;
     const { password, passwordConfirmation, isAccountTypeEmail, remainingTime, canRetry } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
@@ -213,7 +213,7 @@ class ConfirmResetPasswordCode extends NavigatorComponent {
                 ...styles.underline,
                 opacity: canRetry ? 1 : 0.7,
               }}>重新發送驗證{ isAccountTypeEmail ? '信件' : '碼' }</Text>
-              { requestResetPassword.isRequesting &&
+              { resendResetPasswordConfirmCode.isRequesting &&
                 <ActivityIndicator color="white" style={{ ...MiumiuTheme.buttonActivityIndicator, paddingRight: 60 }} />
               }
             </TouchableOpacity>
@@ -293,15 +293,15 @@ const styles = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { generalRequest, requestResetPassword } = state;
+  const { generalRequest, resendResetPasswordConfirmCode } = state;
   return {
     ...ownProps,
-    requestResetPassword,
+    resendResetPasswordConfirmCode,
     confirmState: generalRequest,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { userRequestResetPassword, userConfirmResetPasswordCode }
+  { userResendResetPasswordConfirmCode, userConfirmResetPasswordCode }
 )(ConfirmResetPasswordCode);

@@ -37,8 +37,10 @@ export default class HUD extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.visible) {
-      this.flash();
+    if (this.props.visible !== props.visible) {
+      if (props.visible) {
+        this.flash();
+      }
 
       this.setState({ visible: props.visible });
     }

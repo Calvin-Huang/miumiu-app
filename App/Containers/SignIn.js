@@ -168,7 +168,7 @@ const styles = {
     flex: 1,
   },
   body: {
-    marginTop: 92,
+    marginTop: 74,
     alignItems: 'center',
   },
   forgetButton: {

@@ -7,23 +7,30 @@ import {
   View,
   Text,
   TextInput,
+  ActivityIndicator,
   Navigator,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
+
+import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { NavigatorComponent } from '../Components';
+import { NavigatorComponent, HUD } from '../Components';
 import WayBills from './WayBills';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
+import { userSignIn } from '../Actions';
+import store from '../storeInstance';
 
-export default class ConfirmRegistrationCode extends NavigatorComponent {
+class RegistrationCompleted extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => {
-          navigator.replace({ index: 0, component: WayBills })
+          const { account, password } = route.data;
+          store.dispatch(userSignIn(account, password));
         }}>
         <View style={NavigatorStyle.itemButton}>
           <Icon name="md-close" size={24} color="white" />
@@ -32,7 +39,30 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
     );
   }
 
+  componentWillReceiveProps(props) {
+    if (props.currentUser) {
+      this.props.navigator.replace({ index: 0, component: WayBills });
+    }
+
+    if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {
+      Alert.alert(
+        '發生了一點問題',
+        props.errorMessage,
+      );
+    }
+  }
+
+  signIn() {
+    const { isSigningIn, route: { data: { account, password } } } = this.props;
+    if (isSigningIn) {
+      return;
+    }
+
+    this.props.userSignIn(account, password);
+  }
+
   render() {
+    const { isSigningIn } = this.props;
     return (
       <LinearGradient
         start={{ x: 0.510023057, y: 1.09617584 }} end={{ x: 0.51374295, y: -0.0557819706 }}
@@ -46,12 +76,13 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
         </View>
         <TouchableOpacity
           style={{ ...MiumiuTheme.actionButton, ...styles.transparentButton }}
-          onPress={() => { this.props.navigator.replace({ index: 0, component: WayBills }) }}
+          onPress={this.signIn.bind(this)}
         >
           <Text style={{ ...MiumiuTheme.actionButtonText, ...MiumiuTheme.textShadow }}>
             好的！
           </Text>
         </TouchableOpacity>
+        <HUD visible={isSigningIn} type="progress" message="登入中" />
       </LinearGradient>
     );
   }
@@ -89,3 +120,19 @@ const styles = {
     borderTopColor: 'rgba(255, 255, 255, 0.25)',
   },
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { user } = state;
+
+  return {
+    ...ownProps,
+    isSigningIn: user.isSigningIn,
+    currentUser: user.currentUser,
+    errorMessage: user.result.error ? user.result.error.message : null,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { userSignIn }
+)(RegistrationCompleted);

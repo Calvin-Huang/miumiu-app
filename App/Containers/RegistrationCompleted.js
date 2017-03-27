@@ -41,7 +41,8 @@ class RegistrationCompleted extends NavigatorComponent {
 
   componentWillReceiveProps(props) {
     if (props.currentUser) {
-      this.props.navigator.replace({ index: 0, component: WayBills });
+      const { navigator } = this.props;
+      navigator.immediatelyResetRouteStack([{ index: 0, component: WayBills }]);
     }
 
     if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {

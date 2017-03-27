@@ -148,7 +148,8 @@ class Main extends Component {
         if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
           console.log(query);
         }
-      });
+      })
+      .catch(() => { /* Do nothing */ });
   }
 
   componentWillReceiveProps(props) {

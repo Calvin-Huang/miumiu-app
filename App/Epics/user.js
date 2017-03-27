@@ -21,6 +21,7 @@ import {
   generalRequestFailed,
 } from '../Actions';
 import { currentUser, signOut } from '../Utils/authentication';
+import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 
 import { post } from '../Utils/api';
 
@@ -71,7 +72,7 @@ export function userRegister(action$) {
 
         try {
           const { account, password, passwordConfirmation: confirm } = action;
-          const response = await post('auth/register', { account, password, confirm });
+          const response = await post('auth/register', { account, password, confirm, redirect_uri: `${DEEP_LINK_PROTOCOL}://register/complete` });
 
           observer.next(userRegisterSuccess(response));
           observer.next(generalRequestSuccess());

@@ -47,10 +47,14 @@ class ResetPasswordCompleted extends NavigatorComponent {
     }
 
     if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {
-      Alert.alert(
-        '發生了一點問題',
-        props.errorMessage,
-      );
+      
+      // Wait animation done or alert will interrupt flow.
+      setTimeout(() => {
+        Alert.alert(
+          '發生了一點問題',
+          props.errorMessage,
+        );
+      }, 250);
     }
   }
 

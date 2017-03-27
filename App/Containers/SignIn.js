@@ -46,7 +46,9 @@ class SignIn extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (props.currentUser) {
+    const { navigator, route } = this.props;
+    const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+    if (props.currentUser && currentRoute.index === route.index) {
       dismissKeyboard();
 
       this.props.navigator.replacePreviousAndPop({

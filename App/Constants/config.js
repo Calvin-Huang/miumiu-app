@@ -10,3 +10,4 @@ export const BASE_URL = '';
 export const COUNTDOWN_SECONDS = '10';
 export const REFRESH_TOKEN_PATH = 'auth/token';
 export const DATETIME_FORMAT = 'YYYY/MM/DD HH:mm';
+export const DEEP_LINK_PROTOCOL = '';

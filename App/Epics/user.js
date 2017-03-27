@@ -14,6 +14,8 @@ import {
   userSignInFailed,
   userSignOutSuccess,
   userRegisterSuccess,
+  userResendConfirmCodeSuccess,
+  userResendConfirmCodeFailed,
   generalRequest,
   generalRequestSuccess,
   generalRequestFailed,
@@ -79,5 +81,37 @@ export function userRegister(action$) {
 
         observer.complete();
       });
+    });
+}
+
+export function userConfirmRegistration(action$) {
+  return action$.ofType(ActionTypes.USER_CONFIRM_REGISTRATION_CODE)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { phone: mobile, confirmCode: code } = action;
+          await post('auth/confirm', { mobile, code });
+
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+      });
+    });
+}
+
+export function userResendConfirmCode(action$) {
+  return action$.ofType(ActionTypes.USER_RESEND_CONFIRM_CODE)
+    .switchMap(async (action) => {
+      try {
+        const { account } = action;
+        const response = await post('auth/register/retry', { account });
+
+        return userResendConfirmCodeSuccess(response);
+      } catch (error) {
+        return userResendConfirmCodeFailed(error);
+      }
     });
 }

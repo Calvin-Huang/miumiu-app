@@ -33,4 +33,6 @@ export default combineEpics(
   userEpics.userSignIn,
   userEpics.userSignOut,
   userEpics.userRegister,
+  userEpics.userConfirmRegistration,
+  userEpics.userResendConfirmCode,
 );

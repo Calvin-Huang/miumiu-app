@@ -65,7 +65,13 @@ class SignIn extends NavigatorComponent {
   }
 
   signInButtonClicked() {
-    this.props.userSignIn(this.state.account, this.state.password);
+    const { isSigningIn } = this.props;
+    const { account, password } = this.state;
+    if (isSigningIn || !account || !password) {
+      return;
+    }
+
+    this.props.userSignIn(account, password);
     dismissKeyboard();
   }
 

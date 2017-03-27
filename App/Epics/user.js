@@ -126,7 +126,7 @@ export function userRequestResetPassword(action$) {
 
         try {
           const { account } = action;
-          const response = await post('auth/forget', { account, redirect_uri: `${DEEP_LINK_PROTOCOL}://forget/complete` });
+          const response = await post('auth/forgot', { account, redirect_uri: `${DEEP_LINK_PROTOCOL}://forgot/complete` });
 
           observer.next(userRequestResetPasswordSuccess(response));
           observer.next(generalRequestSuccess());

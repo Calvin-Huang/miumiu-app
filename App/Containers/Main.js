@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   Modal,
+  Linking,
   AsyncStorage,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -45,8 +46,10 @@ import PickUpPassword from './PickUpPassword';
 import FAQ from './FAQ';
 import Settings from './Settings';
 import SignIn from './SignIn';
+import RegistrationCompleted from './RegistrationCompleted';
 import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
+import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
@@ -135,8 +138,16 @@ class Main extends Component {
     FCM.requestPermissions();
     FCM.getFCMToken()
       .then((token) => {
-        
+
       });
+
+    Linking.getInitialURL()
+      .then((url) => {
+        this.handleOpenURL({ url });
+      })
+      .catch(() => { /* Do nothing */ });
+
+    Linking.addEventListener('url', this.handleOpenURL.bind(this));
   }
 
   componentWillReceiveProps(props) {
@@ -184,6 +195,51 @@ class Main extends Component {
           .then((brightnessLevel) => {
             DeviceBrightness.setBrightnessLevel(parseFloat(brightnessLevel, 10));
           });
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL.bind(this));
+  }
+
+  handleOpenURL({ url }) {
+    if (!url) {
+      return;
+    }
+
+    const urlComponents = url.split('?');
+    const domain = urlComponents[0];
+    const queries = (urlComponents[1] || '')
+      .split('&')
+      .map((query) => {
+        const p = query.split('=');
+        let object = {};
+        object[p[0]] = p[1];
+        return object;
+      })
+      .reduce((result, object) => {
+        return {
+          ...result,
+          ...object,
+        };
+      });
+    if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
+      const { token } = queries;
+      if (token) {
+
+        // Disable swipe back gesture.
+        this.refs.navigator.immediatelyResetRouteStack([
+          {
+            index: 0,
+            component: WayBills,
+          }, {
+            index: 1,
+            component: RegistrationCompleted,
+            data: { token },
+            transition: { ...Navigator.SceneConfigs.FloatFromBottom, gestures: {} },
+          }
+        ]);
       }
     }
   }

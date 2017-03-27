@@ -137,7 +137,7 @@ class SignIn extends NavigatorComponent {
             <View style={style.otherWays}>
               <TouchableOpacity style={styles.forgetButton}>
                 <Text style={styles.forgetButtonText}>
-                  忘記帳號或密碼了嗎？
+                  忘記帳號密碼了嗎？
                 </Text>
               </TouchableOpacity>
             </View>

@@ -93,7 +93,7 @@ export function userRequestResetPasswordSuccess(response) {
 
 export function userConfirmResetPasswordCode(phone, confirmCode) {
   return {
-    type: ActionTypes.USER_RESET_PASSWORD_CONFIRM_CODE,
+    type: ActionTypes.USER_CONFIRM_RESET_PASSWORD_CODE,
     phone,
     confirmCode,
   };

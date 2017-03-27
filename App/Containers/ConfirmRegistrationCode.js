@@ -7,6 +7,8 @@ import {
   View,
   Text,
   TextInput,
+  Alert,
+  ActivityIndicator,
   Navigator,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -14,24 +16,29 @@ import {
 
 import dismissKeyboard from 'dismissKeyboard';
 
+import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import leftPad from 'left-pad';
 
-import { NavigatorComponent } from '../Components';
+import { NavigatorComponent, HUD } from '../Components';
 import RegistrationCompleted from './RegistrationCompleted';
 import { MiumiuTheme } from '../Styles';
+import { userResendConfirmCode, userConfirmRegistration } from '../Actions/userActions';
 import { validateEmail } from '../Utils/validator';
 import { COUNTDOWN_SECONDS } from '../Constants/config';
 
-export default class ConfirmRegistrationCode extends NavigatorComponent {
+class ConfirmRegistrationCode extends NavigatorComponent {
   constructor(props) {
     super(props);
 
+    const { route: { data } } = props;
+
     this.state = {
       codes: [ '', '', '', '' ],
-      isAccountTypeEmail: validateEmail(props.route.data.account),
+      isAccountTypeEmail: validateEmail(data.account),
+      timestamp: data.timestamp,
       remainingTime: '0:00',
       canRetry: false,
     };
@@ -45,6 +52,33 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  componentWillReceiveProps(props) {
+    const { route: { data }, confirmState, resendConfirmCode } = props;
+    if ((this.props.resendConfirmCode.isRequesting !== resendConfirmCode.isRequesting) && !resendConfirmCode.isRequesting) {
+      if (resendConfirmCode.error) {
+        Alert.alert(
+          '發生了一點問題',
+          props.error.message,
+        );
+
+      } else if (resendConfirmCode.timestamp && this.state.timestamp !== resendConfirmCode.timestamp) {
+        this.setState({ canRetry: false, timestamp: resendConfirmCode.timestamp });
+
+        this.timer = setInterval(() => {
+          this.countDown();
+        }, 0.5);
+
+        this.refs.HUD.flash(2);
+      }
+    }
+
+    if ((this.props.confirmState.isRequesting !== confirmState.isRequesting) && !confirmState.isRequesting && !confirmState.error) {
+
+      // Disable swipe back gesture.
+      this.pushToNextComponent(RegistrationCompleted, data, { ...Navigator.SceneConfigs.PushFromRight, gestures: {} });
+    }
   }
 
   codeFieldTextChanged(codeFieldNumber, text) {
@@ -66,7 +100,7 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
   }
 
   countDown() {
-    const { timestamp } = this.props.route.data;
+    const { timestamp } = this.state;
 
     const diffSeconds = moment.unix(timestamp).add(COUNTDOWN_SECONDS, 'seconds').diff(moment(), 'seconds');
 
@@ -78,8 +112,30 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
     }
   }
 
+  resendRegistrationConfirmCode() {
+    const { resendConfirmCode, route: { data: { account } } } = this.props;
+    const { canRetry } = this.state;
+
+    if (!canRetry || resendConfirmCode.isRequesting) {
+      return;
+    }
+
+    this.props.userResendConfirmCode(account);
+  }
+
+  submitConfirmCode() {
+    const { confirmState, route: { data: { account: phone } } } = this.props;
+    const { isAccountTypeEmail, codes } = this.state;
+
+    if (isAccountTypeEmail || confirmState.isRequesting) {
+      return;
+    }
+
+    this.props.userConfirmRegistration(phone, codes.join(''));
+  }
+
   render() {
-    const { route: { data: { account, timestamp } } } = this.props;
+    const { route: { data: { account, timestamp } }, confirmState, resendConfirmCode } = this.props;
     const { isAccountTypeEmail, remainingTime, canRetry } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
@@ -104,26 +160,30 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
                 <TextInput ref="codeField4" keyboardType="numeric" maxLength={1} style={styles.codeField} onChangeText={this.codeFieldTextChanged.bind(this, 4)} />
               </View>
             }
+            { confirmState.error &&
+            <Text style={{ ...styles.registerHintText, color: 'red' }}>{confirmState.error.message}</Text>
+            }
             <Text style={styles.registerHintText}>
               如果沒有收到驗證{ isAccountTypeEmail ? '信件' : '碼' }，您可以在 <Text style={{ fontWeight: 'bold' }}>{remainingTime}</Text> 後
             </Text>
-            <TouchableOpacity disabled={!canRetry}>
+            <TouchableOpacity
+              disabled={!canRetry}
+              onPress={this.resendRegistrationConfirmCode.bind(this)}
+            >
               <Text style={{
                 ...MiumiuTheme.buttonText,
                 ...styles.underline,
                 opacity: canRetry ? 1 : 0.7,
               }}>重新發送驗證{ isAccountTypeEmail ? '信件' : '碼' }</Text>
+              { resendConfirmCode.isRequesting &&
+                <ActivityIndicator color="white" style={{ ...MiumiuTheme.buttonActivityIndicator, paddingRight: 60 }} />
+              }
             </TouchableOpacity>
           </View>
           { !isAccountTypeEmail &&
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
-              onPress={() => {
-                dismissKeyboard();
-
-                // Disable swipe back gesture.
-                this.pushToNextComponent(RegistrationCompleted, null, { ...Navigator.SceneConfigs.PushFromRight, gestures: {} });
-              }}
+              onPress={this.submitConfirmCode.bind(this)}
             >
               <LinearGradient
                 start={{ x: 0.485544682, y: 1.44908902 }} end={{ x: 0.485544682, y: -0.811377672 }}
@@ -134,8 +194,12 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
               <Text style={MiumiuTheme.buttonText}>
                 送出
               </Text>
+              { confirmState.isRequesting &&
+                <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
+              }
             </TouchableOpacity>
           }
+          <HUD ref="HUD" type="success" message="送出成功" />
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -189,3 +253,17 @@ const styles = {
     textAlign: 'center',
   },
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { generalRequest, resendConfirmCode } = state;
+  return {
+    ...ownProps,
+    resendConfirmCode,
+    confirmState: generalRequest,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { userResendConfirmCode, userConfirmRegistration }
+)(ConfirmRegistrationCode);

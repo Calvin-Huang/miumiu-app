@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   Modal,
+  Linking,
   AsyncStorage,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -47,6 +48,7 @@ import Settings from './Settings';
 import SignIn from './SignIn';
 import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
+import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
@@ -136,6 +138,16 @@ class Main extends Component {
     FCM.getFCMToken()
       .then((token) => {
         
+      });
+
+    Linking.getInitialURL()
+      .then((url) => {
+        const urlComponents = url.split('?');
+        const domain = urlComponents[0];
+        const query = urlComponents[1];
+        if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
+          console.log(query);
+        }
       });
   }
 

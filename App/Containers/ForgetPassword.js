@@ -21,7 +21,7 @@ import { MKTextField } from 'react-native-material-kit';
 import { NavigatorComponent } from '../Components';
 import ConfirmResetPasswordCode from './ConfirmResetPasswordCode';
 import { MiumiuTheme } from '../Styles';
-import { generalRequestFailed, requestResetPassword } from '../Actions';
+import { generalRequestFailed, userRequestResetPassword } from '../Actions';
 
 class ForgetPassword extends NavigatorComponent {
   constructor(props) {
@@ -33,7 +33,9 @@ class ForgetPassword extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (!props.isRequesting && !props.error && props.timestamp) {
+    const { navigator, route } = props;
+    const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+    if (currentRoute.index === route.index && !props.isRequesting && !props.error && props.timestamp) {
       const { timestamp } = this.props;
       const { account } = this.state;
 
@@ -48,7 +50,7 @@ class ForgetPassword extends NavigatorComponent {
 
     const { account } = this.state;
     if (account) {
-      this.props.requestResetPassword(account);
+      this.props.userRequestResetPassword(account);
     }
   }
 
@@ -99,7 +101,7 @@ class ForgetPassword extends NavigatorComponent {
               style={styles.roundButtonBackground}
             />
             <Text style={MiumiuTheme.buttonText}>
-              確定
+              重設密碼
             </Text>
             { isRequesting &&
               <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
@@ -167,5 +169,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { generalRequestFailed, requestResetPassword }
+  { generalRequestFailed, userRequestResetPassword }
 )(ForgetPassword);

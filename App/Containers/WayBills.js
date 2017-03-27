@@ -115,7 +115,6 @@ class WayBills extends NavigatorComponent {
   }
 
   componentDidMount() {
-    // AsyncStorage.removeItem('miumiu:JWTToken');
     this.props.fetchWayBills(this.props.currentPage);
   }
 

@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"color": "^1.0.3",
+		"event-emitter": "^0.3.5",
 		"humps": "^2.0.0",
 		"jwt-decode": "^2.1.0",
 		"moment": "^2.18.1",

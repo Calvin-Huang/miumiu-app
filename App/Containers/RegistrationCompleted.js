@@ -22,7 +22,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { NavigatorComponent, HUD } from '../Components';
 import WayBills from './WayBills';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
-import { userSignIn } from '../Actions';
+import { userSignIn, userSignInSuccess } from '../Actions';
+import { setAuthenticationToken, currentUser } from '../Utils/authentication';
 import store from '../storeInstance';
 
 class RegistrationCompleted extends NavigatorComponent {
@@ -53,13 +54,19 @@ class RegistrationCompleted extends NavigatorComponent {
     }
   }
 
-  signIn() {
-    const { isSigningIn, route: { data: { account, password } } } = this.props;
+  async signIn() {
+    const { isSigningIn, route: { data: { account, password, token } } } = this.props;
     if (isSigningIn) {
       return;
     }
 
-    this.props.userSignIn(account, password);
+    if (token) {
+      await setAuthenticationToken(token);
+      const user = await currentUser;
+      this.props.userSignInSuccess(user);
+    } else {
+      this.props.userSignIn(account, password);
+    }
   }
 
   render() {
@@ -135,5 +142,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { userSignIn }
+  { userSignIn, userSignInSuccess }
 )(RegistrationCompleted);

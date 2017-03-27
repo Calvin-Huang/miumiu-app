@@ -46,6 +46,7 @@ import PickUpPassword from './PickUpPassword';
 import FAQ from './FAQ';
 import Settings from './Settings';
 import SignIn from './SignIn';
+import RegistrationCompleted from './RegistrationCompleted';
 import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
@@ -146,7 +147,7 @@ class Main extends Component {
       })
       .catch(() => { /* Do nothing */ });
 
-    Linking.addEventListener('url', this.handleOpenURL);
+    Linking.addEventListener('url', this.handleOpenURL.bind(this));
   }
 
   componentWillReceiveProps(props) {
@@ -199,7 +200,7 @@ class Main extends Component {
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleOpenURL);
+    Linking.removeEventListener('url', this.handleOpenURL.bind(this));
   }
 
   handleOpenURL({ url }) {
@@ -209,7 +210,7 @@ class Main extends Component {
 
     const urlComponents = url.split('?');
     const domain = urlComponents[0];
-    const queries = urlComponents[1]
+    const queries = (urlComponents[1] || '')
       .split('&')
       .map((query) => {
         const p = query.split('=');
@@ -224,7 +225,22 @@ class Main extends Component {
         };
       });
     if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
-      
+      const { token } = queries;
+      if (token) {
+
+        // Disable swipe back gesture.
+        this.refs.navigator.immediatelyResetRouteStack([
+          {
+            index: 0,
+            component: WayBills,
+          }, {
+            index: 1,
+            component: RegistrationCompleted,
+            data: { token },
+            transition: { ...Navigator.SceneConfigs.FloatFromBottom, gestures: {} },
+          }
+        ]);
+      }
     }
   }
 

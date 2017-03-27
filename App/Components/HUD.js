@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import {
   View,
   Text,
+  ActivityIndicator,
   Modal,
   StyleSheet,
 } from 'react-native';
@@ -18,7 +19,7 @@ export default class HUD extends Component {
     delay: PropTypes.number,
     visible: PropTypes.bool.isRequired,
     onHidden: PropTypes.func,
-    type: PropTypes.oneOf(['success']),
+    type: PropTypes.oneOf(['success', 'progress']),
     textStyle: PropTypes.object,
     message: PropTypes.string,
   };
@@ -38,6 +39,8 @@ export default class HUD extends Component {
   componentWillReceiveProps(props) {
     if (props.visible) {
       this.flash();
+
+      this.setState({ visible: props.visible });
     }
   }
 
@@ -56,6 +59,7 @@ export default class HUD extends Component {
   }
 
   render() {
+    const { type } = this.props;
     return (
       <Modal
         transparent={true}
@@ -64,8 +68,11 @@ export default class HUD extends Component {
       >
         <View style={styles.container}>
           <BlurView blurType="dark" style={styles.blurContainer}>
-            { this.props.type === 'success' &&
+            { type === 'success' &&
               <Icon name="md-checkmark" color="white" size={30} style={{ paddingHorizontal: 6 }} />
+            }
+            { type === 'progress' &&
+              <ActivityIndicator color="white" style={{ paddingTop: 6, paddingBottom: 8, paddingHorizontal: 6 }} />
             }
             { this.props.message &&
               <Text style={this.props.textStyle || styles.defaultTextStyle}>{this.props.message}</Text>

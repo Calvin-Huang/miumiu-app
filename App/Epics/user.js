@@ -4,10 +4,22 @@
 
 import { AsyncStorage } from 'react-native';
 
+import { Observable } from 'rxjs';
+
 import HttpError from 'standard-http-error';
 
 import * as ActionTypes from '../Constants/actionTypes';
-import { userSignInSuccess, userSignInFailed, userSignOutSuccess } from '../Actions';
+import {
+  userSignInSuccess,
+  userSignInFailed,
+  userSignOutSuccess,
+  userRegisterSuccess,
+  userResendConfirmCodeSuccess,
+  userResendConfirmCodeFailed,
+  generalRequest,
+  generalRequestSuccess,
+  generalRequestFailed,
+} from '../Actions';
 import { currentUser, signOut } from '../Utils/authentication';
 
 import { post } from '../Utils/api';
@@ -49,4 +61,57 @@ export function userSignOut(action$) {
 
       return userSignOutSuccess();
     })
+}
+
+export function userRegister(action$) {
+  return action$.ofType(ActionTypes.USER_REGISTER)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { account, password, passwordConfirmation: confirm } = action;
+          const response = await post('auth/register', { account, password, confirm });
+
+          observer.next(userRegisterSuccess(response));
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+
+        observer.complete();
+      });
+    });
+}
+
+export function userConfirmRegistration(action$) {
+  return action$.ofType(ActionTypes.USER_CONFIRM_REGISTRATION_CODE)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { phone: mobile, confirmCode: code } = action;
+          await post('auth/confirm', { mobile, code });
+
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+      });
+    });
+}
+
+export function userResendConfirmCode(action$) {
+  return action$.ofType(ActionTypes.USER_RESEND_CONFIRM_CODE)
+    .switchMap(async (action) => {
+      try {
+        const { account } = action;
+        const response = await post('auth/register/retry', { account });
+
+        return userResendConfirmCodeSuccess(response);
+      } catch (error) {
+        return userResendConfirmCodeFailed(error);
+      }
+    });
 }

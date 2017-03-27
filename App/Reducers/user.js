@@ -7,6 +7,10 @@ import {
   USER_SIGN_IN_SUCCESS,
   USER_SIGN_IN_FAILED,
   USER_SIGN_OUT,
+  USER_REGISTER_SUCCESS,
+  USER_RESEND_CONFIRM_CODE,
+  USER_RESEND_CONFIRM_CODE_SUCCESS,
+  USER_RESEND_CONFIRM_CODE_FAILED,
   SHOW_USER_QRCODE,
   HIDE_USER_QRCODE,
 } from '../Constants/actionTypes';
@@ -53,6 +57,42 @@ export default function user(state = initialState, action) {
         ...initialState,
         isSigningIn: false,
         currentUser: null,
+      };
+    default:
+      return state;
+  }
+}
+
+export function register(state = { timestamp: null }, action) {
+  switch (action.type) {
+    case USER_REGISTER_SUCCESS:
+      return {
+        timestamp: action.response.timestamp,
+      }
+    default:
+      return state;
+  }
+}
+
+export function resendConfirmCode(state = { isRequesting: false, timestamp: null, error: null }, action) {
+  switch (action.type) {
+    case USER_RESEND_CONFIRM_CODE:
+      return {
+        isRequesting: true,
+        timestamp: null,
+        error: null,
+      };
+    case USER_RESEND_CONFIRM_CODE_SUCCESS:
+      return {
+        isRequesting: false,
+        timestamp: action.response.timestamp,
+        error: null,
+      };
+    case USER_RESEND_CONFIRM_CODE_FAILED:
+      return {
+        isRequesting: false,
+        timestamp: null,
+        error: action.error,
       };
     default:
       return state;

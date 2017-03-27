@@ -46,7 +46,9 @@ class SignIn extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (props.currentUser) {
+    const { navigator, route } = this.props;
+    const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+    if (props.currentUser && currentRoute.index === route.index) {
       dismissKeyboard();
 
       this.props.navigator.replacePreviousAndPop({
@@ -83,6 +85,7 @@ class SignIn extends NavigatorComponent {
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
                 autoCapitalize="none"
+                keyboardType="email-address"
                 floatingLabelEnabled={true}
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
@@ -165,7 +168,7 @@ const styles = {
     flex: 1,
   },
   body: {
-    marginTop: 92,
+    marginTop: 74,
     alignItems: 'center',
   },
   forgetButton: {

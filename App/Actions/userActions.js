@@ -77,14 +77,14 @@ export function userResendConfirmCodeFailed(error) {
   };
 }
 
-export function userForgetPassword(account) {
+export function userRequestResetPassword(account) {
   return {
     type: ActionTypes.USER_REQUEST_RESET_PASSWORD,
     account,
   };
 }
 
-export function userForgetPasswordSuccess(response) {
+export function userRequestResetPasswordSuccess(response) {
   return {
     type: ActionTypes.USER_REQUEST_RESET_PASSWORD_SUCCESS,
     response,

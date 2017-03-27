@@ -137,19 +137,16 @@ class Main extends Component {
     FCM.requestPermissions();
     FCM.getFCMToken()
       .then((token) => {
-        
+
       });
 
     Linking.getInitialURL()
       .then((url) => {
-        const urlComponents = url.split('?');
-        const domain = urlComponents[0];
-        const query = urlComponents[1];
-        if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
-          console.log(query);
-        }
+        this.handleOpenURL({ url });
       })
       .catch(() => { /* Do nothing */ });
+
+    Linking.addEventListener('url', this.handleOpenURL);
   }
 
   componentWillReceiveProps(props) {
@@ -198,6 +195,23 @@ class Main extends Component {
             DeviceBrightness.setBrightnessLevel(parseFloat(brightnessLevel, 10));
           });
       }
+    }
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+
+  handleOpenURL({ url }) {
+    if (!url) {
+      return;
+    }
+
+    const urlComponents = url.split('?');
+    const domain = urlComponents[0];
+    const query = urlComponents[1];
+    if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
+      
     }
   }
 

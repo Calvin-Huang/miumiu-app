@@ -55,6 +55,7 @@ import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 import { errors as APIErrors } from '../Utils/api';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
+import { fetchContactInfo } from '../Actions/settingActions';
 
 class Main extends Component {
   constructor(props) {
@@ -143,6 +144,7 @@ class Main extends Component {
 
   componentDidMount() {
     this.props.checkUserSignedIn();
+    this.props.fetchContactInfo();
 
     FCM.requestPermissions();
     FCM.getFCMToken()
@@ -413,5 +415,5 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode, fetchContactInfo },
 )(Main);

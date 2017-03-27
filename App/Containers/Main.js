@@ -209,7 +209,20 @@ class Main extends Component {
 
     const urlComponents = url.split('?');
     const domain = urlComponents[0];
-    const query = urlComponents[1];
+    const queries = urlComponents[1]
+      .split('&')
+      .map((query) => {
+        const p = query.split('=');
+        let object = {};
+        object[p[0]] = p[1];
+        return object;
+      })
+      .reduce((result, object) => {
+        return {
+          ...result,
+          ...object,
+        };
+      });
     if (domain === `${DEEP_LINK_PROTOCOL}://register/complete`) {
       
     }

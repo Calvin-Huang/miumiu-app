@@ -28,8 +28,7 @@ class Register extends NavigatorComponent {
     super(props);
 
     this.state = {
-      email: null,
-      phone: null,
+      account: null,
       password: null,
       passwordConfirmation: null,
     }

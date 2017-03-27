@@ -17,6 +17,7 @@ import FAQs from './FAQs';
 import navigationBar from './navigationBar';
 import sideDrawer from './sideDrawer';
 import user, { register, resendConfirmCode, requestResetPassword, resendResetPasswordConfirmCode, userQRCodeModal } from './user';
+import { contactInfo } from './setting';
 
 export default combineReducers({
   generalRequest,
@@ -37,4 +38,5 @@ export default combineReducers({
   userQRCodeModal,
   requestResetPassword,
   resendResetPasswordConfirmCode,
+  contactInfo,
 });

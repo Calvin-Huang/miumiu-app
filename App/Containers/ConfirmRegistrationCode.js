@@ -16,11 +16,14 @@ import dismissKeyboard from 'dismissKeyboard';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+import leftPad from 'left-pad';
 
 import { NavigatorComponent } from '../Components';
 import RegistrationCompleted from './RegistrationCompleted';
 import { MiumiuTheme } from '../Styles';
 import { validateEmail } from '../Utils/validator';
+import { COUNTDOWN_SECONDS } from '../Constants/config';
 
 export default class ConfirmRegistrationCode extends NavigatorComponent {
   constructor(props) {
@@ -29,7 +32,19 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
     this.state = {
       codes: [ '', '', '', '' ],
       isAccountTypeEmail: validateEmail(props.route.data.account),
+      remainingTime: '0:00',
+      canRetry: false,
     };
+  }
+
+  componentWillMount() {
+    this.timer = setInterval(() => {
+      this.countDown();
+    }, 0.5);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   codeFieldTextChanged(codeFieldNumber, text) {
@@ -50,8 +65,22 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
     }
   }
 
+  countDown() {
+    const { timestamp } = this.props.route.data;
+
+    const diffSeconds = moment.unix(timestamp).add(COUNTDOWN_SECONDS, 'seconds').diff(moment(), 'seconds');
+
+    if (diffSeconds > 0) {
+      this.setState({ remainingTime: `${Math.floor(diffSeconds / 60)}:${leftPad(diffSeconds % 60, 2, '0')}` });
+    } else {
+      this.setState({ remainingTime: '0:00', canRetry: true });
+      clearInterval(this.timer);
+    }
+  }
+
   render() {
-    const { isAccountTypeEmail } = this.state;
+    const { route: { data: { account, timestamp } } } = this.props;
+    const { isAccountTypeEmail, remainingTime, canRetry } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <LinearGradient
@@ -76,10 +105,14 @@ export default class ConfirmRegistrationCode extends NavigatorComponent {
               </View>
             }
             <Text style={styles.registerHintText}>
-              如果沒有收到驗證{ isAccountTypeEmail ? '信件' : '碼' }，您可以在 <Text>0:20</Text> 後
+              如果沒有收到驗證{ isAccountTypeEmail ? '信件' : '碼' }，您可以在 <Text style={{ fontWeight: 'bold' }}>{remainingTime}</Text> 後
             </Text>
-            <TouchableOpacity>
-              <Text style={{ ...MiumiuTheme.buttonText, ...styles.underline }}>重新發送驗證{ isAccountTypeEmail ? '信件' : '碼' }</Text>
+            <TouchableOpacity disabled={!canRetry}>
+              <Text style={{
+                ...MiumiuTheme.buttonText,
+                ...styles.underline,
+                opacity: canRetry ? 1 : 0.7,
+              }}>重新發送驗證{ isAccountTypeEmail ? '信件' : '碼' }</Text>
             </TouchableOpacity>
           </View>
           { !isAccountTypeEmail &&

@@ -91,11 +91,13 @@ export function userRequestResetPasswordSuccess(response) {
   };
 }
 
-export function userConfirmResetPasswordCode(phone, confirmCode) {
+export function userConfirmResetPasswordCode(phone, confirmCode, password, passwordConfirmation) {
   return {
     type: ActionTypes.USER_CONFIRM_RESET_PASSWORD_CODE,
     phone,
     confirmCode,
+    password,
+    passwordConfirmation,
   };
 }
 

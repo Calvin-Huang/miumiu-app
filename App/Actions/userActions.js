@@ -77,6 +77,51 @@ export function userResendConfirmCodeFailed(error) {
   };
 }
 
+export function userRequestResetPassword(account) {
+  return {
+    type: ActionTypes.USER_REQUEST_RESET_PASSWORD,
+    account,
+  };
+}
+
+export function userRequestResetPasswordSuccess(response) {
+  return {
+    type: ActionTypes.USER_REQUEST_RESET_PASSWORD_SUCCESS,
+    response,
+  };
+}
+
+export function userConfirmResetPasswordCode(phone, confirmCode, password, passwordConfirmation) {
+  return {
+    type: ActionTypes.USER_CONFIRM_RESET_PASSWORD_CODE,
+    phone,
+    confirmCode,
+    password,
+    passwordConfirmation,
+  };
+}
+
+export function userResendResetPasswordConfirmCode(account) {
+  return {
+    type: ActionTypes.USER_RESEND_RESET_PASSWORD_CONFIRM_CODE,
+    account,
+  };
+}
+
+export function userResendResetPasswordConfirmCodeSuccess(response) {
+  return {
+    type: ActionTypes.USER_RESEND_RESET_PASSWORD_CONFIRM_CODE_SUCCESS,
+    response,
+  };
+}
+
+export function userResendResetPasswordConfirmCodeFailed(error) {
+  return {
+    type: ActionTypes.USER_RESEND_RESET_PASSWORD_CONFIRM_CODE_FAILED,
+    error,
+  };
+}
+
 export function userSignOut() {
   return {
     type: ActionTypes.USER_SIGN_OUT,

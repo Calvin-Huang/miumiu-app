@@ -16,6 +16,9 @@ import {
   userRegisterSuccess,
   userResendConfirmCodeSuccess,
   userResendConfirmCodeFailed,
+  userRequestResetPasswordSuccess,
+  userResendResetPasswordConfirmCodeSuccess,
+  userResendResetPasswordConfirmCodeFailed,
   generalRequest,
   generalRequestSuccess,
   generalRequestFailed,
@@ -113,6 +116,59 @@ export function userResendConfirmCode(action$) {
         return userResendConfirmCodeSuccess(response);
       } catch (error) {
         return userResendConfirmCodeFailed(error);
+      }
+    });
+}
+
+export function userRequestResetPassword(action$) {
+  return action$.ofType(ActionTypes.USER_REQUEST_RESET_PASSWORD)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { account } = action;
+          const response = await post('auth/forgot', { account, redirect_uri: `${DEEP_LINK_PROTOCOL}://forgot/complete` });
+
+          observer.next(userRequestResetPasswordSuccess(response));
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+
+        observer.complete();
+      });
+    });
+}
+
+export function userConfirmResetPasswordCode(action$) {
+  return action$.ofType(ActionTypes.USER_CONFIRM_RESET_PASSWORD_CODE)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { phone: mobile, confirmCode: code, password, passwordConfirmation: confirm } = action;
+          await post('auth/forgot/mobile', { mobile, code, password, confirm });
+
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+      });
+    });
+}
+
+export function userResendResetPasswordConfirmCode(action$) {
+  return action$.ofType(ActionTypes.USER_RESEND_RESET_PASSWORD_CONFIRM_CODE)
+    .switchMap(async (action) => {
+      try {
+        const { account } = action;
+        const response = await post('auth/forgot', { account, redirect_uri: `${DEEP_LINK_PROTOCOL}://forgot/complete` });
+
+        return userResendResetPasswordConfirmCodeSuccess(response);
+      } catch (error) {
+        return userResendResetPasswordConfirmCodeFailed(error);
       }
     });
 }

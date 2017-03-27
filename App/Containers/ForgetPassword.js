@@ -1,5 +1,5 @@
 /**
- * Created by Calvin Huang on 3/4/17.
+ * Created by calvin.huang on 27/03/2017.
  */
 
 import React, { Component } from 'react';
@@ -16,50 +16,46 @@ import dismissKeyboard from 'dismissKeyboard';
 
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { MKTextField, MKCheckbox } from 'react-native-material-kit';
+import { MKTextField } from 'react-native-material-kit';
 
 import { NavigatorComponent } from '../Components';
-import ConfirmRegistrationCode from './ConfirmRegistrationCode';
+import ConfirmResetPasswordCode from './ConfirmResetPasswordCode';
 import { MiumiuTheme } from '../Styles';
-import { generalRequestFailed, userRegister } from '../Actions';
+import { generalRequestFailed, userRequestResetPassword } from '../Actions';
 
-class Register extends NavigatorComponent {
+class ForgetPassword extends NavigatorComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       account: null,
-      password: null,
-      passwordConfirmation: null,
     }
   }
 
   componentWillReceiveProps(props) {
-    if (!props.isRequesting && !props.error && props.timestamp) {
+    const { navigator, route } = props;
+    const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+    if (currentRoute.index === route.index && !props.isRequesting && !props.error && props.timestamp) {
       const { timestamp } = this.props;
-      const { account, password } = this.state;
+      const { account } = this.state;
 
-      this.pushToNextComponent(ConfirmRegistrationCode, { account, password, timestamp });
+      this.pushToNextComponent(ConfirmResetPasswordCode, { account, timestamp });
     }
   }
 
-  submitRegistration() {
+  submitRequest() {
     if (this.props.isRequesting) {
       return;
     }
 
-    const { account, password, passwordConfirmation, checkedServiceTerm } = this.state;
-    if (password !== passwordConfirmation) {
-      this.props.generalRequestFailed(new Error('密碼確認錯誤，請檢查密碼'));
-    } else if (!checkedServiceTerm) {
-      this.props.generalRequestFailed(new Error('請同意使用協議'));
-    } else {
-      this.props.userRegister(account, password, passwordConfirmation);
+    const { account } = this.state;
+    if (account) {
+      this.props.userRequestResetPassword(account);
     }
   }
 
   render() {
-    const { account, password, passwordConfirmation } = this.state;
+    const { account } = this.state;
     const { isRequesting, error } = this.props;
 
     return (
@@ -81,37 +77,9 @@ class Register extends NavigatorComponent {
                 highlightColor="#D8D8D8"
                 placeholder="手機號碼或Email信箱"
                 placeholderTextColor="#9E9E9E"
-                style={styles.textField}
+                style={{ backgroundColor: 'white' }}
                 onChangeText={(account) => { this.setState({ account }); }}
                 value={account}
-              />
-            </View>
-            <View style={MiumiuTheme.textFieldGroup}>
-              <MKTextField
-                password={true}
-                floatingLabelEnabled={true}
-                textInputStyle={{ height: 31 }}
-                underlineSize={1}
-                highlightColor="#D8D8D8"
-                placeholder="密碼"
-                placeholderTextColor="#9E9E9E"
-                style={{ backgroundColor: 'white' }}
-                onChangeText={(password) => { this.setState({ password }); }}
-                value={password}
-              />
-            </View>
-            <View style={MiumiuTheme.textFieldGroup}>
-              <MKTextField
-                password={true}
-                floatingLabelEnabled={true}
-                textInputStyle={{ height: 31 }}
-                underlineSize={1}
-                highlightColor="#D8D8D8"
-                placeholder="再次確認密碼"
-                placeholderTextColor="#9E9E9E"
-                style={{ backgroundColor: 'white' }}
-                onChangeText={(passwordConfirmation) => { this.setState({ passwordConfirmation }); }}
-                value={passwordConfirmation}
               />
             </View>
             { error &&
@@ -121,25 +89,10 @@ class Register extends NavigatorComponent {
                 </Text>
               </View>
             }
-            <View style={styles.serviceTermGroup}>
-              <MKCheckbox
-                fillColor="white"
-                checked={this.state.checkedServiceTerm}
-                onCheckedChange={() => this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm })}
-              />
-              <TouchableOpacity
-                onPress={() => this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm })}
-              >
-                <Text style={styles.serviceTermCheckboxText}>註冊喵喵代收同時您已經同意了我們的</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
-                <Text style={styles.serviceTermButtonText}>使用協議</Text>
-              </TouchableOpacity>
-            </View>
           </View>
           <TouchableOpacity
             style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
-            onPress={this.submitRegistration.bind(this)}
+            onPress={this.submitRequest.bind(this)}
           >
             <LinearGradient
               start={{ x: 0.485544682, y: 1.44908902 }} end={{ x: 0.485544682, y: -0.811377672 }}
@@ -148,7 +101,7 @@ class Register extends NavigatorComponent {
               style={styles.roundButtonBackground}
             />
             <Text style={MiumiuTheme.buttonText}>
-              註冊
+              重設密碼
             </Text>
             { isRequesting &&
               <ActivityIndicator color="white" style={MiumiuTheme.buttonActivityIndicator} />
@@ -205,10 +158,10 @@ const styles = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { register, generalRequest } = state;
+  const { requestResetPassword, generalRequest } = state;
   return {
     ...ownProps,
-    timestamp: register.timestamp,
+    timestamp: requestResetPassword.timestamp,
     isRequesting: generalRequest.isRequesting,
     error: generalRequest.error,
   };
@@ -216,5 +169,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { generalRequestFailed, userRegister }
-)(Register);
+  { generalRequestFailed, userRequestResetPassword }
+)(ForgetPassword);

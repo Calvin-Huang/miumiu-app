@@ -1,5 +1,5 @@
 /**
- * Created by Calvin Huang on 3/4/17.
+ * Created by calvin.huang on 27/03/2017.
  */
 
 import React, { Component } from 'react';
@@ -26,7 +26,7 @@ import { userSignIn, userSignInSuccess } from '../Actions';
 import { setAuthenticationToken, currentUser } from '../Utils/authentication';
 import store from '../storeInstance';
 
-class RegistrationCompleted extends NavigatorComponent {
+class ResetPasswordCompleted extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => {
@@ -47,7 +47,7 @@ class RegistrationCompleted extends NavigatorComponent {
     }
 
     if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {
-
+      
       // Wait animation done or alert will interrupt flow.
       setTimeout(() => {
         Alert.alert(
@@ -83,8 +83,8 @@ class RegistrationCompleted extends NavigatorComponent {
         style={styles.container}
       >
         <View style={styles.body}>
-          <Icon name="md-checkmark-circle-outline" size={80} color="white" style={styles.statusIcon} />
-          <Text style={styles.heroText}>註冊成功！{'\n'}開始使用喵喵代收吧</Text>
+          <Icon name="md-bulb" size={80} color="white" style={styles.statusIcon} />
+          <Text style={styles.heroText}>密碼更新成功！{'\n'}歡迎回來喵喵代收</Text>
         </View>
         <TouchableOpacity
           style={{ ...MiumiuTheme.actionButton, ...styles.transparentButton }}
@@ -147,4 +147,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   { userSignIn, userSignInSuccess }
-)(RegistrationCompleted);
+)(ResetPasswordCompleted);

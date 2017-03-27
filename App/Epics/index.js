@@ -37,4 +37,5 @@ export default combineEpics(
   userEpics.userResendConfirmCode,
   userEpics.userRequestResetPassword,
   userEpics.userConfirmResetPasswordCode,
+  userEpics.userResendResetPasswordConfirmCode,
 );

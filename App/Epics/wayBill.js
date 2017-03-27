@@ -21,7 +21,7 @@ import { get, post } from '../Utils/api';
 
 export function fetchWayBills(action$) {
   return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
-    .concatMap(async (action) => {
+    .exhaustMap(async (action) => {
       try {
         const response = await get(`shipping?page=${action.currentPage}`);
 

@@ -51,9 +51,9 @@ import ResetPasswordCompleted from './ResetPasswordCompleted';
 import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
-
+import { errors as APIErrors } from '../Utils/api';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
-import { checkUserSignedIn, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
+import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 
 class Main extends Component {
   constructor(props) {
@@ -149,6 +149,9 @@ class Main extends Component {
       .catch(() => { /* Do nothing */ });
 
     Linking.addEventListener('url', this.handleOpenURL.bind(this));
+    APIErrors.on('JWTRefresh', () => {
+      this.props.userSignOut();
+    });
   }
 
   componentWillReceiveProps(props) {
@@ -402,5 +405,5 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn, showUserQRCode, hideUserQRCode },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode },
 )(Main);

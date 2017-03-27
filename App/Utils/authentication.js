@@ -8,6 +8,8 @@ import jwtDecode from 'jwt-decode';
 import { AUTHENTICATION_TOKEN_KEY, JWT_SECRET } from '../Constants/config';
 import { JWTExpiredError } from './errors';
 
+import moment from 'moment';
+
 export function setAuthenticationToken(token) {
   return AsyncStorage.setItem(AUTHENTICATION_TOKEN_KEY, token);
 }
@@ -17,9 +19,9 @@ export async function getAuthenticationToken() {
 
   if (jwtToken) {
     const { exp } = jwtDecode(jwtToken);
-    const currentTime = (new Date()).getTime();
+    const currentTime = moment().unix();
 
-    if (exp * 1000 < currentTime) {
+    if (exp < currentTime) {
       throw new JWTExpiredError(jwtToken);
     }
   }

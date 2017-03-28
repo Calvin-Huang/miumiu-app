@@ -23,12 +23,12 @@ export function contactInfo(state = initialState, action) {
         error: null,
       };
     case FETCH_CONTACT_INFO_SUCCESS:
-      const { wechat, phone, email } = action.response;
+      const { wechat, mobile, email } = action.response.contact;
       return {
         isRequesting: false,
         data: {
           wechat,
-          phone,
+          mobile,
           email,
         },
         error: null,

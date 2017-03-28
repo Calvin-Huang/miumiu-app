@@ -19,6 +19,7 @@ import {
   userRequestResetPasswordSuccess,
   userResendResetPasswordConfirmCodeSuccess,
   userResendResetPasswordConfirmCodeFailed,
+  checkFCMSubscribeStatus,
   generalRequest,
   generalRequestSuccess,
   generalRequestFailed,
@@ -30,29 +31,35 @@ import { post } from '../Utils/api';
 
 export function checkUserSignedIn(action$) {
   return action$.ofType(ActionTypes.CHECK_USER_SIGNED_IN)
-    .exhaustMap(async (_) => {
-      const user = await currentUser();
-      if (user) {
-        return userSignInSuccess(user);
-      } else {
-        return userSignInFailed(new HttpError(401, '尚未登入'));
-      }
+    .exhaustMap((_) => {
+      return new Observable(async (observer) => {
+        const user = await currentUser();
+        if (user) {
+          observer.next(userSignInSuccess(user));
+          observer.next(checkFCMSubscribeStatus());
+        } else {
+          observer.next(userSignInFailed(new HttpError(401, '尚未登入')));
+        }
+      })
     });
 }
 
 export function userSignIn(action$) {
   return action$.ofType(ActionTypes.USER_SIGN_IN)
-    .switchMap(async ({ account, password }) => {
+    .switchMap(({ account, password }) => {
+      return new Observable(async (observer) => {
 
-      try {
-        await post('auth/login', { account, password });
+        try {
+          await post('auth/login', { account, password });
 
-        const user = await currentUser();
+          const user = await currentUser();
 
-        return userSignInSuccess(user);
-      } catch (error) {
-        return userSignInFailed(error);
-      }
+          observer.next(userSignInSuccess(user));
+          observer.next(checkFCMSubscribeStatus());
+        } catch (error) {
+          observer.next(userSignInFailed(error));
+        }
+      });
     });
 }
 

@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
-import { openSideDrawer, userSignOut } from '../Actions';
+import { openSideDrawer, userSignOut, FCMSubscribeStateResult } from '../Actions';
 
 class Settings extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -29,7 +29,29 @@ class Settings extends NavigatorComponent {
     );
   }
 
+  constructor(props) {
+    super(props);
+
+    const { subscribed: { toAll, toMe } } = props;
+
+    this.state = {
+      toAll,
+      toMe,
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    const { subscribed: { toAll, toMe } } = props;
+
+    this.setState({
+      toAll,
+      toMe,
+    });
+  }
+
   render() {
+    const { FCMSubscribeStateResult } = this.props;
+    const { toAll, toMe } = this.state;
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
@@ -41,8 +63,24 @@ class Settings extends NavigatorComponent {
         </MiumiuThemeNavigatorBackground>
         <View style={styles.body}>
           <View style={styles.listViewRow}>
-            <Text style={styles.listViewText}>到貨通知推播</Text>
-            <Switch value={true} />
+            <Text style={styles.listViewText}>公告通知推播</Text>
+            <Switch
+              value={toAll}
+              onValueChange={(toAll) => {
+                this.setState({ toAll });
+                FCMSubscribeStateResult(toAll, toMe);
+              }}
+            />
+          </View>
+          <View style={styles.listViewRow}>
+            <Text style={styles.listViewText}>貨單通知推播</Text>
+            <Switch
+              value={toMe}
+              onValueChange={(toMe) => {
+                this.setState({ toMe });
+                FCMSubscribeStateResult(toAll, toMe);
+              }}
+            />
           </View>
           <TouchableOpacity style={styles.signOutButton} onPress={() => { this.props.userSignOut(); }}>
             <Text style={MiumiuTheme.buttonText}>登出</Text>
@@ -75,10 +113,14 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { FCM: { subscribed } } = state;
+  return {
+    ...ownProps,
+    subscribed,
+  };
 }
 
 export default connect(
   mapStateToProps,
-  { openSideDrawer, userSignOut }
+  { openSideDrawer, userSignOut, FCMSubscribeStateResult }
 )(Settings);

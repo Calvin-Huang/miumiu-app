@@ -12,6 +12,7 @@ import * as calculator from './calculator';
 import * as deliveryInfo from './deliveryInfo';
 import * as serviceStore from './serviceStore';
 import * as FAQ from './FAQ';
+import * as FCM from './FCM';
 
 // export default combineEpics;
 
@@ -40,4 +41,6 @@ export default combineEpics(
   userEpics.userRequestResetPassword,
   userEpics.userConfirmResetPasswordCode,
   userEpics.userResendResetPasswordConfirmCode,
+  FCM.checkSubscribeStatus,
+  FCM.updateSubscribe,
 );

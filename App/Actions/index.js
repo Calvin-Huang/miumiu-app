@@ -11,4 +11,5 @@ export * from './calculatorActions';
 export * from './serviceStoreActions';
 export * from './FAQActions';
 export * from './deliveryInfoActions';
+export * from './FCMActions';
 export * from './generalRequestActions';

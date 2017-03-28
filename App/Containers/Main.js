@@ -27,13 +27,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
-
-import FCM, {
-  FCMEvent,
-  RemoteNotificationResult,
-  WillPresentNotificationResult,
-  NotificationType,
-} from 'react-native-fcm';
+import FCM from 'react-native-fcm';
 
 import { IconFasterShipping } from '../Components';
 
@@ -146,10 +140,6 @@ class Main extends Component {
     this.props.checkUserSignedIn();
 
     FCM.requestPermissions();
-    FCM.getFCMToken()
-      .then((token) => {
-
-      });
 
     Linking.getInitialURL()
       .then((url) => {

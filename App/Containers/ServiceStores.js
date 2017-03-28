@@ -130,10 +130,27 @@ class ServiceStores extends NavigatorComponent {
     ]).start();
 
     this.setState({ isSearching: false });
+    this.filterSearchResult(null);
   }
 
   searchBarTextChanged(text) {
+    this.filterSearchResult(text);
+  }
 
+  filterSearchResult(term) {
+    const { isSearching } = this.state;
+    const { stores } = this.props;
+    if (!term) {
+      this.setState({
+        stores: dataSource.cloneWithRows(stores),
+      });
+    } else if (isSearching) {
+      this.setState({
+        stores: dataSource.cloneWithRows(
+          stores.filter(({ name, address }) => (name || '').includes(term) || (address || '').includes(term))
+        ),
+      });
+    }
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {

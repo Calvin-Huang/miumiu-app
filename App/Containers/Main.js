@@ -289,6 +289,7 @@ class Main extends Component {
     ];
 
     const { currentUser } = this.props;
+    const user = currentUser || {};
 
     return (
       <Drawer
@@ -299,7 +300,7 @@ class Main extends Component {
           <Menu
             navigationItems={this.state.navigationItems}
             onItemPress={this.navigationItemClicked.bind(this)}
-            userId={(currentUser || {}).id}
+            userId={user.id}
           />
         }
         tapToClose={true}
@@ -336,10 +337,10 @@ class Main extends Component {
             <TouchableWithoutFeedback>
               <View style={MiumiuTheme.modalBody}>
                 <View style={styles.qrCode}>
-                  <QRCode value="+998988008752" size={140} />
+                  <QRCode value={user.account} size={140} />
                 </View>
                 <Text style={styles.qrCodeInfo}>
-                  +998988008752
+                  {user.account}
                 </Text>
                 <Text style={styles.pickupInstruction}>
                   已提貨單號工作人員會將單號由APP註銷

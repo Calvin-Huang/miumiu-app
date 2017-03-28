@@ -295,7 +295,9 @@ class Main extends Component {
   render() {
     const routes = [
       { index: 0, component: WayBills },
-    ]
+    ];
+
+    const { currentUser } = this.props;
 
     return (
       <Drawer
@@ -306,6 +308,7 @@ class Main extends Component {
           <Menu
             navigationItems={this.state.navigationItems}
             onItemPress={this.navigationItemClicked.bind(this)}
+            userId={(currentUser || {}).id}
           />
         }
         tapToClose={true}

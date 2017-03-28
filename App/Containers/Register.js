@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   Alert,
+  Navigator,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -22,6 +23,7 @@ import { NavigatorComponent } from '../Components';
 import ConfirmRegistrationCode from './ConfirmRegistrationCode';
 import { MiumiuTheme } from '../Styles';
 import { generalRequestFailed, userRegister } from '../Actions';
+import ServiceTerm from './ServiceTerm';
 
 class Register extends NavigatorComponent {
   constructor(props) {
@@ -56,6 +58,11 @@ class Register extends NavigatorComponent {
     } else {
       this.props.userRegister(account, password, passwordConfirmation);
     }
+  }
+
+  openServiceTerm() {
+    dismissKeyboard();
+    this.pushToNextComponent(ServiceTerm, null, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {
@@ -132,8 +139,8 @@ class Register extends NavigatorComponent {
               >
                 <Text style={styles.serviceTermCheckboxText}>註冊喵喵代收同時您已經同意了我們的</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
-                <Text style={styles.serviceTermButtonText}>使用協議</Text>
+              <TouchableOpacity onPress={this.openServiceTerm.bind(this)}>
+                <Text style={styles.serviceTermButtonText}>服務條款</Text>
               </TouchableOpacity>
             </View>
           </View>

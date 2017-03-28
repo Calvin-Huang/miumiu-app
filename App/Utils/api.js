@@ -5,6 +5,8 @@
 // Reference to pepperoni-app-kit
 // https://github.com/futurice/pepperoni-app-kit
 
+import { Observable } from 'rxjs';
+
 import HttpError from 'standard-http-error';
 
 import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH, API_DEV_MODE } from '../Constants/config';
@@ -17,6 +19,60 @@ import EventEmitter from 'event-emitter';
  * All API errors are emitted on this channel for interested listeners.
  */
 export const errors = new EventEmitter();
+
+const suppressRedBox = API_DEV_MODE;
+
+async function JWTToken() {
+  try {
+    const token = await getAuthenticationToken();
+    return Observable.of(token);
+  } catch (error) {
+    if (error instanceof JWTExpiredError) {
+      return new Observable(async (observable) => {
+        const { jwtToken: expiredToken } = error;
+        const refreshTokenEndPoint = url(REFRESH_TOKEN_PATH);
+        const headers = getRequestHeaders(null, expiredToken);
+
+        if (suppressRedBox) {
+          console.log(`💬  Refresh expired token, expiredToken: ${expiredToken}`);
+        }
+
+        try {
+          const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
+          const { body: { token: newToken } } = await handleResponse(response);
+
+          if (typeof newToken !== 'string') {
+            observable.error(new Error('Response Token is not string'));
+          }
+
+          if (suppressRedBox) {
+            console.log(`✅  Expired token refreshed, newToken: ${newToken}`);
+          }
+
+          // Store new token to local storage.
+          setAuthenticationToken(newToken);
+
+          observable.next(newToken);
+          observable.complete();
+
+        } catch (error) {
+
+          if (suppressRedBox) {
+            console.log('❌  Refresh expired token failed ❌');
+            console.log(error);
+          }
+
+          errors.emit('JWTRefresh', error);
+
+          observable.error(error);
+          observable.complete();
+        }
+      });
+    } else {
+      return Observable.throw(error);
+    }
+  }
+};
 
 export async function get(path, body) {
   let pathQuery = path;
@@ -43,69 +99,40 @@ export function url(path) {
   return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 
-async function request(method, path, body, suppressRedBox = API_DEV_MODE) {
+async function request(method, path, body) {
   const endPoint = url(path);
 
-  let token;
+  const observable = await JWTToken();
 
-  try {
-    token = await getAuthenticationToken();
-  } catch (error) {
-    if (error instanceof JWTExpiredError) {
-      const { jwtToken: expiredToken } = error;
-      const refreshTokenEndPoint = url(REFRESH_TOKEN_PATH);
-      const headers = getRequestHeaders(null, expiredToken);
+  const response = new Promise((resolve, reject) => {
+    observable.subscribe(
+        async (token) => {
+          const headers = getRequestHeaders(body, token);
+          const options = body
+            ? { method, headers, body: JSON.stringify(body) }
+            : { method, headers };
 
-      if (suppressRedBox) {
-        console.log(`💬  Refresh expired token, expiredToken: ${expiredToken}`);
-      }
+          if (suppressRedBox) {
+            console.log('🚀  Request Options 🚀');
+            console.log(options);
+          }
 
-      try {
-        const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
-        const { body: { token: newToken } } = await handleResponse(response);
+          const response = await timeout(fetch(endPoint, options), TIMEOUT);
 
-        if (typeof newToken !== 'string') {
-          throw new Error('Response Token is not string');
-        }
+          if (suppressRedBox) {
+            console.log('🎯  Response 🎯');
+            console.log(response);
+          }
 
-        token = newToken;
+          resolve(response);
+        },
+        (error) => {
+          reject(error);
+        },
+      )
+    });
 
-        if (suppressRedBox) {
-          console.log(`✅  Expired token refreshed, newToken: ${newToken}`);
-        }
-
-        // Store new token to local storage.
-        setAuthenticationToken(newToken);
-      } catch (error) {
-
-        if (suppressRedBox) {
-          console.log('❌  Refresh expired token failed ❌');
-          console.log(error);
-        }
-
-        errors.emit('JWTRefresh', error);
-      }
-    }
-  }
-
-  const headers = getRequestHeaders(body, token);
-  const options = body
-    ? { method, headers, body: JSON.stringify(body) }
-    : { method, headers };
-
-  if (suppressRedBox) {
-    console.log('🚀  Request Options 🚀');
-    console.log(options);
-  }
-
-  const response = await timeout(fetch(endPoint, options), TIMEOUT);
-
-  if (suppressRedBox) {
-    console.log('🎯  Response 🎯');
-    console.log(response);
-  }
-
-  return handleResponse(response);
+  return handleResponse(await response);
 }
 
 function getRequestHeaders(body, token) {

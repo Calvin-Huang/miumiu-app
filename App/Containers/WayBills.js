@@ -115,7 +115,11 @@ class WayBills extends NavigatorComponent {
   }
 
   componentDidMount() {
-    this.props.fetchWayBills(this.props.currentPage);
+    const { wayBills } = this.props;
+
+    if (wayBills.length <= 0) {
+      this.props.fetchWayBills(this.props.currentPage);
+    }
   }
 
   componentWillReceiveProps(props) {

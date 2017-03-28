@@ -27,7 +27,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
-
+import FCM from 'react-native-fcm';
 
 import { IconFasterShipping } from '../Components';
 

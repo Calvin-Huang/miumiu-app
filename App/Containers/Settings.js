@@ -41,7 +41,11 @@ class Settings extends NavigatorComponent {
         </MiumiuThemeNavigatorBackground>
         <View style={styles.body}>
           <View style={styles.listViewRow}>
-            <Text style={styles.listViewText}>到貨通知推播</Text>
+            <Text style={styles.listViewText}>公告通知推播</Text>
+            <Switch value={true} />
+          </View>
+          <View style={styles.listViewRow}>
+            <Text style={styles.listViewText}>貨單通知推播</Text>
             <Switch value={true} />
           </View>
           <TouchableOpacity style={styles.signOutButton} onPress={() => { this.props.userSignOut(); }}>

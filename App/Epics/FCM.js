@@ -37,9 +37,9 @@ export function updateSubscribe(action$) {
       try {
         if (toAll !== null) {
           if (toAll) {
-            FCM.subscribeToTopic('/topics/general');
+            FCM.subscribeToTopic('general');
           } else {
-            FCM.unsubscribeFromTopic('/topics/general');
+            FCM.unsubscribeFromTopic('general');
           }
 
           subscribed.toAll = toAll;

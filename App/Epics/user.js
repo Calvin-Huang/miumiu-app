@@ -30,17 +30,12 @@ import { post } from '../Utils/api';
 
 export function checkUserSignedIn(action$) {
   return action$.ofType(ActionTypes.CHECK_USER_SIGNED_IN)
-    .switchMap(async (_) => {
-      try {
-        const user = await currentUser();
-        if (user) {
-          return userSignInSuccess(user);
-        } else {
-          return userSignInFailed(new HttpError(401, '尚未登入'));
-        }
-      } catch (error) {
-        // Do nothing, refresh token flow will be executed in api.js.
-        return { type: 'EMPTY_ACTION' };
+    .exhaustMap(async (_) => {
+      const user = await currentUser();
+      if (user) {
+        return userSignInSuccess(user);
+      } else {
+        return userSignInFailed(new HttpError(401, '尚未登入'));
       }
     });
 }

@@ -235,6 +235,7 @@ class FAQ extends NavigatorComponent {
           renderRow={this.renderRowView.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
           enableEmptySections={true}
+          onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}

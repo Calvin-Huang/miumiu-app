@@ -388,6 +388,7 @@ class WayBills extends NavigatorComponent {
           onEndReached={this.onPaginating.bind(this)}
           onEndReachedThreshold={60}
           enableEmptySections={true}
+          onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}

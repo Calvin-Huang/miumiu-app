@@ -9,6 +9,9 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
+  Clipboard,
+  Linking,
+  Platform,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -21,6 +24,7 @@ import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import { fetchContactInfo } from '../Actions/settingActions';
 import store from '../storeInstance';
+import { currentUser } from '../Utils/authentication';
 
 class ContactUs extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -60,6 +64,43 @@ class ContactUs extends NavigatorComponent {
     }
   }
 
+  wechatInfoTapped(wechat) {
+    const copyString = wechat;
+
+    Clipboard.setString(copyString);
+
+    this.refs.HUD.flash(2);
+
+    // When user doesn't install wechat, copy string to clipboard.
+    // console.log(`weixin://dl/chat?${wechat}`);
+    // Linking
+    //   .openURL(`weixin://dl/chat?${wechat}`)
+    //   .catch((_) => {
+    //     if (copyString) {
+    //       Clipboard.setString(copyString);
+    //
+    //       this.refs.HUD.flash(2);
+    //     }
+    //   });
+  }
+
+  phoneInfoTapped(mobile) {
+    // Do nothing when user cancel phone call.
+    Linking
+      .openURL(`${Platform.OS !== 'android' ? 'telprompt' : 'tel'}:${mobile}`)
+      .catch(() => {});
+  }
+
+  async emailInfoTapped(email) {
+    const user = await currentUser();
+
+    // Do nothing when user cancel sending email.
+    // [喵喵代收] 會員編號: ${user.id}
+    Linking
+      .openURL(`mailto:${email}?subject=%5B%E5%96%B5%E5%96%B5%E4%BB%A3%E6%94%B6%5D%20%E6%9C%83%E5%93%A1%E7%B7%A8%E8%99%9F%3A%20${user.id}`)
+      .catch((error) => {});
+  }
+
   render() {
     const { isRequesting, error, contactInfo } = this.props;
     const { mobile, email, wechat } = contactInfo || {};
@@ -83,7 +124,7 @@ class ContactUs extends NavigatorComponent {
           }
           { !error &&
             <View>
-              <TouchableOpacity style={styles.row} onPress={() => {}}>
+              <TouchableOpacity style={styles.row} onPress={this.wechatInfoTapped.bind(this, wechat)}>
                 <View style={styles.iconContainer}>
                   <FontAwesomeIcon name="weixin" size={24} color="gray" />
                 </View>
@@ -95,7 +136,7 @@ class ContactUs extends NavigatorComponent {
               <View style={styles.separatorContainer}>
                 <View style={styles.separator} />
               </View>
-              <TouchableOpacity style={styles.row} onPress={() => {}}>
+              <TouchableOpacity style={styles.row} onPress={this.phoneInfoTapped.bind(this, mobile)}>
                 <View style={styles.iconContainer}>
                   <Icon name="md-call" size={24} color="gray" />
                 </View>
@@ -107,7 +148,7 @@ class ContactUs extends NavigatorComponent {
               <View style={styles.separatorContainer}>
                 <View style={styles.separator} />
               </View>
-              <TouchableOpacity style={styles.row} onPress={() => {}}>
+              <TouchableOpacity style={styles.row} onPress={this.emailInfoTapped.bind(this, email)}>
                 <View style={styles.iconContainer}>
                   <Icon name="md-mail" size={24} color="gray" />
                 </View>
@@ -124,6 +165,7 @@ class ContactUs extends NavigatorComponent {
             </View>
           }
         </View>
+        <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
       </View>
     );
   }

@@ -144,7 +144,6 @@ class Main extends Component {
 
   componentDidMount() {
     this.props.checkUserSignedIn();
-    this.props.fetchContactInfo();
 
     FCM.requestPermissions();
     FCM.getFCMToken()

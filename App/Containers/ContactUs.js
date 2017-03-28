@@ -61,7 +61,8 @@ class ContactUs extends NavigatorComponent {
   }
 
   render() {
-    const { isRequesting, error } = this.props;
+    const { isRequesting, error, contactInfo } = this.props;
+    const { mobile, email, wechat } = contactInfo || {};
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
@@ -71,56 +72,58 @@ class ContactUs extends NavigatorComponent {
             </Text>
           </View>
         </MiumiuThemeNavigatorBackground>
-        { isRequesting &&
-          <View style={MiumiuTheme.paginationView}>
-            <ActivityIndicator />
-          </View>
-        }
-        { error &&
-          <TouchableOpacity
-            style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-            onPress={() => { this.props.fetchContactInfo(); }}
-          >
-            <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
-          </TouchableOpacity>
-        }
-        { !error &&
-          <View style={styles.body}>
-            <TouchableOpacity style={styles.row} onPress={() => {}}>
-              <View style={styles.iconContainer}>
-                <FontAwesomeIcon name="weixin" size={24} color="green" />
-              </View>
-              <Text style={MiumiuTheme.listViewText}>
-                微信：
-              </Text>
-              <Icon style={MiumiuTheme.listViewForwardIndicator} name="md-information-circle" size={22} color="#D8D8D8" />
+        <View style={styles.body}>
+          { error &&
+            <TouchableOpacity
+              style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
+              onPress={() => { this.props.fetchContactInfo(); }}
+            >
+              <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
             </TouchableOpacity>
-            <View style={styles.separatorContainer}>
-              <View style={styles.separator} />
+          }
+          { !error &&
+            <View>
+              <TouchableOpacity style={styles.row} onPress={() => {}}>
+                <View style={styles.iconContainer}>
+                  <FontAwesomeIcon name="weixin" size={24} color="gray" />
+                </View>
+                <Text style={MiumiuTheme.listViewText}>
+                  {wechat}
+                </Text>
+                <Icon style={MiumiuTheme.listViewForwardIndicator} name="md-information-circle" size={22} color="#4285F4" />
+              </TouchableOpacity>
+              <View style={styles.separatorContainer}>
+                <View style={styles.separator} />
+              </View>
+              <TouchableOpacity style={styles.row} onPress={() => {}}>
+                <View style={styles.iconContainer}>
+                  <Icon name="md-call" size={24} color="gray" />
+                </View>
+                <Text style={MiumiuTheme.listViewText}>
+                  {mobile}
+                </Text>
+                <Icon style={MiumiuTheme.listViewForwardIndicator} name="md-information-circle" size={22} color="#4285F4" />
+              </TouchableOpacity>
+              <View style={styles.separatorContainer}>
+                <View style={styles.separator} />
+              </View>
+              <TouchableOpacity style={styles.row} onPress={() => {}}>
+                <View style={styles.iconContainer}>
+                  <Icon name="md-mail" size={24} color="gray" />
+                </View>
+                <Text style={MiumiuTheme.listViewText}>
+                  {email}
+                </Text>
+                <Icon style={MiumiuTheme.listViewForwardIndicator} name="md-information-circle" size={22} color="#4285F4" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.row} onPress={() => {}}>
-              <View style={styles.iconContainer}>
-                <Icon name="md-call" size={24} color="gray" />
-              </View>
-              <Text style={MiumiuTheme.listViewText}>
-                電話聯絡：
-              </Text>
-              <Icon style={MiumiuTheme.listViewForwardIndicator} name="md-information-circle" size={22} color="#D8D8D8" />
-            </TouchableOpacity>
-            <View style={styles.separatorContainer}>
-              <View style={styles.separator} />
+          }
+          { isRequesting &&
+            <View style={MiumiuTheme.paginationView}>
+              <ActivityIndicator />
             </View>
-            <TouchableOpacity style={styles.row} onPress={() => {}}>
-              <View style={styles.iconContainer}>
-                <Icon name="md-mail" size={24} color="gray" />
-              </View>
-              <Text style={MiumiuTheme.listViewText}>
-                電郵聯絡：
-              </Text>
-              <Icon style={MiumiuTheme.listViewForwardIndicator} name="md-information-circle" size={22} color="#D8D8D8" />
-            </TouchableOpacity>
-          </View>
-        }
+          }
+        </View>
       </View>
     );
   }
@@ -164,6 +167,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     contactInfo: contactInfo.data,
+    isRequesting: contactInfo.isRequesting,
     error: contactInfo.error,
   };
 };

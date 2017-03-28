@@ -129,11 +129,15 @@ class FAQ extends NavigatorComponent {
       )
     ]).start();
 
+    if (this.state.isSearching) {
+      this.props.fetchFAQs();
+    }
+
     this.setState({ isSearching: false });
   }
 
   searchBarTextChanged(text) {
-
+    this.props.fetchFAQs(text);
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
@@ -235,6 +239,7 @@ class FAQ extends NavigatorComponent {
           renderRow={this.renderRowView.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
           enableEmptySections={true}
+          onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}

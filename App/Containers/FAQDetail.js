@@ -25,7 +25,8 @@ class FAQDetail extends NavigatorComponent {
   }
 
   componentWillMount() {
-    if (!this.props.FAQ.content) {
+    const { FAQ } = this.props;
+    if (!FAQ || !FAQ.content) {
       this.props.fetchFAQ(this.props.route.data.id);
     }
   }
@@ -36,7 +37,7 @@ class FAQDetail extends NavigatorComponent {
 
   render() {
     const { route: { data }, FAQ, isFetching, error } = this.props;
-    const { title, content } = FAQ;
+    const { title, content } = FAQ || {};
 
     return (
       <View style={MiumiuTheme.container}>

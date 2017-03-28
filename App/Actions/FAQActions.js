@@ -4,9 +4,10 @@
 
 import * as Actions from '../Constants/actionTypes';
 
-export function fetchFAQs() {
+export function fetchFAQs(query = null) {
   return {
     type: Actions.FETCH_FAQS,
+    query,
   };
 }
 

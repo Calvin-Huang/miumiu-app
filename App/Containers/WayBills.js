@@ -123,9 +123,14 @@ class WayBills extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({
-      wayBills: dataSource.cloneWithRows(props.wayBills),
-    });
+    const { searchingTerm } = this;
+    if (searchingTerm) {
+      this.filterSearchResult(searchingTerm);
+    } else {
+      this.setState({
+        wayBills: dataSource.cloneWithRows(props.wayBills),
+      });
+    }
   }
 
   showSearchBar() {
@@ -195,10 +200,29 @@ class WayBills extends NavigatorComponent {
     ]).start();
 
     this.setState({ isSearching: false });
+
+    this.searchingTerm = null;
+    this.filterSearchResult(null);
   }
 
   searchBarTextChanged(text) {
+    this.searchingTerm = text;
 
+    this.filterSearchResult(this.searchingTerm);
+  }
+
+  filterSearchResult(term) {
+    const { isSearching } = this.state;
+    const { wayBills } = this.props;
+    if (!term) {
+      this.setState({
+        wayBills: dataSource.cloneWithRows(wayBills),
+      });
+    } else if (isSearching) {
+      this.setState({
+        wayBills: dataSource.cloneWithRows(wayBills.filter(({ shippingNo }) => shippingNo.includes(term))),
+      });
+    }
   }
   
   onPaginating() {
@@ -388,6 +412,7 @@ class WayBills extends NavigatorComponent {
           onEndReached={this.onPaginating.bind(this)}
           onEndReachedThreshold={60}
           enableEmptySections={true}
+          onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}

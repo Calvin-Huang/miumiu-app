@@ -94,6 +94,7 @@ class DeliveryInfoList extends NavigatorComponent {
     ]).start();
 
     this.setState({ isSearching: true });
+    this.filterSearchResult(null);
   }
 
   hideSearchBar() {
@@ -130,10 +131,25 @@ class DeliveryInfoList extends NavigatorComponent {
     ]).start();
 
     this.setState({ isSearching: false });
+    this.filterSearchResult(null);
   }
 
   searchBarTextChanged(text) {
+    this.filterSearchResult(text);
+  }
 
+  filterSearchResult(term) {
+    const { isSearching } = this.state;
+    const { deliveryInfoList } = this.props;
+    if (!term) {
+      this.setState({
+        deliveryInfoList: dataSource.cloneWithRows(deliveryInfoList),
+      });
+    } else if (isSearching) {
+      this.setState({
+        deliveryInfoList: dataSource.cloneWithRows(deliveryInfoList.filter(({ name }) => name.includes(term))),
+      });
+    }
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {

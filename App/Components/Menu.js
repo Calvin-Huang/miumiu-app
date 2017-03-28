@@ -80,6 +80,8 @@ export default class Menu extends Component {
   }
 
   render() {
+    const { userId } = this.props;
+    const { userInfoWidth } = this.state;
     return (
       <View style={styles.container}>
         <TouchableHighlight
@@ -87,22 +89,23 @@ export default class Menu extends Component {
           onPress={() => { }}
         >
           <View
-            style={{ ...styles.userInfo, backgroundColor: this.state.coverBackgroundColor }}
+            style={{
+              ...styles.userInfo,
+              backgroundColor: this.state.coverBackgroundColor,
+            }}
           >
+            <Image resizeMode="contain" style={styles.catPawsBackground} source={require('../../assets/images/cat-paws.png')} />
             <View style={{ flex: 1 }}>
               <TouchableOpacity
                 style={styles.avatar}
                 onPress={() => { }}
               >
-                <Image style={{ flex: 1 }} source={{ uri: 'https://i.imgur.com/WCdnBho.png' }} />
+                <Image resizeMode="contain" style={{ flex: 1 }} source={require('../../assets/images/cardboard1.png')} />
               </TouchableOpacity>
             </View>
-            <TouchableWithoutFeedback>
-              <View style={styles.moreInfoButton}>
-                <Text style={styles.moreInfoButtonText}>Michael 會員編號 2017</Text>
-                <Icon name="md-arrow-dropdown" size={14} color="white" />
-              </View>
-            </TouchableWithoutFeedback>
+            <View style={styles.moreInfoButton}>
+              <Text style={styles.moreInfoButtonText}>會員編號 {userId}</Text>
+            </View>
           </View>
         </TouchableHighlight>
         <ListView
@@ -124,13 +127,14 @@ const styles = {
     backgroundColor: 'white',
   },
   userInfo: {
-    height: 172,
+    aspectRatio: 162 / 304,
   },
   avatar: {
     width: 64,
     height: 64,
     borderRadius: 32,
     overflow: 'hidden',
+    backgroundColor: '#8B8B8B',
 
     // Status bar: 20, Margin top: 16.
     marginTop: 36,
@@ -145,6 +149,7 @@ const styles = {
     fontSize: 14,
     color: 'white',
     flex: 1,
+    backgroundColor: 'transparent',
   },
   navigationItems: {
     marginTop: 7,
@@ -162,5 +167,10 @@ const styles = {
   navigationItemText: {
     fontSize: 14,
     marginVertical: 16,
+  },
+  catPawsBackground: {
+    position: 'absolute',
+    right: 6,
+    bottom: 7,
   },
 };

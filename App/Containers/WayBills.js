@@ -349,7 +349,7 @@ class WayBills extends NavigatorComponent {
                 marginLeft: 15,
               }}
             >
-              嗨！Michael Guan，你可以先
+              嗨！你可以先
             </Text>
             <TouchableOpacity
               style={{

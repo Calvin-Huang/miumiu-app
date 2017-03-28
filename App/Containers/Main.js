@@ -159,6 +159,7 @@ class Main extends Component {
 
     Linking.addEventListener('url', this.handleOpenURL.bind(this));
     APIErrors.on('JWTRefresh', () => {
+      this.props.closeSideDrawer();
       this.props.userSignOut();
     });
   }
@@ -295,7 +296,9 @@ class Main extends Component {
   render() {
     const routes = [
       { index: 0, component: WayBills },
-    ]
+    ];
+
+    const { currentUser } = this.props;
 
     return (
       <Drawer
@@ -306,6 +309,7 @@ class Main extends Component {
           <Menu
             navigationItems={this.state.navigationItems}
             onItemPress={this.navigationItemClicked.bind(this)}
+            userId={(currentUser || {}).id}
           />
         }
         tapToClose={true}

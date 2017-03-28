@@ -30,7 +30,7 @@ export async function getAuthenticationToken() {
 }
 
 export async function currentUser() {
-  const jwtToken = await getAuthenticationToken();
+  const jwtToken = await AsyncStorage.getItem(AUTHENTICATION_TOKEN_KEY);
 
   if (jwtToken) {
     return jwtDecode(jwtToken);

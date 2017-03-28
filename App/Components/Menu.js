@@ -80,6 +80,7 @@ export default class Menu extends Component {
   }
 
   render() {
+    const { userId } = this.props;
     return (
       <View style={styles.container}>
         <TouchableHighlight
@@ -97,12 +98,9 @@ export default class Menu extends Component {
                 <Image style={{ flex: 1 }} source={{ uri: 'https://i.imgur.com/WCdnBho.png' }} />
               </TouchableOpacity>
             </View>
-            <TouchableWithoutFeedback>
-              <View style={styles.moreInfoButton}>
-                <Text style={styles.moreInfoButtonText}>Michael 會員編號 2017</Text>
-                <Icon name="md-arrow-dropdown" size={14} color="white" />
-              </View>
-            </TouchableWithoutFeedback>
+            <View style={styles.moreInfoButton}>
+              <Text style={styles.moreInfoButtonText}>會員編號 {userId}</Text>
+            </View>
           </View>
         </TouchableHighlight>
         <ListView

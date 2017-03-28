@@ -65,6 +65,10 @@ class ContactUs extends NavigatorComponent {
   }
 
   wechatInfoTapped(wechat) {
+    if (this.props.isRequesting) {
+      return;
+    }
+
     const copyString = wechat;
 
     Clipboard.setString(copyString);
@@ -85,6 +89,10 @@ class ContactUs extends NavigatorComponent {
   }
 
   phoneInfoTapped(mobile) {
+    if (this.props.isRequesting) {
+      return;
+    }
+
     // Do nothing when user cancel phone call.
     Linking
       .openURL(`${Platform.OS !== 'android' ? 'telprompt' : 'tel'}:${mobile}`)
@@ -92,6 +100,10 @@ class ContactUs extends NavigatorComponent {
   }
 
   async emailInfoTapped(email) {
+    if (this.props.isRequesting) {
+      return;
+    }
+
     const user = await currentUser();
 
     // Do nothing when user cancel sending email.

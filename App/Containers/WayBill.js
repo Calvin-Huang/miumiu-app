@@ -19,6 +19,7 @@ import moment from 'moment';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
+import ServiceStore from './ServiceStore';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { showUserQRCode } from '../Actions';
@@ -45,6 +46,11 @@ class WayBill extends NavigatorComponent {
     this.state = {
       data: this.props.route.data,
     };
+  }
+
+  checkServiceStoreButtonTapped() {
+    const { data } = this.state;
+    this.pushToNextComponent(ServiceStore, { id: data.locationId }, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {
@@ -116,6 +122,17 @@ class WayBill extends NavigatorComponent {
               {data.stockFee ? `$${data.stockFee}` : '-'}
             </Text>
           </View>
+          <TouchableOpacity onPress={() => {}}>
+            <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
+          </TouchableOpacity>
+          { data.locationId && data.status === WayBillState.ARRIVED &&
+            <TouchableOpacity onPress={this.checkServiceStoreButtonTapped.bind(this)}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ ...MiumiuTheme.contextText, textDecorationLine: 'none' }}>{data.locationName}</Text>
+                <Icon name="md-information-circle" size={14} color="gray" style={{ marginLeft: 5, marginTop: 4 }} />
+              </View>
+            </TouchableOpacity>
+          }
         </View>
         { data.status === WayBillState.CONFIRMING &&
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
@@ -168,6 +185,12 @@ const styles = {
     ...MiumiuTheme.listViewText,
     flex: 1,
     textAlign: 'right',
+  },
+  guideLinkLabel: {
+    fontWeight: 'bold',
+    padding: 10,
+    textDecorationLine: 'underline',
+    textAlign: 'center',
   },
   body: {
     flex: 1,

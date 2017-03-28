@@ -2,7 +2,7 @@
  * Created by calvin.huang on 28/03/2017.
  */
 
-import { FCM_SUBSCRIBE_STATE_UPDATED } from '../Constants/actionTypes';
+import { FCM_SUBSCRIBE_STATUS_RESULT, FCM_SUBSCRIBE_STATE_UPDATED } from '../Constants/actionTypes';
 
 const initialState = {
   subscribed: {
@@ -13,21 +13,18 @@ const initialState = {
 
 export default function FCM(state = initialState, action) {
   switch (action.type) {
-    case FCM_SUBSCRIBE_STATE_UPDATED:
+    case FCM_SUBSCRIBE_STATUS_RESULT:
       const { toAll, toMe } = action;
-      let result = {};
+      let subscribed = state.subscribed;
       if (toAll !== null) {
-        result.toAll = toAll;
+        subscribed.toAll = toAll;
       }
       if (toMe !== null) {
-        result.toMe = toMe;
+        subscribed.toMe = toMe;
       }
 
       return {
-        subscribed: {
-          ...state.subscribed,
-          ...result,
-        }
+        subscribed,
       };
     default:
       return state;

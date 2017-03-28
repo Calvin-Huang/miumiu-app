@@ -32,7 +32,6 @@ import { fetchServiceStore } from '../Actions';
 
 class ServiceStore extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
-    console.log(route);
     if (route.index > 1) {
       return (
         <TouchableOpacity onPress={() => {

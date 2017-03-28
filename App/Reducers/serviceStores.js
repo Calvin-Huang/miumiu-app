@@ -63,7 +63,11 @@ export default function serviceStores(state = initialState, action) {
 
       const serviceStore = data.find((eachData) => eachData.id === response.id);
 
-      data[data.indexOf(serviceStore)] = { ...serviceStore, ...humps.camelizeKeys(response) };
+      if (serviceStore) {
+        data[data.indexOf(serviceStore)] = { ...serviceStore, ...humps.camelizeKeys(response) };
+      } else {
+        data.push({ ...humps.camelizeKeys(response) });
+      }
 
       return {
         ...state,

@@ -129,11 +129,15 @@ class FAQ extends NavigatorComponent {
       )
     ]).start();
 
+    if (this.state.isSearching) {
+      this.props.fetchFAQs();
+    }
+
     this.setState({ isSearching: false });
   }
 
   searchBarTextChanged(text) {
-
+    this.props.fetchFAQs(text);
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {

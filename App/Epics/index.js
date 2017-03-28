@@ -6,6 +6,7 @@ import 'rxjs';
 import { combineEpics } from 'redux-observable';
 
 import * as userEpics from './user';
+import * as settingEpics from './setting';
 import * as wayBillEpics from './wayBill';
 import * as calculator from './calculator';
 import * as deliveryInfo from './deliveryInfo';
@@ -15,6 +16,7 @@ import * as FAQ from './FAQ';
 // export default combineEpics;
 
 export default combineEpics(
+  settingEpics.fetchContactInfo,
   wayBillEpics.fetchWayBills,
   wayBillEpics.refreshingWayBills,
   wayBillEpics.addingWayBill,

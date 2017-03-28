@@ -64,6 +64,10 @@ async function request(method, path, body, suppressRedBox = API_DEV_MODE) {
         const response = await timeout(fetch(refreshTokenEndPoint, { headers }), TIMEOUT);
         const { body: { token: newToken } } = await handleResponse(response);
 
+        if (typeof newToken !== 'string') {
+          throw new Error('Response Token is not string');
+        }
+
         token = newToken;
 
         if (suppressRedBox) {
@@ -147,6 +151,10 @@ async function handleResponse(response) {
       if (error instanceof JWTExpiredError) {
         oldJwtToken = error.jwtToken;
       }
+    }
+
+    if (typeof token !== 'string') {
+      throw new Error('Response Token is not string');
     }
 
     // Only retrieved token different to old one needs be stored.

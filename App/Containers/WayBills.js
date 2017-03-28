@@ -196,33 +196,7 @@ class WayBills extends NavigatorComponent {
   searchBarTextChanged(text) {
 
   }
-
-  fetchWayBills(page = 1, callback, option) {
-    setTimeout(() => {
-      callback([
-        {
-          state: WayBillState.CONFIRMING,
-          id: '5012381293511238',
-          urgent: UrgentState.APPROVED,
-        }, {
-          state: WayBillState.SHIPPING,
-          id: '5012381293511239',
-          urgent: UrgentState.NORMAL,
-        }, {
-          state: WayBillState.ARRIVED,
-          id: '5012381293511240',
-          urgent: UrgentState.NORMAL,
-        }, {
-          state: WayBillState.ARRIVED,
-          id: '5012381293511241',
-          urgent: UrgentState.APPROVED,
-        }
-      ], {
-        allLoaded: true,
-      });
-    }, 100);
-  }
-
+  
   onPaginating() {
     if (this.props.isFetching) {
       this.props.fetchWayBills(this.props.currentPage + 1)

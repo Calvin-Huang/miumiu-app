@@ -44,6 +44,7 @@ import DeliveryInfoList from './DeliveryInfoList';
 import ServiceStores from './ServiceStores';
 import PickUpPassword from './PickUpPassword';
 import FAQ from './FAQ';
+import ContactUs from './ContactUs';
 import Settings from './Settings';
 import SignIn from './SignIn';
 import RegistrationCompleted from './RegistrationCompleted';
@@ -54,6 +55,7 @@ import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 import { errors as APIErrors } from '../Utils/api';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
+import { fetchContactInfo } from '../Actions/settingActions';
 
 class Main extends Component {
   constructor(props) {
@@ -120,6 +122,13 @@ class Main extends Component {
           },
           name: '常見問題',
           component: FAQ,
+          isSelected: false,
+        }, {
+          icon: {
+            name: 'md-chatboxes',
+          },
+          name: '聯絡我們',
+          component: ContactUs,
           isSelected: false,
         }, {
           icon: {
@@ -405,5 +414,5 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode },
+  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode, fetchContactInfo },
 )(Main);

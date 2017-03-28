@@ -31,11 +31,31 @@ import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { fetchServiceStore } from '../Actions';
 
 class ServiceStore extends NavigatorComponent {
+  static navRightButton(route, navigator, index, navState) {
+    console.log(route);
+    if (route.index > 1) {
+      return (
+        <TouchableOpacity onPress={() => {
+          dismissKeyboard();
+          navigator.pop();
+        }}>
+          <Text style={NavigatorStyle.itemTextButton}>
+            關閉
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  }
+
   constructor(props) {
     super(props);
 
-    if (props.serviceStore.imageUrl) {
-      this.resizeImage(props.serviceStore.imageUrl);
+    const { serviceStore } = props;
+    const store = serviceStore || {};
+    if (store.imageUrl) {
+      this.resizeImage(store.imageUrl);
     }
 
     this.state = {
@@ -46,14 +66,22 @@ class ServiceStore extends NavigatorComponent {
   }
 
   componentWillMount() {
-    if (!this.props.serviceStore.imageUrl) {
+    const { serviceStore } = this.props;
+    const store = serviceStore || {};
+    if (!store.imageUrl) {
       this.props.fetchServiceStore(this.props.route.data.id);
     }
   }
 
   componentWillReceiveProps(props) {
-    if (this.props.serviceStore.imageUrl !== props.serviceStore.imageUrl) {
-      this.resizeImage(props.serviceStore.imageUrl);
+    const { serviceStore } = props;
+    const store = serviceStore || {};
+
+    const { serviceStore: oldServiceStore } = this.props;
+    const oldStore = oldServiceStore || {};
+
+    if (store.imageUrl && oldStore.imageUrl !== store.imageUrl) {
+      this.resizeImage(store.imageUrl);
     }
   }
 
@@ -83,7 +111,7 @@ class ServiceStore extends NavigatorComponent {
 
   render() {
     const { route: { data }, serviceStore, isFetching, error } = this.props;
-    const { name, address, phone, openFrom, openTo, imageUrl } = serviceStore;
+    const { name, address, phone, openFrom, openTo, imageUrl } = serviceStore || {};
     const { width, height, showPhotoView } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>

@@ -17,51 +17,14 @@ import {
 export function checkSubscribeStatus(action$) {
   return action$.ofType(ActionTypes.CHECK_FCM_SUBSCRIBE_STATUS)
     .switchMap(async (action) => {
-      const subscribedBroadcastToAll = await AsyncStorage.getItem('fcm:broadcast:all');
-      const subscribedBroadcastToMe = await AsyncStorage.getItem('fcm:broadcast:me');
+      const json = await AsyncStorage.getItem('fcm:broadcast');
+      const { toAll, toMe } = JSON.parse(json || '{}');
 
       // If there is no stored value, default true.
       return FCMSubscribeStateResult(
-        (subscribedBroadcastToAll === null) ? true : subscribedBroadcastToAll,
-        (subscribedBroadcastToMe === null) ? true : subscribedBroadcastToMe,
+        (toAll === null || toAll === undefined) ? true : toAll,
+        (toMe === null || toMe === undefined) ? true : toMe,
       );
-    });
-}
-
-export function subscribeBroadcastToAll(action$) {
-  return action$.ofType(ActionTypes.SUBSCRIBE_FCM_BROADCAST_TO_ALL)
-    .switchMap(async (action) => {
-      await AsyncStorage.setItem('fcm:broadcast:all', true);
-
-      return FCMSubscribeStateResult(true, null);
-    });
-}
-
-export function unsubscribeBroadcastToAll(action$) {
-  return action$.ofType(ActionTypes.UNSUBSCRIBE_FCM_BROADCAST_TO_ALL)
-    .switchMap(async (action) => {
-      await AsyncStorage.setItem('fcm:broadcast:all', false);
-
-      return FCMSubscribeStateResult(false, null);
-
-    });
-}
-
-export function subscribeBroadcastToMe(action$) {
-  return action$.ofType(ActionTypes.SUBSCRIBE_FCM_BOARDCAST_TO_ME)
-    .switchMap(async (action) => {
-      await AsyncStorage.setItem('fcm:broadcast:me', true);
-
-      return FCMSubscribeStateResult(null, true);
-    });
-}
-
-export function unsubscribeBroadcastToMe(action$) {
-  return action$.ofType(ActionTypes.UNSUBSCRIBE_FCM_BOARDCAST_TO_ME)
-    .switchMap(async (action) => {
-      await AsyncStorage.setItem('fcm:broadcast:me', false);
-
-      return FCMSubscribeStateResult(null, false);
     });
 }
 
@@ -69,6 +32,8 @@ export function updateSubscribe(action$) {
   return action$.ofType(ActionTypes.FCM_SUBSCRIBE_STATUS_RESULT)
     .switchMap(async (action) => {
       const { toAll, toMe } = action;
+      const json = await AsyncStorage.getItem('fcm:broadcast');
+      const subscribed = JSON.parse(json || '{}');
       try {
         if (toAll !== null) {
           if (toAll) {
@@ -76,6 +41,8 @@ export function updateSubscribe(action$) {
           } else {
             FCM.unsubscribeFromTopic('/topics/general');
           }
+
+          subscribed.toAll = toAll;
         }
       } catch (error) {
       }
@@ -88,9 +55,13 @@ export function updateSubscribe(action$) {
           } else {
             del('fcm_token');
           }
+
+          subscribed.toMe = toMe;
         }
       } catch (error) {
       }
+
+      await AsyncStorage.setItem('fcm:broadcast', JSON.stringify(subscribed));
 
       return FCMSubscribeStateUpdated();
     });

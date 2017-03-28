@@ -42,9 +42,5 @@ export default combineEpics(
   userEpics.userConfirmResetPasswordCode,
   userEpics.userResendResetPasswordConfirmCode,
   FCM.checkSubscribeStatus,
-  FCM.subscribeBroadcastToAll,
-  FCM.unsubscribeBroadcastToAll,
-  FCM.subscribeBroadcastToMe,
-  FCM.unsubscribeBroadcastToMe,
   FCM.updateSubscribe,
 );

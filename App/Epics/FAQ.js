@@ -17,9 +17,10 @@ import { get } from '../Utils/api';
 
 export function fetchFAQs(action$) {
   return action$.ofType(ActionTypes.FETCH_FAQS)
-    .switchMap(async (_) => {
+    .switchMap(async (action) => {
       try {
-        const response = await get('faq');
+        const { query } = action;
+        const response = await get(query ? `faq?q=${query}` : 'faq');
 
         return fetchFAQsSuccess(response);
       } catch (error) {

@@ -159,6 +159,7 @@ class Main extends Component {
 
     Linking.addEventListener('url', this.handleOpenURL.bind(this));
     APIErrors.on('JWTRefresh', () => {
+      this.props.closeSideDrawer();
       this.props.userSignOut();
     });
   }

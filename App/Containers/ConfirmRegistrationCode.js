@@ -64,7 +64,7 @@ class ConfirmRegistrationCode extends NavigatorComponent {
       if (resendConfirmCode.error) {
         Alert.alert(
           '發生了一點問題',
-          props.error.message,
+          resendConfirmCode.error.message,
         );
 
       } else if (resendConfirmCode.timestamp && this.state.timestamp !== resendConfirmCode.timestamp) {

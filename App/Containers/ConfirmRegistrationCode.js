@@ -35,13 +35,17 @@ class ConfirmRegistrationCode extends NavigatorComponent {
 
     const { route: { data } } = props;
 
+    const diffSeconds = moment.unix(data.timestamp).add(COUNTDOWN_SECONDS, 'seconds').diff(moment(), 'seconds');
+
     this.state = {
       codes: [ '', '', '', '' ],
       isAccountTypeEmail: validateEmail(data.account),
       timestamp: data.timestamp,
       remainingTime: '0:00',
-      canRetry: false,
+      canRetry: (diffSeconds <= 0),
     };
+
+    this.resendRegistrationConfirmCode();
   }
 
   componentWillMount() {
@@ -60,7 +64,7 @@ class ConfirmRegistrationCode extends NavigatorComponent {
       if (resendConfirmCode.error) {
         Alert.alert(
           '發生了一點問題',
-          props.error.message,
+          resendConfirmCode.error.message,
         );
 
       } else if (resendConfirmCode.timestamp && this.state.timestamp !== resendConfirmCode.timestamp) {

@@ -24,6 +24,7 @@ import { NavigatorComponent } from '../Components';
 import WayBills from './WayBills';
 import Register from './Register';
 import ForgetPassword from './ForgetPassword';
+import ConfirmRegistrationCode from './ConfirmRegistrationCode';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 
 const SignInType = {
@@ -49,6 +50,12 @@ class SignIn extends NavigatorComponent {
   componentWillReceiveProps(props) {
     const { navigator, route } = this.props;
     const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+
+    if (props.previousSendTimestamp && this.props.previousSendTimestamp != props.previousSendTimestamp) {
+      const { account, password } = this.state;
+      this.pushToNextComponent(ConfirmRegistrationCode, { account, password, timestamp: props.previousSendTimestamp });
+    }
+
     if (props.currentUser && currentRoute.index === route.index) {
       dismissKeyboard();
 
@@ -225,6 +232,7 @@ export default connect(
       ...ownProps,
       isSigningIn: user.isSigningIn,
       currentUser: user.currentUser,
+      previousSendTimestamp: user.previousSendTimestamp,
       errorMessage: user.result.error ? user.result.error.message : null,
     }
   },

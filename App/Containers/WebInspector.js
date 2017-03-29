@@ -13,9 +13,8 @@ import {
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { DOMAIN } from '../Constants/config';
 
-export default class ServiceTerm extends NavigatorComponent {
+export default class WebInspector extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => {
@@ -29,16 +28,17 @@ export default class ServiceTerm extends NavigatorComponent {
   }
 
   render() {
+    const { route: { data: { title, uri } } } = this.props;
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
           <View style={NavigatorStyle.titleView}>
             <Text style={NavigatorStyle.titleText}>
-              服務條款
+              {title}
             </Text>
           </View>
         </MiumiuThemeNavigatorBackground>
-        <WebView style={styles.body} source={{ uri: `${DOMAIN}/auth/term?back=0` }} />
+        <WebView style={styles.body} source={{ uri: uri }} />
       </View>
     );
   }

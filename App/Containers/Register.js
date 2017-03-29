@@ -23,7 +23,8 @@ import { NavigatorComponent } from '../Components';
 import ConfirmRegistrationCode from './ConfirmRegistrationCode';
 import { MiumiuTheme } from '../Styles';
 import { generalRequestFailed, userRegister } from '../Actions';
-import ServiceTerm from './ServiceTerm';
+import WebInspector from './WebInspector';
+import { DOMAIN } from '../Constants/config';
 
 class Register extends NavigatorComponent {
   constructor(props) {
@@ -62,7 +63,7 @@ class Register extends NavigatorComponent {
 
   openServiceTerm() {
     dismissKeyboard();
-    this.pushToNextComponent(ServiceTerm, null, Navigator.SceneConfigs.FloatFromBottom);
+    this.pushToNextComponent(WebInspector, { title: '服務條款', uri: `${DOMAIN}/auth/term?back=0` }, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {

@@ -67,7 +67,7 @@ Navigator.defaultProps = {
     }
   },
   configureScene: (route, routeStack) => {
-    return route.transition;
+    return route.transition || Navigator.SceneConfigs.PushFromRight;
   },
 };
 

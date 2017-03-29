@@ -57,7 +57,7 @@ class Register extends NavigatorComponent {
       this.props.generalRequestFailed(new Error('密碼確認錯誤，請檢查密碼'));
     } else if (!checkedServiceTerm) {
       this.props.generalRequestFailed(new Error('請同意使用協議'));
-    } else if (name) {
+    } else if (!name) {
       this.props.generalRequestFailed(new Error('請輸入名稱'));
     } else {
       this.props.userRegister(account, name, password, passwordConfirmation);

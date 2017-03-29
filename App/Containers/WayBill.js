@@ -138,10 +138,13 @@ class WayBill extends NavigatorComponent {
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
+              disabled={data.isUrgent}
               onPress={() => { this.pushToNextComponent(UrgentProcessing, data, Navigator.SceneConfigs.FloatFromBottom); } }
             >
               <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
-              <Text style={MiumiuTheme.actionButtonText}>加急服務</Text>
+              <Text style={{ ...MiumiuTheme.actionButtonText, opacity: !data.isUrgent ? 1 : 0.7 }}>
+                {data.isUrgent ? '已加急' : '加急服務'}
+              </Text>
             </TouchableOpacity>
           </View>
         }

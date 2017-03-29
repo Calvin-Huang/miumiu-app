@@ -53,6 +53,10 @@ class WayBill extends NavigatorComponent {
     this.pushToNextComponent(ServiceStore, { id: data.locationId }, Navigator.SceneConfigs.FloatFromBottom);
   }
 
+  openStockFeeReference() {
+    this.pushToNextComponent(WebInspector, { title: '倉儲費用計算表', uri: `${DOMAIN}/stock_fees`}, Navigator.SceneConfigs.FloatFromBottom);
+  }
+
   render() {
     const { data } = this.state;
     const { icon, iconColor, title } = stateInfoMapping[data.status] || {};
@@ -122,7 +126,7 @@ class WayBill extends NavigatorComponent {
               {data.stockFee ? `$${data.stockFee}` : '-'}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={this.openStockFeeReference.bind(this)}>
             <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
           </TouchableOpacity>
           { data.locationId && data.status === WayBillState.ARRIVED &&

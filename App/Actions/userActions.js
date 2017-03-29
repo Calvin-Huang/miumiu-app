@@ -32,10 +32,11 @@ export function userSignInFailed(error) {
   };
 }
 
-export function userRegister(account, password, passwordConfirmation) {
+export function userRegister(account, name, password, passwordConfirmation) {
   return {
     type: ActionTypes.USER_REGISTER,
     account,
+    name,
     password,
     passwordConfirmation,
   };

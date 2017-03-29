@@ -152,7 +152,10 @@ class Register extends NavigatorComponent {
                 onCheckedChange={() => this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm })}
               />
               <TouchableOpacity
-                onPress={() => this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm })}
+                onPress={() => {
+                  dismissKeyboard();
+                  this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm });
+                }}
               >
                 <Text style={styles.serviceTermCheckboxText}>註冊喵喵代收同時您已經同意了我們的</Text>
               </TouchableOpacity>

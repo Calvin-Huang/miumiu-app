@@ -20,10 +20,11 @@ import moment from 'moment';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
 import ServiceStore from './ServiceStore';
+import WebInspector from './WebInspector';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { showUserQRCode } from '../Actions';
-import { DATETIME_FORMAT } from '../Constants/config';
+import { DATETIME_FORMAT, DOMAIN } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
   static navRightButton({ data: { shippingNo, status } }, navigator, index, navState) {

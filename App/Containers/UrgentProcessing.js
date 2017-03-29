@@ -157,7 +157,7 @@ class UrgentProcessing extends NavigatorComponent {
                   加急件服務
                 </Text>
                 <Text style={MiumiuTheme.contextText}>
-                  當天下午兩點前簽收，加急服務即日到澳，兩點後簽收會是當天狀況優先處理
+                  當天下午兩點前簽收，加急服務即日到澳，兩點後簽收會視當天狀況優先處理
                 </Text>
               </View>
               <View style={styles.paragraph}>

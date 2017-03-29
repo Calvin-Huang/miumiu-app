@@ -304,6 +304,8 @@ class WayBills extends NavigatorComponent {
   }
 
   render() {
+    const { currentUser } = this.props;
+    const user = currentUser || {};
     return (
       <View style={MiumiuTheme.container}>
         <Animated.View
@@ -377,7 +379,7 @@ class WayBills extends NavigatorComponent {
                 marginLeft: 15,
               }}
             >
-              嗨！你可以先
+              嗨！{user.name ? `${user.name}，` : ''}你可以先
             </Text>
             <TouchableOpacity
               style={{
@@ -467,6 +469,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ...ownProps,
+    currentUser: state.user.currentUser,
     wayBills: wayBills.data,
     currentPage: wayBills.currentPage,
     isRefreshing: wayBills.isRefreshing,

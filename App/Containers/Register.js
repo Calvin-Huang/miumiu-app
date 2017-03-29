@@ -32,6 +32,7 @@ class Register extends NavigatorComponent {
 
     this.state = {
       account: null,
+      name: null,
       password: null,
       passwordConfirmation: null,
     }
@@ -51,13 +52,15 @@ class Register extends NavigatorComponent {
       return;
     }
 
-    const { account, password, passwordConfirmation, checkedServiceTerm } = this.state;
+    const { account, name, password, passwordConfirmation, checkedServiceTerm } = this.state;
     if (password !== passwordConfirmation) {
       this.props.generalRequestFailed(new Error('密碼確認錯誤，請檢查密碼'));
     } else if (!checkedServiceTerm) {
       this.props.generalRequestFailed(new Error('請同意使用協議'));
+    } else if (name) {
+      this.props.generalRequestFailed(new Error('請輸入名稱'));
     } else {
-      this.props.userRegister(account, password, passwordConfirmation);
+      this.props.userRegister(account, name, password, passwordConfirmation);
     }
   }
 
@@ -67,7 +70,7 @@ class Register extends NavigatorComponent {
   }
 
   render() {
-    const { account, password, passwordConfirmation } = this.state;
+    const { account, name, password, passwordConfirmation } = this.state;
     const { isRequesting, error } = this.props;
 
     return (
@@ -92,6 +95,19 @@ class Register extends NavigatorComponent {
                 style={styles.textField}
                 onChangeText={(account) => { this.setState({ account }); }}
                 value={account}
+              />
+            </View>
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="名稱"
+                placeholderTextColor="#9E9E9E"
+                style={styles.textField}
+                onChangeText={(name) => { this.setState({ name }); }}
+                value={name}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>

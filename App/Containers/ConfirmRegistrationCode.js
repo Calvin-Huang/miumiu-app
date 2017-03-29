@@ -35,13 +35,17 @@ class ConfirmRegistrationCode extends NavigatorComponent {
 
     const { route: { data } } = props;
 
+    const diffSeconds = moment.unix(data.timestamp).add(COUNTDOWN_SECONDS, 'seconds').diff(moment(), 'seconds');
+
     this.state = {
       codes: [ '', '', '', '' ],
       isAccountTypeEmail: validateEmail(data.account),
       timestamp: data.timestamp,
       remainingTime: '0:00',
-      canRetry: false,
+      canRetry: (diffSeconds <= 0),
     };
+
+    this.resendRegistrationConfirmCode();
   }
 
   componentWillMount() {

@@ -23,7 +23,7 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Comp
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import store from '../storeInstance';
-import { urgentWayBill } from '../Actions/wayBillActions';
+import { urgentWayBill, refreshWayBills } from '../Actions/wayBillActions';
 
 class UrgentProcessing extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -238,5 +238,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { urgentWayBill }
+  { urgentWayBill, refreshWayBills }
 )(UrgentProcessing);

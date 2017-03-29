@@ -25,6 +25,7 @@ const initialState = {
 
   // Empty user for first time check in app launched.
   currentUser: {},
+  previousSendTimestamp: null,
   result: {
     signedIn: null,
     error: null,
@@ -36,11 +37,13 @@ export default function user(state = initialState, action) {
     case USER_SIGN_IN:
       return {
         ...state,
+        previousSendTimestamp: null,
         isSigningIn: true,
       };
     case USER_SIGN_IN_SUCCESS:
       return {
         isSigningIn: false,
+        previousSendTimestamp: null,
         currentUser: action.user,
         result: {
           signedIn: true,
@@ -48,17 +51,21 @@ export default function user(state = initialState, action) {
         }
       };
     case USER_SIGN_IN_FAILED:
+      const { timestamp } = action.error;
+
       return {
         isSigningIn: false,
         currentUser: null,
+        previousSendTimestamp: timestamp,
         result: {
           signedIn: false,
-          error: action.error,
+          error: (timestamp ? null : action.error),
         }
       };
     case USER_SIGN_OUT:
       return {
         ...initialState,
+        previousSendTimestamp: null,
         isSigningIn: false,
         currentUser: null,
       };

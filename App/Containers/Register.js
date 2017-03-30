@@ -206,6 +206,7 @@ const styles = {
     textAlign: 'center',
   },
   serviceTermGroup: {
+    flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 10,

@@ -115,7 +115,7 @@ class Main extends Component {
           icon: {
             name: 'md-help-circle',
           },
-          name: '常見問題',
+          name: '注意事項',
           component: FAQ,
           isSelected: false,
         }, {

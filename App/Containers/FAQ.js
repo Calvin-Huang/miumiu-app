@@ -193,7 +193,7 @@ class FAQ extends NavigatorComponent {
             { !this.state.isSearching &&
               <View style={NavigatorStyle.titleView}>
                 <Text style={NavigatorStyle.titleText}>
-                  常見問題
+                  注意事項
                 </Text>
               </View>
             }

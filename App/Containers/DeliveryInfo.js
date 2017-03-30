@@ -113,13 +113,13 @@ class DeliveryInfo extends NavigatorComponent {
 
   render() {
     const { route: { data }, deliveryInfo, isFetching, error } = this.props;
-    const { name, area, address, phone, zipcode, receiver } = this.state;
+    const { area, address, phone, zipcode, receiver } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
           <MiumiuThemeNavigatorBackground>
             <View style={NavigatorStyle.titleView}>
-              <Text style={NavigatorStyle.titleText}>{name}收貨地址</Text>
+              <Text style={NavigatorStyle.titleText}>{data.name}收貨地址</Text>
             </View>
           </MiumiuThemeNavigatorBackground>
           { error &&

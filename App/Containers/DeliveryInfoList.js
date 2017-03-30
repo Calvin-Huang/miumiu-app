@@ -140,7 +140,7 @@ class DeliveryInfoList extends NavigatorComponent {
 
   filterSearchResult(term) {
     const { isSearching } = this.state;
-    const { deliveryInfoList } = this.props;
+    const { stores } = this.props;
     if (!term) {
       this.setState({
         stores: dataSource.cloneWithRows(stores),

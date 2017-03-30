@@ -24,6 +24,9 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Comp
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { fetchDeliveryInfo } from '../Actions';
 
+// Delivery info id fixed to 4.
+const data = { id: 4 };
+
 class DeliveryInfo extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
@@ -41,6 +44,8 @@ class DeliveryInfo extends NavigatorComponent {
       keyboardVerticalOffset: 0,
     };
 
+    const { name: serviceStoreName } = initStates.data;
+
     if (props.deliveryInfo) {
       const { deliveryInfo } = props;
       initStates = {
@@ -49,7 +54,7 @@ class DeliveryInfo extends NavigatorComponent {
         address: deliveryInfo.address,
         phone: deliveryInfo.phone,
         zipcode: deliveryInfo.zipcode,
-        receiver: deliveryInfo.receiver,
+        receiver: `${serviceStoreName} ${deliveryInfo.receiver}`,
       }
     }
 
@@ -59,20 +64,25 @@ class DeliveryInfo extends NavigatorComponent {
   }
 
   componentWillMount() {
-    if (!this.props.deliveryInfo.address) {
-      this.props.fetchDeliveryInfo(this.props.route.data.id);
+    const { deliveryInfo } = this.props;
+    const info = deliveryInfo || {};
+    if (!info.address) {
+
+      // Delivery info id fixed to 4.
+      this.props.fetchDeliveryInfo(data.id);
     }
   }
 
   componentWillReceiveProps(props) {
     if (this.props.deliveryInfo !== props.deliveryInfo) {
+      const { name: serviceStoreName } = props.route.data;
       const { name, address, phone, zipcode, receiver } = props.deliveryInfo;
       this.setState({
         name,
         address,
         phone,
         zipcode,
-        receiver,
+        receiver: `${serviceStoreName} ${receiver}`,
       });
     }
   }
@@ -302,7 +312,9 @@ const styles = {
 
 const mapStateToProps = (state, ownProps) => {
   const { deliveryInfo, deliveryInfoList } = state;
-  const { data } = ownProps.route;
+
+  // Delivery info id fixed to 4.
+  // const { data } = ownProps.route;
   const info = deliveryInfoList.data.find((object) => object.id === data.id);
   return {
     ...ownProps,

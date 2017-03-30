@@ -179,7 +179,7 @@ class ServiceStores extends NavigatorComponent {
       return (
         <TouchableOpacity
           style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-          onPress={() => { this.props.fetchFAQs(); }}
+          onPress={() => { this.props.fetchServiceStores(); }}
         >
           <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
         </TouchableOpacity>

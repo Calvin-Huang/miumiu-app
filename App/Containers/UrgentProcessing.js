@@ -165,7 +165,7 @@ class UrgentProcessing extends NavigatorComponent {
                   收費
                 </Text>
                 <Text style={MiumiuTheme.contextText}>
-                  50cm或以下+$5，51cm以上+$10
+                  50cm或以下+$5，51cm以上+$10，超過200cm請聯絡客服
                 </Text>
               </View>
               <View style={styles.paragraph}>

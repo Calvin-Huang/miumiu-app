@@ -66,7 +66,7 @@ class ResetPasswordCompleted extends NavigatorComponent {
 
     if (token) {
       await setAuthenticationToken(token);
-      const user = await currentUser;
+      const user = await currentUser();
       this.props.userSignInSuccess(user);
     } else {
       this.props.userSignIn(account, password);

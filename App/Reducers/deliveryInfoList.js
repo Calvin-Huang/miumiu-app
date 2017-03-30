@@ -63,7 +63,11 @@ export default function deliveryInfoList(state = initialState, action) {
 
       const deliveryInfo = data.find((eachData) => eachData.id === response.id);
 
-      data[data.indexOf(deliveryInfo)] = { ...deliveryInfo, ...humps.camelizeKeys(response) };
+      if (deliveryInfo) {
+        data[data.indexOf(deliveryInfo)] = { ...deliveryInfo, ...humps.camelizeKeys(response) };
+      } else {
+        data.push({ ...humps.camelizeKeys(response) });
+      }
 
       return {
         ...state,

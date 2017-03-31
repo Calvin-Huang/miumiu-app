@@ -50,6 +50,8 @@ class DeliveryInfo extends NavigatorComponent {
       const { deliveryInfo } = props;
       initStates = {
         ...initStates,
+        area: deliveryInfo.area,
+        street: deliveryInfo.street,
         name: deliveryInfo.name,
         address: deliveryInfo.address,
         phone: deliveryInfo.phone,
@@ -76,8 +78,10 @@ class DeliveryInfo extends NavigatorComponent {
   componentWillReceiveProps(props) {
     if (this.props.deliveryInfo !== props.deliveryInfo) {
       const { name: serviceStoreName } = props.route.data;
-      const { name, address, phone, zipcode, receiver } = props.deliveryInfo;
+      const { area, street, name, address, phone, zipcode, receiver } = props.deliveryInfo;
       this.setState({
+        area,
+        street,
         name,
         address,
         phone,
@@ -113,7 +117,7 @@ class DeliveryInfo extends NavigatorComponent {
 
   render() {
     const { route: { data }, deliveryInfo, isFetching, error } = this.props;
-    const { area, address, phone, zipcode, receiver } = this.state;
+    const { area, street, address, phone, zipcode, receiver } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
@@ -208,6 +212,29 @@ class DeliveryInfo extends NavigatorComponent {
                     value={area}
                   />
                   <TouchableWithoutFeedback onPress={this.modifyKeyboardVerticalOffset.bind(this, 'areaField')}>
+                    <View style={styles.textInputTouchReceiver} />
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
+              <View
+                onLayout={this.measureLayout.bind(this, 'streetField')}
+                style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
+              >
+                <View style={MiumiuTheme.fixMKTextFieldStyleError}>
+                  <MKTextField
+                    ref="streetField"
+                    floatingLabelEnabled={true}
+                    textInputStyle={{ height: 31 }}
+                    underlineSize={1}
+                    highlightColor="#9E9E9E"
+                    placeholder="街道"
+                    placeholderTextColor="#9E9E9E"
+                    style={{ backgroundColor: 'white' }}
+                    onFocus={this.modifyKeyboardVerticalOffset.bind(this, 'streetField')}
+                    onChangeText={(street) => { this.setState({ data: { ...data, street } }); }}
+                    value={street}
+                  />
+                  <TouchableWithoutFeedback onPress={this.modifyKeyboardVerticalOffset.bind(this, 'streetField')}>
                     <View style={styles.textInputTouchReceiver} />
                   </TouchableWithoutFeedback>
                 </View>

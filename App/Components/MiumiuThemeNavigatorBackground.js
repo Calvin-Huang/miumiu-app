@@ -6,6 +6,7 @@ import React, { PropTypes, Component } from 'react';
 import {
   Animated,
   View,
+  Platform,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -37,7 +38,7 @@ const styles = {
     height: 104,
   },
   navBackgroundContainer: {
-    height: 64,
+    height: Platform.OS === 'ios' ? 64 : 56,
     overflow: 'hidden',
   }
 };

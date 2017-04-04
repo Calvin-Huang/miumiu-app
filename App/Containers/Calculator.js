@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Navigator,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -26,6 +27,8 @@ import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions';
 import { calculateFee } from '../Actions/calculatorActions';
 import store from '../storeInstance';
+import WebInspector from './WebInspector';
+import { DOMAIN } from '../Constants/config';
 
 class Calculator extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -83,6 +86,10 @@ class Calculator extends NavigatorComponent {
   calculateButtonClicked() {
     const { width, height, length, weight } = this.state;
     this.props.calculateFee(width, height, length, weight);
+  }
+
+  openShippingFeeReference() {
+    this.pushToNextComponent(WebInspector, { title: '運費寄量表', uri: `${DOMAIN}/shipping_fees`}, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {
@@ -162,7 +169,7 @@ class Calculator extends NavigatorComponent {
             <View style={styles.guide}>
               <Image source={require('../../assets/images/cardboards.png')} />
               <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLabel }}>貨品測量參考基準</Text>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={this.openShippingFeeReference.bind(this)}>
                 <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel }}>您還可以參考完整的運費寄量表</Text>
               </TouchableOpacity>
             </View>

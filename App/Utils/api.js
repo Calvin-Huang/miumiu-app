@@ -117,14 +117,18 @@ async function request(method, path, body) {
             console.log(options);
           }
 
-          const response = await timeout(fetch(endPoint, options), TIMEOUT);
+          try {
+            const response = await timeout(fetch(endPoint, options), TIMEOUT);
 
-          if (suppressRedBox) {
-            console.log('🎯  Response 🎯');
-            console.log(response);
+            if (suppressRedBox) {
+              console.log('🎯  Response 🎯');
+              console.log(response);
+            }
+
+            resolve(response);
+          } catch (error) {
+            reject(error);
           }
-
-          resolve(response);
         },
         (error) => {
           reject(error);

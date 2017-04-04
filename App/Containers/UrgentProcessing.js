@@ -23,7 +23,7 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Comp
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { openSideDrawer } from '../Actions/sideDrawerActions';
 import store from '../storeInstance';
-import { urgentWayBill } from '../Actions/wayBillActions';
+import { urgentWayBill, refreshWayBills } from '../Actions/wayBillActions';
 
 class UrgentProcessing extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
@@ -157,7 +157,7 @@ class UrgentProcessing extends NavigatorComponent {
                   加急件服務
                 </Text>
                 <Text style={MiumiuTheme.contextText}>
-                  當天下午兩點前簽收，加急服務即日到澳，兩點後簽收會是當天狀況優先處理
+                  當天下午兩點前簽收，加急服務即日到澳，兩點後簽收會視當天狀況優先處理
                 </Text>
               </View>
               <View style={styles.paragraph}>
@@ -165,7 +165,7 @@ class UrgentProcessing extends NavigatorComponent {
                   收費
                 </Text>
                 <Text style={MiumiuTheme.contextText}>
-                  50cm或以下+$5，51cm以上+$10
+                  50cm或以下+$5，51cm以上+$10，超過200cm請聯絡客服
                 </Text>
               </View>
               <View style={styles.paragraph}>
@@ -238,5 +238,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { urgentWayBill }
+  { urgentWayBill, refreshWayBills }
 )(UrgentProcessing);

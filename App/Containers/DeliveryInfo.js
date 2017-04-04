@@ -24,6 +24,9 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Comp
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { fetchDeliveryInfo } from '../Actions';
 
+// Delivery info id fixed to 4.
+const data = { id: 4 };
+
 class DeliveryInfo extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
@@ -41,15 +44,19 @@ class DeliveryInfo extends NavigatorComponent {
       keyboardVerticalOffset: 0,
     };
 
+    const { name: serviceStoreName } = initStates.data;
+
     if (props.deliveryInfo) {
       const { deliveryInfo } = props;
       initStates = {
         ...initStates,
+        area: deliveryInfo.area,
+        street: deliveryInfo.street,
         name: deliveryInfo.name,
         address: deliveryInfo.address,
         phone: deliveryInfo.phone,
         zipcode: deliveryInfo.zipcode,
-        receiver: deliveryInfo.receiver,
+        receiver: `${serviceStoreName} ${deliveryInfo.receiver}`,
       }
     }
 
@@ -59,20 +66,27 @@ class DeliveryInfo extends NavigatorComponent {
   }
 
   componentWillMount() {
-    if (!this.props.deliveryInfo.address) {
-      this.props.fetchDeliveryInfo(this.props.route.data.id);
+    const { deliveryInfo } = this.props;
+    const info = deliveryInfo || {};
+    if (!info.address) {
+
+      // Delivery info id fixed to 4.
+      this.props.fetchDeliveryInfo(data.id);
     }
   }
 
   componentWillReceiveProps(props) {
     if (this.props.deliveryInfo !== props.deliveryInfo) {
-      const { name, address, phone, zipcode, receiver } = props.deliveryInfo;
+      const { name: serviceStoreName } = props.route.data;
+      const { area, street, name, address, phone, zipcode, receiver } = props.deliveryInfo;
       this.setState({
+        area,
+        street,
         name,
         address,
         phone,
         zipcode,
-        receiver,
+        receiver: `${serviceStoreName} ${receiver}`,
       });
     }
   }
@@ -103,13 +117,13 @@ class DeliveryInfo extends NavigatorComponent {
 
   render() {
     const { route: { data }, deliveryInfo, isFetching, error } = this.props;
-    const { name, area, address, phone, zipcode, receiver } = this.state;
+    const { area, street, address, phone, zipcode, receiver } = this.state;
     return (
       <TouchableWithoutFeedback onPress={() => { dismissKeyboard(); }}>
         <View style={MiumiuTheme.container}>
           <MiumiuThemeNavigatorBackground>
             <View style={NavigatorStyle.titleView}>
-              <Text style={NavigatorStyle.titleText}>{name}收貨地址</Text>
+              <Text style={NavigatorStyle.titleText}>{data.name}收貨地址</Text>
             </View>
           </MiumiuThemeNavigatorBackground>
           { error &&
@@ -198,6 +212,29 @@ class DeliveryInfo extends NavigatorComponent {
                     value={area}
                   />
                   <TouchableWithoutFeedback onPress={this.modifyKeyboardVerticalOffset.bind(this, 'areaField')}>
+                    <View style={styles.textInputTouchReceiver} />
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
+              <View
+                onLayout={this.measureLayout.bind(this, 'streetField')}
+                style={{ ...MiumiuTheme.textFieldGroup, ...styles.inlineFieldGroup }}
+              >
+                <View style={MiumiuTheme.fixMKTextFieldStyleError}>
+                  <MKTextField
+                    ref="streetField"
+                    floatingLabelEnabled={true}
+                    textInputStyle={{ height: 31 }}
+                    underlineSize={1}
+                    highlightColor="#9E9E9E"
+                    placeholder="街道"
+                    placeholderTextColor="#9E9E9E"
+                    style={{ backgroundColor: 'white' }}
+                    onFocus={this.modifyKeyboardVerticalOffset.bind(this, 'streetField')}
+                    onChangeText={(street) => { this.setState({ data: { ...data, street } }); }}
+                    value={street}
+                  />
+                  <TouchableWithoutFeedback onPress={this.modifyKeyboardVerticalOffset.bind(this, 'streetField')}>
                     <View style={styles.textInputTouchReceiver} />
                   </TouchableWithoutFeedback>
                 </View>
@@ -302,7 +339,9 @@ const styles = {
 
 const mapStateToProps = (state, ownProps) => {
   const { deliveryInfo, deliveryInfoList } = state;
-  const { data } = ownProps.route;
+
+  // Delivery info id fixed to 4.
+  // const { data } = ownProps.route;
   const info = deliveryInfoList.data.find((object) => object.id === data.id);
   return {
     ...ownProps,

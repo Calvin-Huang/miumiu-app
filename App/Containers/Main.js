@@ -47,6 +47,7 @@ import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 import { errors as APIErrors } from '../Utils/api';
+import { showNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 import { fetchContactInfo } from '../Actions/settingActions';
@@ -114,7 +115,7 @@ class Main extends Component {
           icon: {
             name: 'md-help-circle',
           },
-          name: '常見問題',
+          name: '注意事項',
           component: FAQ,
           isSelected: false,
         }, {
@@ -149,6 +150,7 @@ class Main extends Component {
 
     Linking.addEventListener('url', this.handleOpenURL.bind(this));
     APIErrors.on('JWTRefresh', () => {
+      this.props.showNavigationBar();
       this.props.closeSideDrawer();
       this.props.userSignOut();
     });
@@ -409,5 +411,5 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode, fetchContactInfo },
+  { showNavigationBar, openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode, fetchContactInfo },
 )(Main);

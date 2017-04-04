@@ -20,10 +20,11 @@ import moment from 'moment';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
 import ServiceStore from './ServiceStore';
+import WebInspector from './WebInspector';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { showUserQRCode } from '../Actions';
-import { DATETIME_FORMAT } from '../Constants/config';
+import { DATETIME_FORMAT, DOMAIN } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
   static navRightButton({ data: { shippingNo, status } }, navigator, index, navState) {
@@ -51,6 +52,10 @@ class WayBill extends NavigatorComponent {
   checkServiceStoreButtonTapped() {
     const { data } = this.state;
     this.pushToNextComponent(ServiceStore, { id: data.locationId }, Navigator.SceneConfigs.FloatFromBottom);
+  }
+
+  openStockFeeReference() {
+    this.pushToNextComponent(WebInspector, { title: '倉儲費用計算表', uri: `${DOMAIN}/stock_fees`}, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {
@@ -122,7 +127,7 @@ class WayBill extends NavigatorComponent {
               {data.stockFee ? `$${data.stockFee}` : '-'}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={this.openStockFeeReference.bind(this)}>
             <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
           </TouchableOpacity>
           { data.locationId && data.status === WayBillState.ARRIVED &&
@@ -138,10 +143,13 @@ class WayBill extends NavigatorComponent {
           <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
+              disabled={data.isUrgent}
               onPress={() => { this.pushToNextComponent(UrgentProcessing, data, Navigator.SceneConfigs.FloatFromBottom); } }
             >
               <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
-              <Text style={MiumiuTheme.actionButtonText}>加急服務</Text>
+              <Text style={{ ...MiumiuTheme.actionButtonText, opacity: !data.isUrgent ? 1 : 0.7 }}>
+                {data.isUrgent ? '已加急' : '加急服務'}
+              </Text>
             </TouchableOpacity>
           </View>
         }

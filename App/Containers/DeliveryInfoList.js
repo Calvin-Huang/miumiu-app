@@ -24,7 +24,7 @@ import dismissKeyboard from 'dismissKeyboard';
 import { NavigatorComponent } from '../Components';
 import DeliveryInfo from './DeliveryInfo';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchDeliveryInfoList, refreshDeliveryInfoList } from '../Actions';
+import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchServiceStores, refreshServiceStores } from '../Actions';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -49,17 +49,17 @@ class DeliveryInfoList extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
-      deliveryInfoList: dataSource.cloneWithRows(props.deliveryInfoList),
+      stores: dataSource.cloneWithRows(props.stores),
     }
   }
 
   componentDidMount() {
-    this.props.fetchDeliveryInfoList();
+    this.props.fetchServiceStores();
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      deliveryInfoList: dataSource.cloneWithRows(props.deliveryInfoList),
+      stores: dataSource.cloneWithRows(props.stores),
     });
   }
 
@@ -140,14 +140,16 @@ class DeliveryInfoList extends NavigatorComponent {
 
   filterSearchResult(term) {
     const { isSearching } = this.state;
-    const { deliveryInfoList } = this.props;
+    const { stores } = this.props;
     if (!term) {
       this.setState({
-        deliveryInfoList: dataSource.cloneWithRows(deliveryInfoList),
+        stores: dataSource.cloneWithRows(stores),
       });
     } else if (isSearching) {
       this.setState({
-        deliveryInfoList: dataSource.cloneWithRows(deliveryInfoList.filter(({ name }) => name.includes(term))),
+        stores: dataSource.cloneWithRows(
+          stores.filter(({ name, address }) => (name || '').includes(term) || (address || '').includes(term))
+        ),
       });
     }
   }
@@ -171,7 +173,7 @@ class DeliveryInfoList extends NavigatorComponent {
       return (
         <TouchableOpacity
           style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-          onPress={() => { this.props.fetchDeliveryInfoList(); }}
+          onPress={() => { this.props.fetchServiceStores(); }}
         >
           <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
         </TouchableOpacity>
@@ -247,7 +249,7 @@ class DeliveryInfoList extends NavigatorComponent {
         </Animated.View>
 
         <ListView
-          dataSource={this.state.deliveryInfoList}
+          dataSource={this.state.stores}
           renderRow={this.renderRowView.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
           enableEmptySections={true}
@@ -255,7 +257,7 @@ class DeliveryInfoList extends NavigatorComponent {
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={this.props.refreshDeliveryInfoList.bind(this)}
+              onRefresh={this.props.refreshServiceStores.bind(this)}
             />
           }
         />
@@ -273,17 +275,17 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { deliveryInfoList } = state;
+  const { serviceStores: stores } = state;
   return {
     ...ownProps,
-    isFetching: deliveryInfoList.isFetching,
-    isRefreshing: deliveryInfoList.isRefreshing,
-    deliveryInfoList: deliveryInfoList.data,
-    error: deliveryInfoList.error,
+    isFetching: stores.isFetching,
+    isRefreshing: stores.isRefreshing,
+    stores: stores.data,
+    error: stores.error,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchDeliveryInfoList, refreshDeliveryInfoList }
+  { showNavigationBar, hideNavigationBar, fetchServiceStores, refreshServiceStores }
 )(DeliveryInfoList);

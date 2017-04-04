@@ -172,17 +172,19 @@ class ServiceStore extends NavigatorComponent {
                       </TouchableWithoutFeedback>
                     </View>
                   </View>
-                  <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: true })}>
-                    <Image
-                      style={{
-                        marginTop: 10,
-                        width: width,
-                        height: height,
-                        flex: 1,
-                      }}
-                      source={{ uri: imageUrl }}
-                    />
-                  </TouchableWithoutFeedback>
+                  { imageUrl &&
+                    <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: true })}>
+                      <Image
+                        style={{
+                          marginTop: 10,
+                          width: width,
+                          height: height,
+                          flex: 1,
+                        }}
+                        source={{ uri: imageUrl }}
+                      />
+                    </TouchableWithoutFeedback>
+                  }
                   { isFetching &&
                     <View style={MiumiuTheme.paginationView}>
                       <ActivityIndicator />
@@ -193,20 +195,22 @@ class ServiceStore extends NavigatorComponent {
             </ScrollView>
           }
           <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
-          <Modal visible={showPhotoView} animationType="fade" transparent={true}>
-            <View style={styles.photoViewContainer}>
-              <PhotoView
-                minimumZoomScale={1}
-                maximumZoomScale={3}
-                androidScaleType="center"
-                style={{ width: width, height: width }}
-                source={{ uri: imageUrl }}
-              />
-              <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: false })}>
-                <Icon name="md-close" size={24} color="white" style={styles.dismissButton} />
-              </TouchableWithoutFeedback>
-            </View>
-          </Modal>
+          { imageUrl &&
+            <Modal visible={showPhotoView} animationType="fade" transparent={true}>
+              <View style={styles.photoViewContainer}>
+                <PhotoView
+                  minimumZoomScale={1}
+                  maximumZoomScale={3}
+                  androidScaleType="center"
+                  style={{ width: width, height: width }}
+                  source={{ uri: imageUrl }}
+                />
+                <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: false })}>
+                  <Icon name="md-close" size={24} color="white" style={styles.dismissButton} />
+                </TouchableWithoutFeedback>
+              </View>
+            </Modal>
+          }
         </View>
       </TouchableWithoutFeedback>
     );

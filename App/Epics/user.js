@@ -81,8 +81,8 @@ export function userRegister(action$) {
         observer.next(generalRequest());
 
         try {
-          const { account, password, passwordConfirmation: confirm } = action;
-          const response = await post('auth/register', { account, password, confirm, redirect_uri: `${DEEP_LINK_PROTOCOL}://register/complete` });
+          const { account, name, password, passwordConfirmation: confirm } = action;
+          const response = await post('auth/register', { account, name, password, confirm, redirect_uri: `${DEEP_LINK_PROTOCOL}://register/complete` });
 
           observer.next(userRegisterSuccess(response));
           observer.next(generalRequestSuccess());

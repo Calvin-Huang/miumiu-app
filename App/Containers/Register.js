@@ -23,7 +23,8 @@ import { NavigatorComponent } from '../Components';
 import ConfirmRegistrationCode from './ConfirmRegistrationCode';
 import { MiumiuTheme } from '../Styles';
 import { generalRequestFailed, userRegister } from '../Actions';
-import ServiceTerm from './ServiceTerm';
+import WebInspector from './WebInspector';
+import { DOMAIN } from '../Constants/config';
 
 class Register extends NavigatorComponent {
   constructor(props) {
@@ -31,6 +32,7 @@ class Register extends NavigatorComponent {
 
     this.state = {
       account: null,
+      name: null,
       password: null,
       passwordConfirmation: null,
     }
@@ -50,23 +52,25 @@ class Register extends NavigatorComponent {
       return;
     }
 
-    const { account, password, passwordConfirmation, checkedServiceTerm } = this.state;
+    const { account, name, password, passwordConfirmation, checkedServiceTerm } = this.state;
     if (password !== passwordConfirmation) {
       this.props.generalRequestFailed(new Error('密碼確認錯誤，請檢查密碼'));
     } else if (!checkedServiceTerm) {
       this.props.generalRequestFailed(new Error('請同意使用協議'));
+    } else if (!name) {
+      this.props.generalRequestFailed(new Error('請輸入名稱'));
     } else {
-      this.props.userRegister(account, password, passwordConfirmation);
+      this.props.userRegister(account, name, password, passwordConfirmation);
     }
   }
 
   openServiceTerm() {
     dismissKeyboard();
-    this.pushToNextComponent(ServiceTerm, null, Navigator.SceneConfigs.FloatFromBottom);
+    this.pushToNextComponent(WebInspector, { title: '服務條款', uri: `${DOMAIN}/auth/term?back=0` }, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {
-    const { account, password, passwordConfirmation } = this.state;
+    const { account, name, password, passwordConfirmation } = this.state;
     const { isRequesting, error } = this.props;
 
     return (
@@ -91,6 +95,19 @@ class Register extends NavigatorComponent {
                 style={styles.textField}
                 onChangeText={(account) => { this.setState({ account }); }}
                 value={account}
+              />
+            </View>
+            <View style={MiumiuTheme.textFieldGroup}>
+              <MKTextField
+                floatingLabelEnabled={true}
+                textInputStyle={{ height: 31 }}
+                underlineSize={1}
+                highlightColor="#D8D8D8"
+                placeholder="名稱"
+                placeholderTextColor="#9E9E9E"
+                style={styles.textField}
+                onChangeText={(name) => { this.setState({ name }); }}
+                value={name}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
@@ -135,7 +152,10 @@ class Register extends NavigatorComponent {
                 onCheckedChange={() => this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm })}
               />
               <TouchableOpacity
-                onPress={() => this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm })}
+                onPress={() => {
+                  dismissKeyboard();
+                  this.setState({ checkedServiceTerm: !this.state.checkedServiceTerm });
+                }}
               >
                 <Text style={styles.serviceTermCheckboxText}>註冊喵喵代收同時您已經同意了我們的</Text>
               </TouchableOpacity>
@@ -186,6 +206,7 @@ const styles = {
     textAlign: 'center',
   },
   serviceTermGroup: {
+    flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 10,

@@ -17,7 +17,7 @@ export default class MiumiuThemeNavigatorBackground extends Component {
 
   render() {
     return (
-      <View style={{ ...styles.navBackgroundContainer, ...this.props.style }}>
+      <View removeClippedSubviews={true} style={{ ...styles.navBackgroundContainer, ...this.props.style }}>
         <LinearGradient
           start={{ x: 0.485544672, y: 1.08471279 }} end={{ x: 0.485544682, y: -0.0498809549 }}
           locations={[0, 0.0802375638, 0.438058036, 1]}

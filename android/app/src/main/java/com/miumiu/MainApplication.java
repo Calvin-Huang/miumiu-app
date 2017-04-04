@@ -39,8 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
             new SvgPackage(),
             new LinearGradientPackage(),
             new VectorIconsPackage(),
-            new ReactMaterialKitPackage(),
-            new FIRMessagingPackage()
+            new ReactMaterialKitPackage()
       );
     }
   };

@@ -10,6 +10,7 @@ import org.capslock.RNDeviceBrightness.RNDeviceBrightness;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;

@@ -311,7 +311,7 @@ class Main extends Component {
         onOpenStart={this.fadeInOutOverlay.bind(this)}
         onCloseStart={this.fadeInOutOverlay.bind(this)}
       >
-        <StatusBar barStyle='light-content' />
+        <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
         <Navigator
           ref="navigator"
           style={styles.container}

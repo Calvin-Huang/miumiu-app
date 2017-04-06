@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Navigator,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -26,7 +27,12 @@ export default class NavigatorComponent extends Component {
     if (route.transition === Navigator.SceneConfigs.PushFromRight) {
       return (
         <TouchableOpacity onPress={() => { dismissKeyboard(); navigator.pop(); }}>
-          <Icon style={NavigatorStyle.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
+          <Icon
+            style={NavigatorStyle.navBackButton}
+            name={Platform.OS === 'ios' ? 'ios-arrow-back' : 'md-arrow-back'}
+            size={24}
+            color="#FFFFFF"
+          />
         </TouchableOpacity>
       );
     } else {

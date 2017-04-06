@@ -42,7 +42,7 @@ class FAQDetail extends NavigatorComponent {
     return (
       <View style={MiumiuTheme.container}>
         <MiumiuThemeNavigatorBackground>
-          <View style={NavigatorStyle.titleView}>
+          <View style={{ ...NavigatorStyle.titleView, left: 0, right: 0 }}>
             <Text numberOfLines={1} style={{ ...NavigatorStyle.titleText, marginHorizontal: 30 }}>
               {title}
             </Text>

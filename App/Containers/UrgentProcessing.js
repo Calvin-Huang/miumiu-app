@@ -37,12 +37,24 @@ class UrgentProcessing extends NavigatorComponent {
         </TouchableOpacity>
       );
     } else {
-      return null;
+      if (Platform.OS === 'android') {
+        return (
+          <TouchableOpacity onPress={() => {
+          navigator.pop();
+        }}>
+            <View style={NavigatorStyle.itemButton}>
+              <Icon name="md-close" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+        );
+      } else {
+        return null;
+      }
     }
   }
 
   static navRightButton(route, navigator, index, navState) {
-    if (route.index !== 0) {
+    if (route.index !== 0 && Platform.OS === 'ios') {
       return (
         <TouchableOpacity onPress={() => {
           dismissKeyboard();

@@ -321,7 +321,7 @@ class WayBills extends NavigatorComponent {
             style={MiumiuTheme.navBackgroundWithSearchBar}
           >
             { !this.state.isSearching &&
-              <View style={NavigatorStyle.titleView}>
+              <View style={NavigatorStyle.brandView}>
                 <Image source={require('../../assets/images/icon-miumiu.png')} />
               </View>
             }

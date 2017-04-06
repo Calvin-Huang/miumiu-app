@@ -2,7 +2,24 @@
  * Created by Calvin Huang on 2/16/17.
  */
 
-export default styles = {
+import {
+  Platform,
+} from 'react-native';
+
+const styles = {
+  titleView: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 20 : 6,
+    right: Platform.OS === 'ios' ? 0 : null,
+    left: Platform.OS === 'ios' ? 0 : 72,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+};
+
+export default {
   navBackButton: {
     marginTop: 10,
     marginRight: 80,
@@ -30,14 +47,10 @@ export default styles = {
     color: 'white',
     fontWeight: 'bold',
   },
-  titleView: {
-    position: 'absolute',
-    top: 20,
+  titleView: styles.titleView,
+  brandView: {
+    ...styles.titleView,
     right: 0,
     left: 0,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
   },
 };

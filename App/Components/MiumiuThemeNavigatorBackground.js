@@ -6,6 +6,7 @@ import React, { PropTypes, Component } from 'react';
 import {
   Animated,
   View,
+  Platform,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,7 +18,7 @@ export default class MiumiuThemeNavigatorBackground extends Component {
 
   render() {
     return (
-      <View style={{ ...styles.navBackgroundContainer, ...this.props.style }}>
+      <View removeClippedSubviews={true} style={{ ...styles.navBackgroundContainer, ...this.props.style }}>
         <LinearGradient
           start={{ x: 0.485544672, y: 1.08471279 }} end={{ x: 0.485544682, y: -0.0498809549 }}
           locations={[0, 0.0802375638, 0.438058036, 1]}
@@ -37,7 +38,7 @@ const styles = {
     height: 104,
   },
   navBackgroundContainer: {
-    height: 64,
+    height: Platform.OS === 'ios' ? 64 : 56,
     overflow: 'hidden',
   }
 };

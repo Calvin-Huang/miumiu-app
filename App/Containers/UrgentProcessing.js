@@ -44,9 +44,9 @@ class UrgentProcessing extends NavigatorComponent {
     if (route.index !== 0) {
       return (
         <TouchableOpacity onPress={() => {
-        dismissKeyboard();
-        navigator.pop();
-      }}>
+          dismissKeyboard();
+          navigator.pop();
+        }}>
           <Text style={NavigatorStyle.itemTextButton}>
             取消
           </Text>

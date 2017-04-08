@@ -136,6 +136,8 @@ class Main extends Component {
         },
       ]
     };
+
+    this.handleOpenURL = this.handleOpenURL.bind(this);
     this.androidBackHandler = this.androidBackHandler.bind(this);
   }
 
@@ -150,7 +152,7 @@ class Main extends Component {
       })
       .catch(() => { /* Do nothing */ });
 
-    Linking.addEventListener('url', this.handleOpenURL.bind(this));
+    Linking.addEventListener('url', this.handleOpenURL);
     APIErrors.on('JWTRefresh', () => {
       this.props.showNavigationBar();
       this.props.closeSideDrawer();
@@ -210,7 +212,7 @@ class Main extends Component {
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleOpenURL.bind(this));
+    Linking.removeEventListener('url', this.handleOpenURL);
     BackAndroid.removeEventListener('hardwareBackPress', this.androidBackHandler);
   }
 

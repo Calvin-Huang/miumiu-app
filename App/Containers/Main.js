@@ -17,6 +17,7 @@ import {
   TouchableWithoutFeedback,
   Animated,
   Easing,
+  BackAndroid,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -135,6 +136,9 @@ class Main extends Component {
         },
       ]
     };
+
+    this.handleOpenURL = this.handleOpenURL.bind(this);
+    this.androidBackHandler = this.androidBackHandler.bind(this);
   }
 
   componentDidMount() {
@@ -148,12 +152,14 @@ class Main extends Component {
       })
       .catch(() => { /* Do nothing */ });
 
-    Linking.addEventListener('url', this.handleOpenURL.bind(this));
+    Linking.addEventListener('url', this.handleOpenURL);
     APIErrors.on('JWTRefresh', () => {
       this.props.showNavigationBar();
       this.props.closeSideDrawer();
       this.props.userSignOut();
     });
+
+    BackAndroid.addEventListener('hardwareBackPress', this.androidBackHandler);
   }
 
   componentWillReceiveProps(props) {
@@ -206,7 +212,8 @@ class Main extends Component {
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleOpenURL.bind(this));
+    Linking.removeEventListener('url', this.handleOpenURL);
+    BackAndroid.removeEventListener('hardwareBackPress', this.androidBackHandler);
   }
 
   handleOpenURL({ url }) {
@@ -252,6 +259,24 @@ class Main extends Component {
         ]);
       }
     }
+  }
+
+  androidBackHandler() {
+    const { navigator } = this.refs;
+    const { sideDrawerOpened, showNavigator, closeSideDrawer, showNavigationBar } = this.props;
+    if (sideDrawerOpened) {
+      closeSideDrawer();
+      return true;
+
+    } else if (!showNavigator) {
+      showNavigationBar();
+      return true;
+
+    } else if (navigator.getCurrentRoutes().length > 1) {
+      navigator.pop();
+      return true;
+    }
+    return false;
   }
 
   fadeInOutOverlay() {

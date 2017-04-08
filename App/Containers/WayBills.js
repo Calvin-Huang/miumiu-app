@@ -70,6 +70,13 @@ class WayBills extends NavigatorComponent {
             </View>
           </TouchableOpacity>
         }
+        { Platform.OS === 'android' &&
+          <TouchableOpacity onPress={() => { store.dispatch(hideNavigationBar()); }}>
+            <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
+              <Icon name="md-search" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+        }
         <TouchableOpacity onPress={() => { store.dispatch(showUserQRCode()); }}>
           <View style={{ ...NavigatorStyle.itemButton, marginLeft: 16, marginRight: 2 }}>
             <FontAwesomeIcon name="qrcode" size={24} color="white" />
@@ -126,6 +133,10 @@ class WayBills extends NavigatorComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.props.showNavigationBar();
+  }
+
   componentWillReceiveProps(props) {
     const { searchingTerm } = this;
     if (searchingTerm) {
@@ -134,6 +145,12 @@ class WayBills extends NavigatorComponent {
       this.setState({
         wayBills: dataSource.cloneWithRows(props.wayBills),
       });
+    }
+
+    if (Platform.OS === 'android') {
+      if (this.props.isNavigatorShown !== props.isNavigatorShown) {
+        this.setState({ isSearching: !props.isNavigatorShown });
+      }
     }
   }
 
@@ -238,7 +255,11 @@ class WayBills extends NavigatorComponent {
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.row} onPress={() => {
-          this.hideSearchBar();
+          if (Platform.OS === 'ios') {
+            this.hideSearchBar();
+          } else {
+            this.props.showNavigationBar();
+          }
           this.pushToNextComponent(WayBill, rowData);
         }}>
         <WayBillStateView style={styles.wayBillState} state={rowData.status} />
@@ -313,8 +334,9 @@ class WayBills extends NavigatorComponent {
     return (
       <View style={MiumiuTheme.container}>
         <Animated.View
+          removeClippedSubviews={true}
           style={{
-            height: this.state.navBarStretchValue,
+            height: (Platform.OS === 'android' ? 56 : this.state.navBarStretchValue),
             overflow: 'hidden',
           }}
         >
@@ -329,24 +351,40 @@ class WayBills extends NavigatorComponent {
                 <Image source={require('../../assets/images/icon-miumiu.png')} />
               </View>
             }
-            <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
-              <Animated.View
-                style={{
-                  ...MiumiuTheme.searchBar,
-                  marginBottom: this.state.searchBarMarginBottom,
-                }}
-              >
-                <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+            { Platform.OS === 'ios' &&
+              <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
+                <Animated.View
+                  style={{
+                    ...MiumiuTheme.searchBar,
+                    marginBottom: this.state.searchBarMarginBottom,
+                  }}
+                >
+                  <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+                  <TextInput
+                    ref="searchBar"
+                    style={{ ...MiumiuTheme.buttonText, flex: 1 }}
+                    placeholderTextColor="rgba(255, 255, 255, 0.65)"
+                    placeholder="輸入關鍵字查單"
+                    onFocus={this.showSearchBar.bind(this)}
+                    onChangeText={this.searchBarTextChanged.bind(this)}
+                  />
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            }
+            { Platform.OS === 'android' && this.state.isSearching &&
+              <View style={MiumiuTheme.androidSearchBarContainer}>
+                <TouchableOpacity onPress={this.props.showNavigationBar}>
+                  <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
                 <TextInput
                   ref="searchBar"
-                  style={{ ...MiumiuTheme.buttonText, flex: 1 }}
+                  style={MiumiuTheme.androidSearchInput}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="輸入關鍵字查單"
-                  onFocus={this.showSearchBar.bind(this)}
                   onChangeText={this.searchBarTextChanged.bind(this)}
                 />
-              </Animated.View>
-            </TouchableWithoutFeedback>
+              </View>
+            }
             <TouchableOpacity
               style={{
                 alignSelf: 'flex-end',
@@ -509,6 +547,7 @@ const mapStateToProps = (state, ownProps) => {
     isRefreshing: wayBills.isRefreshing,
     isFetching: wayBills.isFetching,
     error: wayBills.error,
+    isNavigatorShown: state.navigationBar.isShown,
   };
 };
 

@@ -14,6 +14,7 @@ import {
   Easing,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -39,6 +40,18 @@ class ServiceStores extends NavigatorComponent {
     );
   }
 
+  static navRightButton(route, navigator, index, navState) {
+    if (Platform.OS === 'android') {
+      return (
+        <TouchableOpacity onPress={() => { store.dispatch(hideNavigationBar()); }}>
+          <View style={NavigatorStyle.itemButton}>
+            <Icon name="md-search" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  }
+
   constructor(props) {
     super(props);
 
@@ -57,10 +70,20 @@ class ServiceStores extends NavigatorComponent {
     this.props.fetchServiceStores();
   }
 
+  componentWillUnmount() {
+    this.props.showNavigationBar();
+  }
+
   componentWillReceiveProps(props) {
     this.setState({
       stores: dataSource.cloneWithRows(props.stores),
     });
+
+    if (Platform.OS === 'android') {
+      if (this.props.isNavigatorShown !== props.isNavigatorShown) {
+        this.setState({ isSearching: !props.isNavigatorShown });
+      }
+    }
   }
 
   showSearchBar() {
@@ -156,7 +179,11 @@ class ServiceStores extends NavigatorComponent {
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
-        this.hideSearchBar();
+        if (Platform.OS === 'ios') {
+          this.hideSearchBar();
+        } else {
+          this.props.showNavigationBar();
+        }
         this.pushToNextComponent(ServiceStore, rowData);
       }}>
         <View style={{ flex: 1 }}>
@@ -199,8 +226,9 @@ class ServiceStores extends NavigatorComponent {
     return (
       <View style={MiumiuTheme.container}>
         <Animated.View
+          removeClippedSubviews={true}
           style={{
-            height: this.state.navBarStretchValue,
+            height: (Platform.OS === 'android' ? 56 : this.state.navBarStretchValue),
             overflow: 'hidden',
           }}
         >
@@ -217,24 +245,40 @@ class ServiceStores extends NavigatorComponent {
               </Text>
             </View>
             }
-            <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
-              <Animated.View
-                style={{
-                  ...MiumiuTheme.searchBar,
-                  marginBottom: this.state.searchBarMarginBottom,
-                }}
-              >
-                <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+            { Platform.OS === 'ios' &&
+              <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
+                <Animated.View
+                  style={{
+                    ...MiumiuTheme.searchBar,
+                    marginBottom: this.state.searchBarMarginBottom,
+                  }}
+                >
+                  <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+                  <TextInput
+                    ref="searchBar"
+                    style={{ ...MiumiuTheme.buttonText, flex: 1 }}
+                    placeholderTextColor="rgba(255, 255, 255, 0.65)"
+                    placeholder="查詢離你最近的據點"
+                    onFocus={this.showSearchBar.bind(this)}
+                    onChangeText={this.searchBarTextChanged.bind(this)}
+                  />
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            }
+            { Platform.OS === 'android' && this.state.isSearching &&
+              <View style={MiumiuTheme.androidSearchBarContainer}>
+                <TouchableOpacity onPress={this.props.showNavigationBar}>
+                  <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
                 <TextInput
                   ref="searchBar"
-                  style={{ ...MiumiuTheme.buttonText, flex: 1 }}
+                  style={MiumiuTheme.androidSearchInput}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="查詢離你最近的據點"
-                  onFocus={this.showSearchBar.bind(this)}
                   onChangeText={this.searchBarTextChanged.bind(this)}
                 />
-              </Animated.View>
-            </TouchableWithoutFeedback>
+              </View>
+            }
             <TouchableOpacity
               style={{
                 alignSelf: 'flex-end',
@@ -293,6 +337,7 @@ const mapStateToProps = (state, ownProps) => {
     isRefreshing: stores.isRefreshing,
     stores: stores.data,
     error: stores.error,
+    isNavigatorShown: state.navigationBar.isShown,
   };
 };
 

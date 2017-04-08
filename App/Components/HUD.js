@@ -11,7 +11,6 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { BlurView } from 'react-native-blur';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class HUD extends Component {
@@ -69,7 +68,7 @@ export default class HUD extends Component {
         visible={this.state.visible}
       >
         <View style={styles.container}>
-          <BlurView blurType="dark" style={styles.blurContainer}>
+          <View blurType="dark" style={styles.blurContainer}>
             { type === 'success' &&
               <Icon name="md-checkmark" color="white" size={30} style={{ paddingHorizontal: 6 }} />
             }
@@ -79,7 +78,7 @@ export default class HUD extends Component {
             { this.props.message &&
               <Text style={this.props.textStyle || styles.defaultTextStyle}>{this.props.message}</Text>
             }
-          </BlurView>
+          </View>
         </View>
       </Modal>
     );
@@ -98,6 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
+    backgroundColor: '#555557',
   },
   defaultTextStyle: {
     fontSize: 14,

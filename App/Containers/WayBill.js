@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
+  Alert,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -17,20 +18,22 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Color from 'color';
 import moment from 'moment';
 
-import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping } from '../Components';
+import store from '../storeInstance';
+
+import { NavigatorComponent, MiumiuThemeNavigatorBackground, IconFasterShipping, HUD } from '../Components';
 import UrgentProcessing from './UrgentProcessing';
 import ServiceStore from './ServiceStore';
 import WebInspector from './WebInspector';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
-import { showUserQRCode } from '../Actions';
+import { showUserQRCode, deleteWayBill, refreshWayBills } from '../Actions';
 import { DATETIME_FORMAT, DOMAIN } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
-  static navRightButton({ data: { shippingNo, status } }, navigator, index, navState) {
+  static navRightButton({ data: { hex, status } }, navigator, index, navState) {
     if (status === WayBillState.CONFIRMING) {
       return (
-        <TouchableOpacity onPress={() => { console.log(shippingNo); }}>
+        <TouchableOpacity onPress={() => { store.dispatch(deleteWayBill(hex)); }}>
           <Text style={NavigatorStyle.itemTextButton}>
             刪除
           </Text>
@@ -49,6 +52,27 @@ class WayBill extends NavigatorComponent {
     };
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.isRequesting !== props.isRequesting) {
+      if (!props.isRequesting) {
+
+        if (!props.error) {
+          this.props.refreshWayBills();
+          this.props.navigator.pop();
+        } else {
+
+          // Wait HUD disappear.
+          setTimeout(() => {
+            Alert.alert(
+              '發生了一點問題',
+              props.error.message,
+            );
+          }, 100);
+        }
+      }
+    }
+  }
+
   checkServiceStoreButtonTapped() {
     const { data } = this.state;
     this.pushToNextComponent(ServiceStore, { id: data.locationId }, Navigator.SceneConfigs.FloatFromBottom);
@@ -60,6 +84,7 @@ class WayBill extends NavigatorComponent {
 
   render() {
     const { data } = this.state;
+    const { isRequesting } = this.props;
     const { icon, iconColor, title } = stateInfoMapping[data.status] || {};
 
     const sectionTitle = ((data) => {
@@ -164,6 +189,7 @@ class WayBill extends NavigatorComponent {
             </TouchableOpacity>
           </View>
         }
+        <HUD visible={isRequesting} type="progress" message="更新中" />
       </View>
     )
   }
@@ -206,10 +232,15 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  const { generalRequest } = state;
+  return {
+    ...ownProps,
+    isRequesting: generalRequest.isRequesting,
+    error: generalRequest.error,
+  };
 }
 
 export default connect(
   mapStateToProps,
-  { showUserQRCode }
+  { showUserQRCode, deleteWayBill, refreshWayBills }
 )(WayBill);

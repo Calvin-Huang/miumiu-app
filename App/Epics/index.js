@@ -22,6 +22,7 @@ export default combineEpics(
   wayBillEpics.refreshingWayBills,
   wayBillEpics.addingWayBill,
   wayBillEpics.urgentWayBill,
+  wayBillEpics.deleteWayBill,
   calculator.calculate,
   deliveryInfo.fetchDeliveryInfoList,
   deliveryInfo.refreshDeliveryInfoList,

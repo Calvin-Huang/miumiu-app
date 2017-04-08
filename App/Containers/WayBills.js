@@ -16,10 +16,12 @@ import {
   Navigator,
   Animated,
   Easing,
+  Platform,
 } from 'react-native';
 
 import { connect } from 'react-redux';
 import GiftedListView from 'react-native-gifted-listview';
+import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
@@ -53,19 +55,21 @@ class WayBills extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
     return (
       <View style={NavigatorStyle.itemButtonsContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            navigator.push({
-              index: route.index + 1,
-              component: AddWayBill,
-              transition: Navigator.SceneConfigs.FloatFromBottom,
-            });
-          }}
-        >
-          <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
-            <Icon name="md-add" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
+        { Platform.OS === 'ios' &&
+          <TouchableOpacity
+            onPress={() => {
+              navigator.push({
+                index: route.index + 1,
+                component: AddWayBill,
+                transition: Navigator.SceneConfigs.FloatFromBottom,
+              });
+            }}
+          >
+            <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
+              <Icon name="md-add" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+        }
         <TouchableOpacity onPress={() => { store.dispatch(showUserQRCode()); }}>
           <View style={{ ...NavigatorStyle.itemButton, marginLeft: 16, marginRight: 2 }}>
             <FontAwesomeIcon name="qrcode" size={24} color="white" />
@@ -422,6 +426,21 @@ class WayBills extends NavigatorComponent {
             />
           }
         />
+
+        <MKButton
+          style={styles.androidAddButton}
+          backgroundColor="#3D73BA"
+          shadowRadius={2}
+          shadowOffset={{width:0, height:2}}
+          shadowOpacity={.7}
+          shadowColor="black"
+          fab={true}
+          onPress={() => {
+            this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+          }}
+        >
+          <Icon name="md-add" size={24} color="white" />
+        </MKButton>
       </View>
     );
   }
@@ -461,6 +480,21 @@ const styles = {
     width: 300,
     height: 200,
     marginTop: 55,
+  },
+  androidAddButton: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowRadius: 1,
+    shadowOffset: { width: 0, height: 0.5 },
+    shadowOpacity: 0.7,
+    shadowColor: 'black',
+    elevation: 4,
   },
 };
 

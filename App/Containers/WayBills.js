@@ -465,20 +465,22 @@ class WayBills extends NavigatorComponent {
           }
         />
 
-        <MKButton
-          style={styles.androidAddButton}
-          backgroundColor="#3D73BA"
-          shadowRadius={2}
-          shadowOffset={{width:0, height:2}}
-          shadowOpacity={.7}
-          shadowColor="black"
-          fab={true}
-          onPress={() => {
-            this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
-          }}
-        >
-          <Icon name="md-add" size={24} color="white" />
-        </MKButton>
+        { Platform.OS === 'android' &&
+          <MKButton
+            style={styles.androidAddButton}
+            backgroundColor="#3D73BA"
+            shadowRadius={2}
+            shadowOffset={{width:0, height:2}}
+            shadowOpacity={.7}
+            shadowColor="black"
+            fab={true}
+            onPress={() => {
+              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+            }}
+          >
+            <Icon name="md-add" size={24} color="white" />
+          </MKButton>
+        }
       </View>
     );
   }

@@ -143,7 +143,16 @@ class Main extends Component {
   }
 
   componentDidMount() {
-    this.props.checkUserSignedIn();
+    if (this.props.currentUser === null) {
+      this.refs.navigator.push({
+        index: 1,
+        component: SignIn,
+        transition: Navigator.SceneConfigs.FloatFromBottom,
+      });
+
+    } else {
+      this.props.checkUserSignedIn();
+    }
 
     FCM.requestPermissions();
 
@@ -274,8 +283,16 @@ class Main extends Component {
       return true;
 
     } else if (navigator.getCurrentRoutes().length > 1) {
-      navigator.pop();
-      return true;
+
+      const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+
+      if (currentRoute.component.displayName === 'Connect(SignIn)') {
+        return false;
+
+      } else {
+        navigator.pop();
+        return true;
+      }
     }
     return false;
   }

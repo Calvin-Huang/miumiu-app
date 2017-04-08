@@ -11,7 +11,6 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -201,7 +200,7 @@ class UrgentProcessing extends NavigatorComponent {
             </View>
           </View>
 
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <KeyboardAvoidingView behavior="padding">
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}

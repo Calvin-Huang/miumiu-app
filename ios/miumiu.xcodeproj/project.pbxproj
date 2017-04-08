@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -32,7 +31,6 @@
 		73B06EA1E88341A88543FC57 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471CA79013C3447292EF755A /* Entypo.ttf */; };
 		794095EC02F147D0B92585EB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 565260B0290346DA97E2875E /* SimpleLineIcons.ttf */; };
 		79C68D960CE34E7D8AB6D625 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DBB0E90A79D42E08EA3C20D /* EvilIcons.ttf */; };
-		7E0ACDFE17F946E8A5146C4E /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8268057A2A244F9ABDA0FC43 /* libRNBlur.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		836544DD158945B49CA94935 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 961862EA875246DDBC9EDFF0 /* Zocial.ttf */; };
 		9D41E82214D94AB08B19CA71 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9526CABC1124AC7B5CE6227 /* Foundation.ttf */; };
@@ -273,13 +271,6 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		E277972E1E839704006838B4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 10350E00CE3A4BF287B63A09 /* RNBlur.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
-			remoteInfo = RNBlur;
-		};
 		E2BA272E1E82AA170080EFF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D07B837A8B4F4E2F949491FD /* RNFIRMessaging.xcodeproj */;
@@ -301,7 +292,6 @@
 		00E356F21AD99517003FC87E /* miumiuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = miumiuTests.m; sourceTree = "<group>"; };
 		0AC8EB640F2E4856BFB4F98F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		0E62381E1B6A4ADDA6C8E564 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
-		10350E00CE3A4BF287B63A09 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* miumiu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = miumiu.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -324,7 +314,6 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		78EB866A7D6D4FF1971CE6D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		8268057A2A244F9ABDA0FC43 /* libRNBlur.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBlur.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8446D3CA95424B8BAD311794 /* libRNDeviceBrightness.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceBrightness.a; sourceTree = "<group>"; };
 		961862EA875246DDBC9EDFF0 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -392,7 +381,6 @@
 				2B8605D8E97747DA96FCD763 /* libRNFIRMessaging.a in Frameworks */,
 				E2BA273E1E82B09E0080EFF1 /* Protobuf.framework in Frameworks */,
 				E2BA27421E82B13F0080EFF1 /* FirebaseStorage.framework in Frameworks */,
-				7E0ACDFE17F946E8A5146C4E /* libRNBlur.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -604,7 +592,6 @@
 				D7B22D7A547344799CA77C73 /* RNSVG.xcodeproj */,
 				E4AB5EA65E8F432989E6A098 /* RNDeviceBrightness.xcodeproj */,
 				D07B837A8B4F4E2F949491FD /* RNFIRMessaging.xcodeproj */,
-				10350E00CE3A4BF287B63A09 /* RNBlur.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -647,14 +634,6 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* miumiu.app */,
 				00E356EE1AD99517003FC87E /* miumiuTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		E27797101E839704006838B4 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E277972F1E839704006838B4 /* libRNBlur.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -800,10 +779,6 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-				},
-				{
-					ProductGroup = E27797101E839704006838B4 /* Products */;
-					ProjectRef = 10350E00CE3A4BF287B63A09 /* RNBlur.xcodeproj */;
 				},
 				{
 					ProductGroup = 18D065AA1E76C58E005DA846 /* Products */;
@@ -1041,13 +1016,6 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E277972F1E839704006838B4 /* libRNBlur.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBlur.a;
-			remoteRef = E277972E1E839704006838B4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		E2BA272F1E82AA170080EFF1 /* libRNFIRMessaging.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1171,13 +1139,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/miumiu.app/miumiu";
@@ -1195,13 +1156,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/miumiu.app/miumiu";

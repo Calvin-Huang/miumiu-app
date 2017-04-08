@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
-  Platform,
+  Alert,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -176,7 +176,7 @@ class Calculator extends NavigatorComponent {
             </View>
           </View>
 
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <KeyboardAvoidingView behavior="padding">
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
@@ -200,6 +200,7 @@ class Calculator extends NavigatorComponent {
             animationType="fade"
             transparent={true}
             visible={this.state.showModal}
+            onRequestClose={() => this.setState({ showModal: false }) }
           >
             <TouchableOpacity
               style={MiumiuTheme.modalContainer}

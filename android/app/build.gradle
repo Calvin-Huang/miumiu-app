@@ -126,7 +126,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-blur')
     compile project(':react-native-fcm')
     compile project(':react-native-device-brightness')
     compile project(':react-native-svg')
@@ -144,19 +143,6 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
-}
-
-repositories {
-    maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
-}
-
-buildscript {
-    repositories {
-        maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
-    }
-    dependencies {
-        classpath 'com.fivehundredpx:blurringview:1.0.0'
-    }
 }
 
 apply plugin: 'com.google.gms.google-services'

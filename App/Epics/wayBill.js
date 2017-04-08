@@ -17,7 +17,7 @@ import {
 } from '../Actions/wayBillActions';
 import { generalRequest, generalRequestSuccess, generalRequestFailed } from '../Actions/generalRequestActions';
 
-import { get, post } from '../Utils/api';
+import { get, post, del } from '../Utils/api';
 
 export function fetchWayBills(action$) {
   return action$.ofType(ActionTypes.REQUESTED_WAYBILLS)
@@ -67,6 +67,24 @@ export function urgentWayBill(action$) {
         (async () => {
           try {
             await post('shipping/urgent', { shipping_no: action.shippingNo, logistic: action.logistic });
+
+            return generalRequestSuccess();
+          } catch (error) {
+            return generalRequestFailed(error);
+          }
+        })(),
+      );
+    });
+}
+
+export function deleteWayBill(action$) {
+  return action$.ofType(ActionTypes.DELETE_WAYBILL)
+    .switchMap((action) => {
+      return Observable.concat(
+        Observable.of(generalRequest()),
+        (async () => {
+          try {
+            await del(`shipping/${action.hex}`);
 
             return generalRequestSuccess();
           } catch (error) {

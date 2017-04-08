@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';

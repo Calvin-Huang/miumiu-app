@@ -67,6 +67,13 @@ export function addWayBillFailed(error) {
   }
 }
 
+export function deleteWayBill(hex) {
+  return {
+    type: Actions.DELETE_WAYBILL,
+    hex,
+  }
+}
+
 export function urgentWayBill(shippingNo, logistic) {
   return {
     type: Actions.URGENT_WAYBILL,

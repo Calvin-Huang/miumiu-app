@@ -188,7 +188,7 @@ class Main extends Component {
 
         setTimeout(() => {
           this.props.openSideDrawer();
-        }, 200);
+        }, 250);
       } else {
         this.refs.navigator.push({
           index: 1,

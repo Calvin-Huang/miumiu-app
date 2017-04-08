@@ -22,3 +22,9 @@ export function generalRequestFailed(error) {
     error,
   };
 }
+
+export function resetGeneralRequest() {
+  return {
+    type: ActionsTypes.RESET_GENERAL_REQUEST,
+  };
+}

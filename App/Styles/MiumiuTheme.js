@@ -202,4 +202,16 @@ export default style = {
     justifyContent: 'center',
     backgroundColor: 'white',
   },
+  androidSearchBarContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    height: 56,
+    marginHorizontal: 9,
+    alignItems: 'center',
+  },
+  androidSearchInput: {
+    flex: 1,
+    marginLeft: 20,
+    color: 'white',
+  },
 };

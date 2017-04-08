@@ -16,10 +16,12 @@ import {
   Navigator,
   Animated,
   Easing,
+  Platform,
 } from 'react-native';
 
 import { connect } from 'react-redux';
 import GiftedListView from 'react-native-gifted-listview';
+import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
@@ -53,19 +55,28 @@ class WayBills extends NavigatorComponent {
   static navRightButton(route, navigator, index, navState) {
     return (
       <View style={NavigatorStyle.itemButtonsContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            navigator.push({
-              index: route.index + 1,
-              component: AddWayBill,
-              transition: Navigator.SceneConfigs.FloatFromBottom,
-            });
-          }}
-        >
-          <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
-            <Icon name="md-add" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
+        { Platform.OS === 'ios' &&
+          <TouchableOpacity
+            onPress={() => {
+              navigator.push({
+                index: route.index + 1,
+                component: AddWayBill,
+                transition: Navigator.SceneConfigs.FloatFromBottom,
+              });
+            }}
+          >
+            <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
+              <Icon name="md-add" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+        }
+        { Platform.OS === 'android' &&
+          <TouchableOpacity onPress={() => { store.dispatch(hideNavigationBar()); }}>
+            <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
+              <Icon name="md-search" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+        }
         <TouchableOpacity onPress={() => { store.dispatch(showUserQRCode()); }}>
           <View style={{ ...NavigatorStyle.itemButton, marginLeft: 16, marginRight: 2 }}>
             <FontAwesomeIcon name="qrcode" size={24} color="white" />
@@ -122,6 +133,10 @@ class WayBills extends NavigatorComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.props.showNavigationBar();
+  }
+
   componentWillReceiveProps(props) {
     const { searchingTerm } = this;
     if (searchingTerm) {
@@ -130,6 +145,12 @@ class WayBills extends NavigatorComponent {
       this.setState({
         wayBills: dataSource.cloneWithRows(props.wayBills),
       });
+    }
+
+    if (Platform.OS === 'android') {
+      if (this.props.isNavigatorShown !== props.isNavigatorShown) {
+        this.setState({ isSearching: !props.isNavigatorShown });
+      }
     }
   }
 
@@ -234,7 +255,11 @@ class WayBills extends NavigatorComponent {
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.row} onPress={() => {
-          this.hideSearchBar();
+          if (Platform.OS === 'ios') {
+            this.hideSearchBar();
+          } else {
+            this.props.showNavigationBar();
+          }
           this.pushToNextComponent(WayBill, rowData);
         }}>
         <WayBillStateView style={styles.wayBillState} state={rowData.status} />
@@ -309,8 +334,9 @@ class WayBills extends NavigatorComponent {
     return (
       <View style={MiumiuTheme.container}>
         <Animated.View
+          removeClippedSubviews={true}
           style={{
-            height: this.state.navBarStretchValue,
+            height: (Platform.OS === 'android' ? 56 : this.state.navBarStretchValue),
             overflow: 'hidden',
           }}
         >
@@ -321,28 +347,44 @@ class WayBills extends NavigatorComponent {
             style={MiumiuTheme.navBackgroundWithSearchBar}
           >
             { !this.state.isSearching &&
-              <View style={NavigatorStyle.titleView}>
+              <View style={NavigatorStyle.brandView}>
                 <Image source={require('../../assets/images/icon-miumiu.png')} />
               </View>
             }
-            <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
-              <Animated.View
-                style={{
-                  ...MiumiuTheme.searchBar,
-                  marginBottom: this.state.searchBarMarginBottom,
-                }}
-              >
-                <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+            { Platform.OS === 'ios' &&
+              <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
+                <Animated.View
+                  style={{
+                    ...MiumiuTheme.searchBar,
+                    marginBottom: this.state.searchBarMarginBottom,
+                  }}
+                >
+                  <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+                  <TextInput
+                    ref="searchBar"
+                    style={{ ...MiumiuTheme.buttonText, flex: 1 }}
+                    placeholderTextColor="rgba(255, 255, 255, 0.65)"
+                    placeholder="輸入關鍵字查單"
+                    onFocus={this.showSearchBar.bind(this)}
+                    onChangeText={this.searchBarTextChanged.bind(this)}
+                  />
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            }
+            { Platform.OS === 'android' && this.state.isSearching &&
+              <View style={MiumiuTheme.androidSearchBarContainer}>
+                <TouchableOpacity onPress={this.props.showNavigationBar}>
+                  <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
                 <TextInput
                   ref="searchBar"
-                  style={{ ...MiumiuTheme.buttonText, flex: 1 }}
+                  style={MiumiuTheme.androidSearchInput}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="輸入關鍵字查單"
-                  onFocus={this.showSearchBar.bind(this)}
                   onChangeText={this.searchBarTextChanged.bind(this)}
                 />
-              </Animated.View>
-            </TouchableWithoutFeedback>
+              </View>
+            }
             <TouchableOpacity
               style={{
                 alignSelf: 'flex-end',
@@ -422,6 +464,23 @@ class WayBills extends NavigatorComponent {
             />
           }
         />
+
+        { Platform.OS === 'android' &&
+          <MKButton
+            style={styles.androidAddButton}
+            backgroundColor="#3D73BA"
+            shadowRadius={2}
+            shadowOffset={{width:0, height:2}}
+            shadowOpacity={.7}
+            shadowColor="black"
+            fab={true}
+            onPress={() => {
+              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+            }}
+          >
+            <Icon name="md-add" size={24} color="white" />
+          </MKButton>
+        }
       </View>
     );
   }
@@ -462,6 +521,21 @@ const styles = {
     height: 200,
     marginTop: 55,
   },
+  androidAddButton: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowRadius: 1,
+    shadowOffset: { width: 0, height: 0.5 },
+    shadowOpacity: 0.7,
+    shadowColor: 'black',
+    elevation: 4,
+  },
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -475,6 +549,7 @@ const mapStateToProps = (state, ownProps) => {
     isRefreshing: wayBills.isRefreshing,
     isFetching: wayBills.isFetching,
     error: wayBills.error,
+    isNavigatorShown: state.navigationBar.isShown,
   };
 };
 

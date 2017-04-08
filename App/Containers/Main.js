@@ -17,6 +17,7 @@ import {
   TouchableWithoutFeedback,
   Animated,
   Easing,
+  BackAndroid,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -51,6 +52,7 @@ import { showNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 import { fetchContactInfo } from '../Actions/settingActions';
+import { resetGeneralRequest } from '../Actions/generalRequestActions';
 
 class Main extends Component {
   constructor(props) {
@@ -135,6 +137,9 @@ class Main extends Component {
         },
       ]
     };
+
+    this.handleOpenURL = this.handleOpenURL.bind(this);
+    this.androidBackHandler = this.androidBackHandler.bind(this);
   }
 
   componentDidMount() {
@@ -148,12 +153,14 @@ class Main extends Component {
       })
       .catch(() => { /* Do nothing */ });
 
-    Linking.addEventListener('url', this.handleOpenURL.bind(this));
+    Linking.addEventListener('url', this.handleOpenURL);
     APIErrors.on('JWTRefresh', () => {
       this.props.showNavigationBar();
       this.props.closeSideDrawer();
       this.props.userSignOut();
     });
+
+    BackAndroid.addEventListener('hardwareBackPress', this.androidBackHandler);
   }
 
   componentWillReceiveProps(props) {
@@ -206,7 +213,8 @@ class Main extends Component {
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleOpenURL.bind(this));
+    Linking.removeEventListener('url', this.handleOpenURL);
+    BackAndroid.removeEventListener('hardwareBackPress', this.androidBackHandler);
   }
 
   handleOpenURL({ url }) {
@@ -252,6 +260,24 @@ class Main extends Component {
         ]);
       }
     }
+  }
+
+  androidBackHandler() {
+    const { navigator } = this.refs;
+    const { sideDrawerOpened, showNavigator, closeSideDrawer, showNavigationBar } = this.props;
+    if (sideDrawerOpened) {
+      closeSideDrawer();
+      return true;
+
+    } else if (!showNavigator) {
+      showNavigationBar();
+      return true;
+
+    } else if (navigator.getCurrentRoutes().length > 1) {
+      navigator.pop();
+      return true;
+    }
+    return false;
   }
 
   fadeInOutOverlay() {
@@ -311,12 +337,13 @@ class Main extends Component {
         onOpenStart={this.fadeInOutOverlay.bind(this)}
         onCloseStart={this.fadeInOutOverlay.bind(this)}
       >
-        <StatusBar barStyle='light-content' />
+        <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
         <Navigator
           ref="navigator"
           style={styles.container}
           initialRoute={routes[0]}
           initialRouteStack={routes}
+          onWillFocus={this.props.resetGeneralRequest}
           navigationBar={
             (this.props.showNavigator &&
               <Navigator.NavigationBar style={{ flex: 1 }} />
@@ -331,6 +358,7 @@ class Main extends Component {
           animationType="fade"
           transparent={true}
           visible={this.props.showUserQRCodeModal}
+          onRequestClose={() => { this.props.hideUserQRCode(); }}
         >
           <TouchableOpacity
             style={MiumiuTheme.modalContainer}
@@ -411,5 +439,15 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { showNavigationBar, openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode, fetchContactInfo },
+  {
+    showNavigationBar,
+    openSideDrawer,
+    closeSideDrawer,
+    checkUserSignedIn,
+    userSignOut,
+    showUserQRCode,
+    hideUserQRCode,
+    fetchContactInfo,
+    resetGeneralRequest,
+  },
 )(Main);

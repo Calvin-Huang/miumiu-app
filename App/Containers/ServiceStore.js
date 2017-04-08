@@ -196,7 +196,7 @@ class ServiceStore extends NavigatorComponent {
           }
           <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
           { imageUrl &&
-            <Modal visible={showPhotoView} animationType="fade" transparent={true}>
+            <Modal visible={showPhotoView} animationType="fade" transparent={true} onRequestClose={() => this.setState({ showPhotoView: false })}>
               <View style={styles.photoViewContainer}>
                 <PhotoView
                   minimumZoomScale={1}

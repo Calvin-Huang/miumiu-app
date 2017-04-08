@@ -92,7 +92,7 @@ class SignIn extends NavigatorComponent {
           colors={['#57C9EB', '#55BCE3', '#4E9ACF', '#487ABD']}
           style={styles.container}
         >
-          <View style={NavigatorStyle.titleView}>
+          <View style={NavigatorStyle.brandView}>
             <Image source={require('../../assets/images/icon-miumiu.png')} />
           </View>
           <View style={styles.body}>

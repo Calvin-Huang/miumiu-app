@@ -2,7 +2,12 @@
  * Created by calvin.huang on 23/03/2017.
  */
 
-import { GENERAL_REQUEST, GENERAL_REQUEST_SUCCESS, GENERAL_REQUEST_FAILED } from '../Constants/actionTypes';
+import {
+  GENERAL_REQUEST,
+  GENERAL_REQUEST_SUCCESS,
+  GENERAL_REQUEST_FAILED,
+  RESET_GENERAL_REQUEST,
+} from '../Constants/actionTypes';
 
 const initialState = {
   isRequesting: false,
@@ -25,6 +30,11 @@ export default function generalRequest(state = initialState, action) {
       return {
         isRequesting: false,
         error: action.error,
+      };
+    case RESET_GENERAL_REQUEST:
+      return {
+        isRequesting: false,
+        error: null,
       };
     default:
       return state;

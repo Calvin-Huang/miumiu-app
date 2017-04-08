@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Navigator,
+  Alert,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -199,6 +200,7 @@ class Calculator extends NavigatorComponent {
             animationType="fade"
             transparent={true}
             visible={this.state.showModal}
+            onRequestClose={() => this.setState({ showModal: false }) }
           >
             <TouchableOpacity
               style={MiumiuTheme.modalContainer}

@@ -52,6 +52,7 @@ import { showNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 import { fetchContactInfo } from '../Actions/settingActions';
+import { resetGeneralRequest } from '../Actions/generalRequestActions';
 
 class Main extends Component {
   constructor(props) {
@@ -342,6 +343,7 @@ class Main extends Component {
           style={styles.container}
           initialRoute={routes[0]}
           initialRouteStack={routes}
+          onWillFocus={this.props.resetGeneralRequest}
           navigationBar={
             (this.props.showNavigator &&
               <Navigator.NavigationBar style={{ flex: 1 }} />
@@ -437,5 +439,15 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
     };
   },
-  { showNavigationBar, openSideDrawer, closeSideDrawer, checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode, fetchContactInfo },
+  {
+    showNavigationBar,
+    openSideDrawer,
+    closeSideDrawer,
+    checkUserSignedIn,
+    userSignOut,
+    showUserQRCode,
+    hideUserQRCode,
+    fetchContactInfo,
+    resetGeneralRequest,
+  },
 )(Main);

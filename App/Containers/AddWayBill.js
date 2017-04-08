@@ -11,29 +11,51 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
 
 import { connect } from 'react-redux';
 import { MKTextField } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Color from 'color';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { addWayBill, refreshWayBills } from '../Actions/wayBillActions';
 
 class AddWayBill extends NavigatorComponent {
+  static navLeftButton(route, navigator, index, navState) {
+    if (Platform.OS === 'android') {
+      return (
+        <TouchableOpacity onPress={() => {
+          navigator.pop();
+        }}>
+          <View style={NavigatorStyle.itemButton}>
+            <Icon name="md-close" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  }
+
   static navRightButton(route, navigator, index, navState) {
-    return (
-      <TouchableOpacity onPress={() => {
+    if (Platform.OS === 'ios') {
+      return (
+        <TouchableOpacity onPress={() => {
         dismissKeyboard();
         navigator.pop();
       }}>
-        <Text style={NavigatorStyle.itemTextButton}>
-          取消
-        </Text>
-      </TouchableOpacity>
-    );
+          <Text style={NavigatorStyle.itemTextButton}>
+            取消
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
   }
 
   constructor(props) {

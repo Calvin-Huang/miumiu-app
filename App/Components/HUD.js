@@ -66,6 +66,7 @@ export default class HUD extends Component {
         transparent={true}
         animationType="fade"
         visible={this.state.visible}
+        onRequestClose={() => {}}
       >
         <View style={styles.container}>
           <View blurType="dark" style={styles.blurContainer}>

@@ -1,4 +1,4 @@
-package com.miumiu;
+package org.capslock.miumiu;
 
 import com.facebook.react.ReactActivity;
 

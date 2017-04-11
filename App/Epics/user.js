@@ -24,6 +24,7 @@ import {
   generalRequest,
   generalRequestSuccess,
   generalRequestFailed,
+  openSideDrawer,
 } from '../Actions';
 import { currentUser, signOut } from '../Utils/authentication';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
@@ -64,6 +65,13 @@ export function userSignIn(action$) {
         }
         observer.complete();
       });
+    });
+}
+
+export function afterUserSignIn(action$) {
+  return action$.ofType(ActionTypes.USER_SIGN_IN_SUCCESS)
+    .map((_) => {
+      return openSideDrawer();
     });
 }
 

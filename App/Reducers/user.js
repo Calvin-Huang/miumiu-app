@@ -15,6 +15,7 @@ import {
   USER_RESEND_RESET_PASSWORD_CONFIRM_CODE,
   USER_RESEND_RESET_PASSWORD_CONFIRM_CODE_SUCCESS,
   USER_RESEND_RESET_PASSWORD_CONFIRM_CODE_FAILED,
+  USER_INFO_UPDATED,
   SHOW_USER_QRCODE,
   HIDE_USER_QRCODE,
 } from '../Constants/actionTypes';
@@ -68,6 +69,11 @@ export default function user(state = initialState, action) {
         previousSendTimestamp: null,
         isSigningIn: false,
         currentUser: null,
+      };
+    case USER_INFO_UPDATED:
+      return {
+        ...state,
+        currentUser: action.user,
       };
     default:
       return state;

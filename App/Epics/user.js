@@ -19,6 +19,7 @@ import {
   userRequestResetPasswordSuccess,
   userResendResetPasswordConfirmCodeSuccess,
   userResendResetPasswordConfirmCodeFailed,
+  userInfoUpdated,
   checkFCMSubscribeStatus,
   generalRequest,
   generalRequestSuccess,
@@ -27,7 +28,7 @@ import {
 import { currentUser, signOut } from '../Utils/authentication';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 
-import { post } from '../Utils/api';
+import { post, put } from '../Utils/api';
 
 export function checkUserSignedIn(action$) {
   return action$.ofType(ActionTypes.CHECK_USER_SIGNED_IN)
@@ -184,5 +185,28 @@ export function userResendResetPasswordConfirmCode(action$) {
       } catch (error) {
         return userResendResetPasswordConfirmCodeFailed(error);
       }
+    });
+}
+
+export function userInfo(action$) {
+  return action$.ofType(ActionTypes.UPDATE_USER_INFO)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { name } = action;
+          await put('me', { name });
+
+          // Update cached currentUser
+          const user = await currentUser();
+          observer.next(userInfoUpdated(user));
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+
+        observer.complete();
+      });
     });
 }

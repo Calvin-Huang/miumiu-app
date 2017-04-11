@@ -123,6 +123,20 @@ export function userResendResetPasswordConfirmCodeFailed(error) {
   };
 }
 
+export function updateUserInfo(name) {
+  return {
+    type: ActionTypes.UPDATE_USER_INFO,
+    name,
+  };
+}
+
+export function userInfoUpdated(user) {
+  return {
+    type: ActionTypes.USER_INFO_UPDATED,
+    user,
+  }
+}
+
 export function userSignOut() {
   return {
     type: ActionTypes.USER_SIGN_OUT,

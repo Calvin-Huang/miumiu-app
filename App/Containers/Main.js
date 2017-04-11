@@ -292,13 +292,11 @@ class Main extends Component {
     return false;
   }
 
-  fadeInOutOverlay() {
-    const nextOpacityValue = -(this.state.overlayOpacityValue._value - 1);
-
+  fadeInOutOverlay(opacity) {
     Animated.timing(
       this.state.overlayOpacityValue,
       {
-        toValue: nextOpacityValue,
+        toValue: opacity,
         duration: 250,
         easing: Easing.linear
       }
@@ -346,8 +344,8 @@ class Main extends Component {
         tapToClose={true}
         openDrawerOffset={56}
         onClose={() => { this.props.closeSideDrawer(); }}
-        onOpenStart={this.fadeInOutOverlay.bind(this)}
-        onCloseStart={this.fadeInOutOverlay.bind(this)}
+        onOpenStart={this.fadeInOutOverlay.bind(this, 1)}
+        onCloseStart={this.fadeInOutOverlay.bind(this, 0)}
       >
         <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
         <Navigator

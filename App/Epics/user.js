@@ -19,15 +19,17 @@ import {
   userRequestResetPasswordSuccess,
   userResendResetPasswordConfirmCodeSuccess,
   userResendResetPasswordConfirmCodeFailed,
+  userInfoUpdated,
   checkFCMSubscribeStatus,
   generalRequest,
   generalRequestSuccess,
   generalRequestFailed,
+  openSideDrawer,
 } from '../Actions';
 import { currentUser, signOut } from '../Utils/authentication';
 import { DEEP_LINK_PROTOCOL } from '../Constants/config';
 
-import { post } from '../Utils/api';
+import { post, put } from '../Utils/api';
 
 export function checkUserSignedIn(action$) {
   return action$.ofType(ActionTypes.CHECK_USER_SIGNED_IN)
@@ -40,6 +42,8 @@ export function checkUserSignedIn(action$) {
         } else {
           observer.next(userSignInFailed(new HttpError(401, '尚未登入')));
         }
+
+        observer.complete();
       })
     });
 }
@@ -59,7 +63,15 @@ export function userSignIn(action$) {
         } catch (error) {
           observer.next(userSignInFailed(error));
         }
+        observer.complete();
       });
+    });
+}
+
+export function afterUserSignIn(action$) {
+  return action$.ofType(ActionTypes.USER_SIGN_IN_SUCCESS)
+    .map((_) => {
+      return openSideDrawer();
     });
 }
 
@@ -109,6 +121,8 @@ export function userConfirmRegistration(action$) {
         } catch (error) {
           observer.next(generalRequestFailed(error));
         }
+
+        observer.complete();
       });
     });
 }
@@ -162,6 +176,8 @@ export function userConfirmResetPasswordCode(action$) {
         } catch (error) {
           observer.next(generalRequestFailed(error));
         }
+
+        observer.complete();
       });
     });
 }
@@ -177,5 +193,28 @@ export function userResendResetPasswordConfirmCode(action$) {
       } catch (error) {
         return userResendResetPasswordConfirmCodeFailed(error);
       }
+    });
+}
+
+export function userInfo(action$) {
+  return action$.ofType(ActionTypes.UPDATE_USER_INFO)
+    .switchMap((action) => {
+      return new Observable(async (observer) => {
+        observer.next(generalRequest());
+
+        try {
+          const { name } = action;
+          await put('me', { name });
+
+          // Update cached currentUser
+          const user = await currentUser();
+          observer.next(userInfoUpdated(user));
+          observer.next(generalRequestSuccess());
+        } catch (error) {
+          observer.next(generalRequestFailed(error));
+        }
+
+        observer.complete();
+      });
     });
 }

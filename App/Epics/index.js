@@ -35,6 +35,7 @@ export default combineEpics(
   FAQ.fetchFAQ,
   userEpics.checkUserSignedIn,
   userEpics.userSignIn,
+  userEpics.afterUserSignIn,
   userEpics.userSignOut,
   userEpics.userRegister,
   userEpics.userConfirmRegistration,
@@ -42,6 +43,7 @@ export default combineEpics(
   userEpics.userRequestResetPassword,
   userEpics.userConfirmResetPasswordCode,
   userEpics.userResendResetPasswordConfirmCode,
+  userEpics.userInfo,
   FCM.checkSubscribeStatus,
   FCM.updateSubscribe,
 );

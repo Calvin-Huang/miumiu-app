@@ -40,6 +40,8 @@ export function checkUserSignedIn(action$) {
         } else {
           observer.next(userSignInFailed(new HttpError(401, '尚未登入')));
         }
+
+        observer.complete();
       })
     });
 }
@@ -59,6 +61,7 @@ export function userSignIn(action$) {
         } catch (error) {
           observer.next(userSignInFailed(error));
         }
+        observer.complete();
       });
     });
 }
@@ -109,6 +112,8 @@ export function userConfirmRegistration(action$) {
         } catch (error) {
           observer.next(generalRequestFailed(error));
         }
+
+        observer.complete();
       });
     });
 }
@@ -162,6 +167,8 @@ export function userConfirmResetPasswordCode(action$) {
         } catch (error) {
           observer.next(generalRequestFailed(error));
         }
+
+        observer.complete();
       });
     });
 }

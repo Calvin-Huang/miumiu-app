@@ -92,7 +92,7 @@ class DeliveryInfo extends NavigatorComponent {
   }
 
   copyText(fieldName) {
-    const copyString = this.props.deliveryInfo[fieldName];
+    const copyString = this.state[fieldName];
     if (copyString) {
       Clipboard.setString(copyString);
 

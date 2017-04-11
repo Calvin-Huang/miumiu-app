@@ -184,11 +184,6 @@ class Main extends Component {
             return item;
           })
         });
-
-
-        setTimeout(() => {
-          this.props.openSideDrawer();
-        }, 250);
       } else {
         this.refs.navigator.push({
           index: 1,

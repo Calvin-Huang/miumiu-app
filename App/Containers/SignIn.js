@@ -48,15 +48,12 @@ class SignIn extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    const { navigator, route } = this.props;
-    const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
-
     if (props.previousSendTimestamp && this.props.previousSendTimestamp != props.previousSendTimestamp) {
       const { account, password } = this.state;
       this.pushToNextComponent(ConfirmRegistrationCode, { account, password, timestamp: props.previousSendTimestamp });
     }
 
-    if (props.currentUser && currentRoute.index === route.index) {
+    if (props.currentUser && this.isCurrentRoute) {
       dismissKeyboard();
 
       this.props.navigator.replacePreviousAndPop({

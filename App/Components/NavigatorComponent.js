@@ -48,6 +48,17 @@ export default class NavigatorComponent extends Component {
     return null;
   }
 
+  get currentRoute() {
+    const { navigator } = this.props;
+    const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
+    return currentRoute;
+  }
+
+  get isCurrentRoute() {
+    const { route } = this.props;
+    return this.currentRoute.index === route.index;
+  }
+
   pushToNextComponent(component, data = {}, transition = Navigator.SceneConfigs.PushFromRight) {
     this.props.navigator.push({
       index: this.props.route.index + 1,

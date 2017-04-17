@@ -47,6 +47,10 @@ export default class Menu extends Component {
     this.state = {
       coverBackgroundColor: '#616161',
       navigationItems: dataSource.cloneWithRows(props.navigationItems),
+      userInfo: {
+        width: 0,
+        height: 0,
+      },
     };
   }
 
@@ -54,6 +58,12 @@ export default class Menu extends Component {
     this.setState({
       navigationItems: dataSource.cloneWithRows(props.navigationItems),
     })
+  }
+
+  // Calculate size manually because aspectRatio not work.
+  onLayout(event) {
+    const { nativeEvent: { layout: { x, y, width, height } } } = event;
+    this.setState({ userInfo: { width, height: (width * 162 / 304) } });
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
@@ -81,16 +91,20 @@ export default class Menu extends Component {
 
   render() {
     const { userId } = this.props;
-    const { userInfoWidth } = this.state;
+    const { userInfo } = this.state;
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        onLayout={this.onLayout.bind(this)}
+      >
         <TouchableHighlight
           underlayColor={Color(this.state.coverBackgroundColor).lighten(0.2)}
           onPress={() => { }}
         >
           <View
             style={{
-              ...styles.userInfo,
+              width: userInfo.width,
+              height: userInfo.height,
               backgroundColor: this.state.coverBackgroundColor,
             }}
           >
@@ -126,6 +140,8 @@ const styles = {
     flexDirection: 'column',
     backgroundColor: 'white',
   },
+
+  // Don't know why aspectRatio not work
   userInfo: {
     aspectRatio: 162 / 304,
   },

@@ -48,6 +48,12 @@ class Settings extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
+
+    // Prevent from triggering update from other components.
+    if (!this.isCurrentRoute) {
+      return;
+    }
+
     const { subscribed: { toAll, toMe }, currentUser } = props;
 
     this.setState({

@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   Navigator,
   Alert,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';

@@ -20,7 +20,6 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import GiftedListView from 'react-native-gifted-listview';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';

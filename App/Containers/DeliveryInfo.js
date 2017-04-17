@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Clipboard,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -31,7 +32,12 @@ class DeliveryInfo extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
       <TouchableOpacity onPress={() => { navigator.pop(); }}>
-        <Icon style={NavigatorStyle.navBackButton} name="ios-arrow-back" size={24} color="#FFFFFF" />
+        <Icon
+          style={NavigatorStyle.navBackButton}
+          name={Platform.OS === 'ios' ? 'ios-arrow-back' : 'md-arrow-back'}
+          size={24}
+          color="#FFFFFF"
+        />
       </TouchableOpacity>
     );
   }
@@ -92,7 +98,7 @@ class DeliveryInfo extends NavigatorComponent {
   }
 
   copyText(fieldName) {
-    const copyString = this.props.deliveryInfo[fieldName];
+    const copyString = this.state[fieldName];
     if (copyString) {
       Clipboard.setString(copyString);
 

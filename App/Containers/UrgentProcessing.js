@@ -85,6 +85,12 @@ class UrgentProcessing extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
+
+    // Prevent triggering update from other components.
+    if (!this.isCurrentRoute) {
+      return;
+    }
+
     if (this.props.isRequesting !== props.isRequesting) {
       if (!props.isRequesting) {
         dismissKeyboard();
@@ -201,7 +207,7 @@ class UrgentProcessing extends NavigatorComponent {
             </View>
           </View>
 
-          <KeyboardAvoidingView behavior="padding">
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
             <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
               <TouchableOpacity
                 style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}

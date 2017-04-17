@@ -90,7 +90,7 @@ class Register extends NavigatorComponent {
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
                 highlightColor="#D8D8D8"
-                placeholder="手機號碼或Email信箱"
+                placeholder="手機號碼"
                 placeholderTextColor="#9E9E9E"
                 style={styles.textField}
                 onChangeText={(account) => { this.setState({ account }); }}

@@ -85,6 +85,12 @@ class UrgentProcessing extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
+
+    // Prevent triggering update from other components.
+    if (!this.isCurrentRoute) {
+      return;
+    }
+
     if (this.props.isRequesting !== props.isRequesting) {
       if (!props.isRequesting) {
         dismissKeyboard();

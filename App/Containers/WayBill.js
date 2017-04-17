@@ -53,6 +53,11 @@ class WayBill extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
+    // Prevent triggering update from other components.
+    if (!this.isCurrentRoute) {
+      return;
+    }
+
     if (this.props.isRequesting !== props.isRequesting) {
       if (!props.isRequesting) {
 
@@ -189,7 +194,7 @@ class WayBill extends NavigatorComponent {
             </TouchableOpacity>
           </View>
         }
-        <HUD visible={isRequesting} type="progress" message="更新中" />
+        <HUD visible={this.isCurrentRoute && isRequesting} type="progress" message="更新中" />
       </View>
     )
   }

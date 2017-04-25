@@ -15,6 +15,7 @@
 		"react": "16.0.0-alpha.6",
 		"react-native": "0.43.3",
 		"react-native-device-brightness": "^1.0.0",
+		"react-native-device-info": "^0.10.2",
 		"react-native-drawer": "^2.3.0",
 		"react-native-fcm": "^6.1.0",
 		"react-native-html-render": "^1.0.5",

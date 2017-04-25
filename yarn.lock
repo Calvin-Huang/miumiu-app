@@ -1202,6 +1202,10 @@ commander@~2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.1.0.tgz#d121bbae860d9992a3d517ba96f56588e47c6781"
 
+compare-versions@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-3.0.1.tgz#e60915b7fb294e29bbb60869188762beeb871443"
+
 compressible@~2.0.5:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.9.tgz#6daab4e2b599c2770dd9e21e7a891b1c5a755425"

@@ -35,8 +35,9 @@ export function checkVersion(action$) {
     });
 }
 
-export function onUpdateHintModalClose(action$) {
+export function onUpdateHintModalClose(action$, store) {
   return action$.ofType(HIDE_VERSION_OUTDATED_HINT)
+    .filter((_) => store.getState().user.currentUser)
     .map((_) => {
       return openSideDrawer();
     });

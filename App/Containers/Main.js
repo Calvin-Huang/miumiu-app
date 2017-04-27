@@ -449,6 +449,16 @@ class Main extends Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
+                { Platform.OS === 'android' &&
+                  <TouchableOpacity
+                    style={MiumiuTheme.button}
+                    onPress={this.updateButtonClicked.bind(this, APK_DOWNLOAD_URL)}
+                  >
+                    <Text style={{ ...MiumiuTheme.contentText, textDecorationLine: 'underline' }}>
+                      下載 apk
+                    </Text>
+                  </TouchableOpacity>
+                }
                 { !this.props.needUpdateModal.forceUpdate &&
                   <TouchableOpacity
                     style={{ ...MiumiuTheme.button }}

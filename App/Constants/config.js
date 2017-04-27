@@ -12,3 +12,6 @@ export const DOMAIN = '';
 export const REFRESH_TOKEN_PATH = 'auth/token';
 export const DATETIME_FORMAT = 'YYYY/MM/DD HH:mm';
 export const DEEP_LINK_PROTOCOL = '';
+export const APPSTORE_URL = '';
+export const GOOGLEPLAY_URL = '';
+export const APK_DOWNLOAD_URL = '';

@@ -155,7 +155,7 @@ const styles = {
     marginTop: 20,
   },
   forgetButtonText: {
-    ...MiumiuTheme.contextText,
+    ...MiumiuTheme.contentText,
     textDecorationLine: 'underline',
   },
 };

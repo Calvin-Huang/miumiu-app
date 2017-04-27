@@ -175,7 +175,7 @@ class UrgentProcessing extends NavigatorComponent {
                 <Text style={MiumiuTheme.titleText}>
                   加急件服務
                 </Text>
-                <Text style={MiumiuTheme.contextText}>
+                <Text style={MiumiuTheme.contentText}>
                   當天下午兩點前簽收，加急服務即日到澳，兩點後簽收會視當天狀況優先處理
                 </Text>
               </View>
@@ -183,7 +183,7 @@ class UrgentProcessing extends NavigatorComponent {
                 <Text style={MiumiuTheme.titleText}>
                   收費
                 </Text>
-                <Text style={MiumiuTheme.contextText}>
+                <Text style={MiumiuTheme.contentText}>
                   50cm或以下+$5，51cm以上+$10，超過200cm請聯絡客服
                 </Text>
               </View>
@@ -192,15 +192,15 @@ class UrgentProcessing extends NavigatorComponent {
                   注意事項
                 </Text>
                 <View style={MiumiuTheme.bulletItem}>
-                  <Text style={MiumiuTheme.contextText}>・</Text>
+                  <Text style={MiumiuTheme.contentText}>・</Text>
                   <View style={MiumiuTheme.bulletContent}>
-                    <Text style={MiumiuTheme.contextText}>必須於簽收前申請，如簽收後申請視時間盡量安排</Text>
+                    <Text style={MiumiuTheme.contentText}>必須於簽收前申請，如簽收後申請視時間盡量安排</Text>
                   </View>
                 </View>
                 <View style={MiumiuTheme.bulletItem}>
-                  <Text style={MiumiuTheme.contextText}>・</Text>
+                  <Text style={MiumiuTheme.contentText}>・</Text>
                   <View style={MiumiuTheme.bulletContent}>
-                    <Text style={MiumiuTheme.contextText}>此服務並非保證，如遇貨量較多有可能延遲不成功不收費</Text>
+                    <Text style={MiumiuTheme.contentText}>此服務並非保證，如遇貨量較多有可能延遲不成功不收費</Text>
                   </View>
                 </View>
               </View>

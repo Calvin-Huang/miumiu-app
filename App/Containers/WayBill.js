@@ -158,12 +158,12 @@ class WayBill extends NavigatorComponent {
             </Text>
           </View>
           <TouchableOpacity onPress={this.openStockFeeReference.bind(this)}>
-            <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
+            <Text style={{ ...MiumiuTheme.contentText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
           </TouchableOpacity>
           { data.locationId && data.status === WayBillState.ARRIVED &&
             <TouchableOpacity onPress={this.checkServiceStoreButtonTapped.bind(this)}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ ...MiumiuTheme.contextText, textDecorationLine: 'none' }}>{data.locationName}</Text>
+                <Text style={{ ...MiumiuTheme.contentText, textDecorationLine: 'none' }}>{data.locationName}</Text>
                 <Icon name="md-information-circle" size={14} color="gray" style={{ marginLeft: 5, marginTop: 4 }} />
               </View>
             </TouchableOpacity>

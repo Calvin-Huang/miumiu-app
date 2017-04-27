@@ -368,11 +368,11 @@ class Main extends Component {
           animationType="fade"
           transparent={true}
           visible={this.props.showUserQRCodeModal}
-          onRequestClose={() => { this.props.hideUserQRCode(); }}
+          onRequestClose={this.props.hideUserQRCode.bind(this)}
         >
           <TouchableOpacity
             style={MiumiuTheme.modalContainer}
-            onPress={() => { this.props.hideUserQRCode(); }}
+            onPress={this.props.hideUserQRCode.bind(this)}
           >
             <TouchableWithoutFeedback>
               <View style={MiumiuTheme.modalBody}>
@@ -394,7 +394,7 @@ class Main extends Component {
                 >
                   <TouchableOpacity
                     style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
-                    onPress={() => { this.props.hideUserQRCode(); }}
+                    onPress={this.props.hideUserQRCode.bind(this)}
                   >
                     <Text style={MiumiuTheme.buttonText}>
                       關閉

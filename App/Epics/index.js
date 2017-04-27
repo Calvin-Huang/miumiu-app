@@ -5,6 +5,7 @@
 import 'rxjs';
 import { combineEpics } from 'redux-observable';
 
+import * as versionEpics from './version';
 import * as userEpics from './user';
 import * as settingEpics from './setting';
 import * as wayBillEpics from './wayBill';
@@ -17,6 +18,7 @@ import * as FCM from './FCM';
 // export default combineEpics;
 
 export default combineEpics(
+  versionEpics.checkVersion,
   settingEpics.fetchContactInfo,
   wayBillEpics.fetchWayBills,
   wayBillEpics.refreshingWayBills,

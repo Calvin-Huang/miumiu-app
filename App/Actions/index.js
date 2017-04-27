@@ -2,6 +2,7 @@
  * Created by Calvin Huang on 2/23/17.
  */
 
+export * from './checkVersionActions';
 export * from './navigationBarActions';
 export * from './sideDrawerActions';
 export * from './settingActions';

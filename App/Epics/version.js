@@ -4,8 +4,8 @@
 
 import { Observable } from 'rxjs';
 
-import { FETCH_CURRENT_VERSION_INFO } from '../Constants/actionTypes';
-import { showVersionOutdatedHint } from '../Actions';
+import { FETCH_CURRENT_VERSION_INFO, HIDE_VERSION_OUTDATED_HINT } from '../Constants/actionTypes';
+import { showVersionOutdatedHint, openSideDrawer } from '../Actions';
 
 import { get } from '../Utils/api';
 
@@ -32,5 +32,12 @@ export function checkVersion(action$) {
 
         observer.complete();
       });
+    });
+}
+
+export function onUpdateHintModalClose(action$) {
+  return action$.ofType(HIDE_VERSION_OUTDATED_HINT)
+    .map((_) => {
+      return openSideDrawer();
     });
 }

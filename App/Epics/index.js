@@ -19,6 +19,7 @@ import * as FCM from './FCM';
 
 export default combineEpics(
   versionEpics.checkVersion,
+  versionEpics.onUpdateHintModalClose,
   settingEpics.fetchContactInfo,
   wayBillEpics.fetchWayBills,
   wayBillEpics.refreshingWayBills,

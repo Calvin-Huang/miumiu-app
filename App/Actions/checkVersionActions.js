@@ -10,9 +10,10 @@ export function fetchCurrentVersionInfo() {
   };
 }
 
-export function showVersionOutdatedHint(isForceUpdate) {
+export function showVersionOutdatedHint(versionName, isForceUpdate) {
   return {
     type: ActionTypes.SHOW_VERSION_OUTDATED_HINT,
+    versionName,
     isForceUpdate,
   };
 }

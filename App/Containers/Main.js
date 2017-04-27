@@ -386,10 +386,10 @@ class Main extends Component {
               </Text>
               <View
                 style={{
-                    alignSelf: 'stretch',
-                     borderRadius: MiumiuTheme.button.borderRadius,
-                     backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
-                  }}
+                  alignSelf: 'stretch',
+                  borderRadius: MiumiuTheme.button.borderRadius,
+                  backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                }}
               >
                 <TouchableOpacity
                   style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}

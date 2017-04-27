@@ -374,35 +374,33 @@ class Main extends Component {
             style={MiumiuTheme.modalContainer}
             onPress={this.props.hideUserQRCode.bind(this)}
           >
-            <TouchableWithoutFeedback>
-              <View style={MiumiuTheme.modalBody}>
-                <View style={styles.qrCode}>
-                  <QRCode value={user.account} size={140} />
-                </View>
-                <Text style={styles.qrCodeInfo}>
-                  {user.account}
-                </Text>
-                <Text style={styles.pickupInstruction}>
-                  已提貨單號工作人員會將單號由APP註銷
-                </Text>
-                <View
-                  style={{
+            <View style={MiumiuTheme.modalBody}>
+              <View style={styles.qrCode}>
+                <QRCode value={user.account} size={140} />
+              </View>
+              <Text style={styles.qrCodeInfo}>
+                {user.account}
+              </Text>
+              <Text style={styles.pickupInstruction}>
+                已提貨單號工作人員會將單號由APP註銷
+              </Text>
+              <View
+                style={{
                     alignSelf: 'stretch',
                      borderRadius: MiumiuTheme.button.borderRadius,
                      backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
                   }}
+              >
+                <TouchableOpacity
+                  style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
+                  onPress={this.props.hideUserQRCode.bind(this)}
                 >
-                  <TouchableOpacity
-                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
-                    onPress={this.props.hideUserQRCode.bind(this)}
-                  >
-                    <Text style={MiumiuTheme.buttonText}>
-                      關閉
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                  <Text style={MiumiuTheme.buttonText}>
+                    關閉
+                  </Text>
+                </TouchableOpacity>
               </View>
-            </TouchableWithoutFeedback>
+            </View>
           </TouchableOpacity>
         </Modal>
       </Drawer>

@@ -416,10 +416,10 @@ class Main extends Component {
           animationType="fade"
           transparent={true}
           visible={this.props.needUpdateModal.show}
-          onRequestClose={this.props.needUpdateModal.forceUpdate ? null : this.props.hideVersionOutdatedHint.bind(this)}
+          onRequestClose={this.props.needUpdateModal.forceUpdate ? () => {} : this.props.hideVersionOutdatedHint.bind(this)}
         >
           <TouchableWithoutFeedback
-            onPress={this.props.needUpdateModal.forceUpdate ? null : this.props.hideVersionOutdatedHint.bind(this)}
+            onPress={this.props.needUpdateModal.forceUpdate ? () => {} : this.props.hideVersionOutdatedHint.bind(this)}
           >
             <View style={MiumiuTheme.modalContainer}>
               <View style={MiumiuTheme.modalBody}>

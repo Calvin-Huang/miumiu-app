@@ -411,6 +411,7 @@ class Main extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
+        
         <Modal
           animationType="fade"
           transparent={true}

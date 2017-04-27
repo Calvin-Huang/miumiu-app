@@ -18,6 +18,7 @@ import {
   Animated,
   Easing,
   BackAndroid,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
@@ -46,12 +47,13 @@ import RegistrationCompleted from './RegistrationCompleted';
 import ResetPasswordCompleted from './ResetPasswordCompleted';
 import { Menu, Navigator } from '../Components';
 import { MiumiuTheme } from '../Styles';
-import { DEEP_LINK_PROTOCOL } from '../Constants/config';
+import { DEEP_LINK_PROTOCOL, APPSTORE_URL, GOOGLEPLAY_URL, APK_DOWNLOAD_URL } from '../Constants/config';
 import { errors as APIErrors } from '../Utils/api';
 import { showNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 import { fetchContactInfo } from '../Actions/settingActions';
+import { fetchCurrentVersionInfo, hideVersionOutdatedHint } from '../Actions/checkVersionActions';
 import { resetGeneralRequest } from '../Actions/generalRequestActions';
 
 class Main extends Component {
@@ -170,6 +172,8 @@ class Main extends Component {
     });
 
     BackAndroid.addEventListener('hardwareBackPress', this.androidBackHandler);
+
+    this.props.fetchCurrentVersionInfo();
   }
 
   componentWillReceiveProps(props) {
@@ -321,6 +325,10 @@ class Main extends Component {
     }
   }
 
+  updateButtonClicked(updateSourceUrl) {
+    Linking.openURL(updateSourceUrl);
+  }
+
   render() {
     const routes = [
       { index: 0, component: WayBills },
@@ -331,7 +339,7 @@ class Main extends Component {
 
     return (
       <Drawer
-        open={this.props.sideDrawerOpened}
+        open={!this.props.needUpdateModal.show && this.props.sideDrawerOpened}
         ref="sideDrawer"
         type="overlay"
         content={
@@ -403,6 +411,55 @@ class Main extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.needUpdateModal.show}
+          onRequestClose={this.props.needUpdateModal.forceUpdate ? null : this.props.hideVersionOutdatedHint.bind(this)}
+        >
+          <TouchableWithoutFeedback
+            onPress={this.props.needUpdateModal.forceUpdate ? null : this.props.hideVersionOutdatedHint.bind(this)}
+          >
+            <View style={MiumiuTheme.modalContainer}>
+              <View style={MiumiuTheme.modalBody}>
+                <View style={MiumiuTheme.modalTitle}>
+                  <Text style={MiumiuTheme.modalTitleText}>
+                    有新版本發佈囉
+                  </Text>
+                </View>
+                <View style={MiumiuTheme.modalContent}>
+                  <Text style={MiumiuTheme.modalContentText}>
+                    最新的版本是 {this.props.needUpdateModal.versionName} 版{"\n"}使用最新的版本獲取最棒的使用體驗吧！
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    alignSelf: 'stretch',
+                    borderRadius: MiumiuTheme.button.borderRadius,
+                    backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2)
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary }}
+                    onPress={this.updateButtonClicked.bind(this, Platform.OS === 'ios' ? APPSTORE_URL : GOOGLEPLAY_URL)}
+                  >
+                    <Text style={MiumiuTheme.buttonText}>
+                      前往 {Platform.OS === 'ios' ? 'AppStore' : 'GooglePlay'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                { !this.props.needUpdateModal.forceUpdate &&
+                  <TouchableOpacity
+                    style={{ ...MiumiuTheme.button }}
+                    onPress={this.props.hideVersionOutdatedHint.bind(this)}
+                  >
+                    <Text style={MiumiuTheme.contentText}>下次再說</Text>
+                  </TouchableOpacity>
+                }
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
       </Drawer>
     );
   }
@@ -445,6 +502,7 @@ export default connect(
       sideDrawerOpened: state.sideDrawer.isOpened,
       currentUser: state.user.currentUser,
       showUserQRCodeModal: state.userQRCodeModal.show,
+      needUpdateModal: state.needUpdateModal,
     };
   },
   {
@@ -456,6 +514,8 @@ export default connect(
     showUserQRCode,
     hideUserQRCode,
     fetchContactInfo,
+    fetchCurrentVersionInfo,
+    hideVersionOutdatedHint,
     resetGeneralRequest,
   },
 )(Main);

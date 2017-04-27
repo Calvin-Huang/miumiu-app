@@ -14,6 +14,17 @@ const sharedStyle = {
     color: 'white',
     fontSize: 14,
   },
+  titleText: {
+    color: '#4A4A4A',
+    fontSize: 14,
+    marginBottom: 8,
+    fontWeight: 'bold',
+  },
+  contentText: {
+    color: '#757575',
+    fontSize: 14,
+    lineHeight: 20,
+  },
 }
 
 export default style = {
@@ -22,17 +33,8 @@ export default style = {
     flexDirection: 'column',
     backgroundColor: '#EFEFF4'
   },
-  titleText: {
-    color: '#4A4A4A',
-    fontSize: 14,
-    marginBottom: 8,
-    fontWeight: 'bold',
-  },
-  contextText: {
-    color: '#757575',
-    fontSize: 14,
-    lineHeight: 20,
-  },
+  titleText: sharedStyle.titleText,
+  contentText: sharedStyle.contentText,
   errorText: {
     color: 'red',
     fontSize: 14,
@@ -122,6 +124,21 @@ export default style = {
     },
     shadowRadius: 4,
     shadowOpacity: 1,
+  },
+  modalTitle: {
+    marginBottom: 14,
+  },
+  modalTitleText: {
+    ...sharedStyle.titleText,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  modalContent: {
+    marginBottom: 18,
+  },
+  modalContentText: {
+    ...sharedStyle.contentText,
+    textAlign: 'center',
   },
   fixMKTextFieldStyleError: {
     flex: 1,

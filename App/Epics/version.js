@@ -22,7 +22,7 @@ export function checkVersion(action$) {
           const { name: currentVersion, forceUpdate } = humps.camelizeKeys(await get('version'));
           const version = DeviceInfo.getVersion();
 
-          if (compareVersions(currentVersion, version)) {
+          if (compareVersions(currentVersion, version) === 1) {
             observer.next(showVersionOutdatedHint(currentVersion, forceUpdate));
           }
 

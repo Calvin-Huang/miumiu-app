@@ -16,3 +16,9 @@ export function showVersionOutdatedHint(isForceUpdate) {
     isForceUpdate,
   };
 }
+
+export function hideVersionOutdatedHint() {
+  return {
+    type: ActionTypes.HIDE_VERSION_OUTDATED_HINT,
+  };
+}

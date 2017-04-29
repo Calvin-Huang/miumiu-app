@@ -15,3 +15,4 @@ export const DEEP_LINK_PROTOCOL = '';
 export const APPSTORE_URL = '';
 export const GOOGLEPLAY_URL = '';
 export const APK_DOWNLOAD_URL = '';
+export const FCM_TOPIC = '';

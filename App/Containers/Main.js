@@ -29,7 +29,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
-import FCM from 'react-native-fcm';
+import FCM, { FCMEvent } from 'react-native-fcm';
 
 import { IconFasterShipping } from '../Components';
 
@@ -52,6 +52,7 @@ import { errors as APIErrors } from '../Utils/api';
 import { showNavigationBar } from '../Actions/navigationBarActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
+import { checkFCMSubscribeStatus } from '../Actions/FCMActions';
 import { fetchContactInfo } from '../Actions/settingActions';
 import { fetchCurrentVersionInfo, hideVersionOutdatedHint } from '../Actions/checkVersionActions';
 import { resetGeneralRequest } from '../Actions/generalRequestActions';
@@ -157,6 +158,9 @@ class Main extends Component {
     }
 
     FCM.requestPermissions();
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+      this.props.checkFCMSubscribeStatus();
+    });
 
     Linking.getInitialURL()
       .then((url) => {
@@ -223,6 +227,7 @@ class Main extends Component {
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL);
     BackAndroid.removeEventListener('hardwareBackPress', this.androidBackHandler);
+    this.refreshTokenListener.remove();
   }
 
   handleOpenURL({ url }) {
@@ -521,6 +526,7 @@ export default connect(
     openSideDrawer,
     closeSideDrawer,
     checkUserSignedIn,
+    checkFCMSubscribeStatus,
     userSignOut,
     showUserQRCode,
     hideUserQRCode,

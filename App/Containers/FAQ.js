@@ -56,8 +56,6 @@ class FAQ extends NavigatorComponent {
     super(props);
 
     this.state = {
-      showNavButton: true,
-      showTitle: true,
       navBarStretchValue: new Animated.Value(104),
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),

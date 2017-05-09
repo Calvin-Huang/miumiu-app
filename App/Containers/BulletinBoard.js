@@ -79,14 +79,9 @@ class BulletinBoard extends NavigatorComponent {
   }
 
   componentWillReceiveProps(props) {
-    const { searchingTerm } = this;
-    if (searchingTerm) {
-      this.filterSearchResult(searchingTerm);
-    } else {
-      this.setState({
-        bulletinBoard: dataSource.cloneWithRows(props.bulletinBoard),
-      });
-    }
+    this.setState({
+      bulletinBoard: dataSource.cloneWithRows(props.bulletinBoard),
+    });
 
     if (Platform.OS === 'android') {
       if (this.props.isNavigatorShown !== props.isNavigatorShown) {

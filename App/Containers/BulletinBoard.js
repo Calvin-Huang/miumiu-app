@@ -165,19 +165,6 @@ class BulletinBoard extends NavigatorComponent {
     this.filterSearchResult(text);
   }
 
-  filterSearchResult(term) {
-    const { isSearching } = this.state;
-    const { bulletinBoard } = this.props;
-    if (!term) {
-      this.setState({
-        bulletinBoard: dataSource.cloneWithRows(bulletinBoard),
-      });
-    } else if (isSearching) {
-      this.setState({
-        bulletinBoard: dataSource.cloneWithRows(
-          bulletinBoard.filter(({ name, address }) => (name || '').includes(term) || (address || '').includes(term))
-        ),
-      });
     }
   }
 

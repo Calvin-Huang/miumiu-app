@@ -10,6 +10,7 @@ import {
   REFRESH_BULLETIN_BOARD,
   REFRESH_BULLETIN_BOARD_SUCCESS,
   REFRESH_BULLETIN_BOARD_FAILED,
+  FETCH_BULLETIN_SUCCESS,
 } from '../Constants/actionTypes';
 
 const initialState = {
@@ -96,6 +97,18 @@ export default function bulletinBoard(state = initialState, action) {
         isRefreshing: false,
         isFetching: false,
         error: action.error,
+      };
+    case FETCH_BULLETIN_SUCCESS:
+      const { data } = state;
+      const { response } = action;
+
+      const bulletin = data.find((eachData) => eachData.id === response.id);
+
+      data[data.indexOf(bulletin)] = { ...bulletin, ...response };
+
+      return {
+        ...state,
+        data,
       };
     default:
       return state;

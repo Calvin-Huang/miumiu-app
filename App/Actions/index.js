@@ -4,6 +4,7 @@
 
 export * from './checkVersionActions';
 export * from './navigationBarActions';
+export * from './navigationItemActions';
 export * from './sideDrawerActions';
 export * from './settingActions';
 export * from './userActions';

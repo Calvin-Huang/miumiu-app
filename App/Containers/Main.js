@@ -25,32 +25,23 @@ import dismissKeyboard from 'dismissKeyboard';
 
 import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
 import FCM, { FCMEvent } from 'react-native-fcm';
 
-import { IconFasterShipping } from '../Components';
+import WayBills from '../Containers/WayBills';
+import SignIn from '../Containers/SignIn';
+import RegistrationCompleted from '../Containers/RegistrationCompleted';
+import ResetPasswordCompleted from '../Containers/ResetPasswordCompleted';
 
-import WayBills from './WayBills';
-import UrgentProcessing from './UrgentProcessing';
-import Calculator from './Calculator';
-import DeliveryInfoList from './DeliveryInfoList';
-import ServiceStores from './ServiceStores';
-import PickUpPassword from './PickUpPassword';
-import BulletinBoard from './BulletinBoard';
-import FAQ from './FAQ';
-import ContactUs from './ContactUs';
-import Settings from './Settings';
-import SignIn from './SignIn';
-import RegistrationCompleted from './RegistrationCompleted';
-import ResetPasswordCompleted from './ResetPasswordCompleted';
 import { Menu, Navigator } from '../Components';
+
 import { MiumiuTheme } from '../Styles';
 import { DEEP_LINK_PROTOCOL, APPSTORE_URL, GOOGLEPLAY_URL, APK_DOWNLOAD_URL } from '../Constants/config';
 import { errors as APIErrors } from '../Utils/api';
 import { showNavigationBar } from '../Actions/navigationBarActions';
+import { navigationItemSelected } from '../Actions/navigationItemActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 import { checkFCMSubscribeStatus } from '../Actions/FCMActions';
@@ -64,89 +55,6 @@ class Main extends Component {
 
     this.state = {
       overlayOpacityValue: new Animated.Value(0),
-      navigationItems: [
-        {
-          icon: {
-            name: 'md-list-box',
-          },
-          name: '貨單管理',
-          component: WayBills,
-          isSelected: true,
-        }, {
-          icon: {
-            component: IconFasterShipping,
-            size: 16,
-          },
-          name: '加急服務',
-          component: UrgentProcessing,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-calculator'
-          },
-          name: '試算運費',
-          component: Calculator,
-          isSelected: false,
-        }, {
-          icon: {
-            component: FontAwesomeIcon,
-            name: 'qrcode',
-            size: 20,
-          },
-          name: 'QRCode 取貨',
-          component: Component,
-          isSelected: false,
-        // }, {
-        //   icon: {
-        //     name: 'md-lock',
-        //   },
-        //   name: '取貨鎖設定',
-        //   component: PickUpPassword,
-        //   isSelected: false,
-        }, {
-          icon: {
-            name: 'md-flag',
-          },
-          name: '收貨地址',
-          component: DeliveryInfoList,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-home',
-          },
-          name: '門市資訊',
-          component: ServiceStores,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-text',
-          },
-          name: '公告事項',
-          component: BulletinBoard,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-help-circle',
-          },
-          name: '注意事項',
-          component: FAQ,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-chatboxes',
-          },
-          name: '聯絡我們',
-          component: ContactUs,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-settings',
-          },
-          name: '設定',
-          component: Settings,
-          isSelected: false,
-        },
-      ]
     };
 
     this.handleOpenURL = this.handleOpenURL.bind(this);
@@ -193,13 +101,7 @@ class Main extends Component {
       if (props.currentUser) {
 
         // Reset menu status.
-        this.setState({
-          navigationItems: this.state.navigationItems.map((item, index) => {
-            item.isSelected = (index === 0);
-
-            return item;
-          })
-        });
+        this.props.navigationItemSelected(this.props.navigationItems[0]);
       } else {
         this.refs.navigator.push({
           index: 1,
@@ -324,13 +226,7 @@ class Main extends Component {
     this.props.closeSideDrawer();
 
     if (itemData.component !== Component) {
-      this.setState({
-        navigationItems: this.state.navigationItems.map((item) => {
-          item.isSelected = (item === itemData);
-
-          return item;
-        })
-      });
+      this.props.navigationItemSelected(itemData);
 
       this.refs.navigator.replace({ index: 0, component: itemData.component });
     } else {
@@ -357,7 +253,7 @@ class Main extends Component {
         type="overlay"
         content={
           <Menu
-            navigationItems={this.state.navigationItems}
+            navigationItems={this.props.navigationItems}
             onItemPress={this.navigationItemClicked.bind(this)}
             userId={user.id}
           />
@@ -523,6 +419,7 @@ export default connect(
     return {
       ...ownProps,
       showNavigator: state.navigationBar.isShown,
+      navigationItems: state.navigationItems,
       sideDrawerOpened: state.sideDrawer.isOpened,
       currentUser: state.user.currentUser,
       showUserQRCodeModal: state.userQRCodeModal.show,
@@ -531,6 +428,7 @@ export default connect(
   },
   {
     showNavigationBar,
+    navigationItemSelected,
     openSideDrawer,
     closeSideDrawer,
     checkUserSignedIn,

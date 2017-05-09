@@ -186,6 +186,12 @@ class BulletinBoard extends NavigatorComponent {
     }
   }
 
+  onPaginating() {
+    if (this.props.isFetching) {
+      this.props.fetchBulletinBoard(this.props.currentPage + 1);
+    }
+  }
+
   renderRowView(rowData, sectionID, rowID, highlightRow) {
     return (
       <TouchableOpacity style={styles.listViewRow} onPress={() => {
@@ -310,6 +316,8 @@ class BulletinBoard extends NavigatorComponent {
           dataSource={this.state.bulletinBoard}
           renderRow={this.renderRowView.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
+          onEndReached={this.onPaginating.bind(this)}
+          onEndReachedThreshold={60}
           enableEmptySections={true}
           onScroll={() => { dismissKeyboard(); }}
           refreshControl={

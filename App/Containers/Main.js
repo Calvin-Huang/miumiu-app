@@ -39,6 +39,7 @@ import Calculator from './Calculator';
 import DeliveryInfoList from './DeliveryInfoList';
 import ServiceStores from './ServiceStores';
 import PickUpPassword from './PickUpPassword';
+import BulletinBoard from './BulletinBoard';
 import FAQ from './FAQ';
 import ContactUs from './ContactUs';
 import Settings from './Settings';
@@ -115,6 +116,13 @@ class Main extends Component {
           },
           name: '門市資訊',
           component: ServiceStores,
+          isSelected: false,
+        }, {
+          icon: {
+            name: 'md-text',
+          },
+          name: '公告事項',
+          component: BulletinBoard,
           isSelected: false,
         }, {
           icon: {

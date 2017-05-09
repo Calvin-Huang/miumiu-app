@@ -13,6 +13,7 @@ import {
   FCMSubscribeStateResult,
   FCMSubscribeStateUpdated,
 } from '../Actions/FCMActions';
+import { FCM_TOPIC } from '../Constants/config';
 
 export function checkSubscribeStatus(action$) {
   return action$.ofType(ActionTypes.CHECK_FCM_SUBSCRIBE_STATUS)
@@ -37,9 +38,9 @@ export function updateSubscribe(action$) {
       try {
         if (toAll !== null) {
           if (toAll) {
-            FCM.subscribeToTopic('general');
+            FCM.subscribeToTopic(FCM_TOPIC);
           } else {
-            FCM.unsubscribeFromTopic('general');
+            FCM.unsubscribeFromTopic(FCM_TOPIC);
           }
 
           subscribed.toAll = toAll;

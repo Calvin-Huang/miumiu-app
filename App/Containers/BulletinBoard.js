@@ -1,19 +1,21 @@
 /**
- * Created by Calvin Huang on 3/7/17.
+ * Created by calvin.huang on 08/05/2017.
  */
 
 import React, { Component } from 'react';
 import {
   View,
   Text,
-  TextInput,
   ListView,
+  TextInput,
+  Image,
   ActivityIndicator,
   RefreshControl,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Navigator,
   Animated,
   Easing,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
   Platform,
 } from 'react-native';
 
@@ -21,18 +23,29 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
+import moment from 'moment';
+import zh_HK from 'moment/locale/zh-hk';
 
+import Bulletin from './Bulletin';
 import { NavigatorComponent } from '../Components';
-import FAQDetail from './FAQDetail';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchFAQs, refreshFAQs } from '../Actions';
+import {
+  showNavigationBar,
+  hideNavigationBar,
+  openSideDrawer,
+  fetchBulletinBoard,
+  searchBulletinBoard,
+  refreshBulletinBoard,
+} from '../Actions';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-class FAQ extends NavigatorComponent {
+moment.locale('zh-hk', zh_HK);
+
+class BulletinBoard extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {
     return (
-      <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
+      <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()) }}>
         <View style={NavigatorStyle.itemButton}>
           <Icon name="md-menu" size={24} color="white" />
         </View>
@@ -60,12 +73,12 @@ class FAQ extends NavigatorComponent {
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
-      FAQs: dataSource.cloneWithRows(props.FAQs),
+      bulletinBoard: dataSource.cloneWithRows(props.bulletinBoard),
     }
   }
 
   componentDidMount() {
-    this.props.fetchFAQs();
+    this.props.fetchBulletinBoard();
   }
 
   componentWillUnmount() {
@@ -74,7 +87,7 @@ class FAQ extends NavigatorComponent {
 
   componentWillReceiveProps(props) {
     this.setState({
-      FAQs: dataSource.cloneWithRows(props.FAQs),
+      bulletinBoard: dataSource.cloneWithRows(props.bulletinBoard),
     });
 
     if (Platform.OS === 'android') {
@@ -150,15 +163,28 @@ class FAQ extends NavigatorComponent {
       )
     ]).start();
 
-    if (this.state.isSearching) {
-      this.props.fetchFAQs();
-    }
-
     this.setState({ isSearching: false });
+
+    // Search empty string to reset searching.
+    this.props.searchBulletinBoard();
   }
 
   searchBarTextChanged(text) {
-    this.props.fetchFAQs(text);
+    this.props.searchBulletinBoard(text);
+  }
+
+  retryFetching() {
+    if (this.state.isSearching) {
+      this.props.searchBulletinBoard(this.props.query);
+    } else {
+      this.props.fetchBulletinBoard(this.props.currentPage);
+    }
+  }
+
+  onPaginating() {
+    if (this.props.isFetching) {
+      this.props.fetchBulletinBoard(this.props.currentPage + 1);
+    }
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
@@ -169,11 +195,16 @@ class FAQ extends NavigatorComponent {
         } else {
           this.props.showNavigationBar();
         }
-        this.pushToNextComponent(FAQDetail, rowData);
+        this.pushToNextComponent(Bulletin, rowData);
       }}>
-        <Text style={MiumiuTheme.listViewText}>
-          { rowData.title }
-        </Text>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          <Text style={MiumiuTheme.listViewText}>
+            { rowData.title }
+          </Text>
+          <Text style={styles.timeTag}>
+            { moment(rowData.createdAt).calendar() }
+          </Text>
+        </View>
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
     );
@@ -184,7 +215,7 @@ class FAQ extends NavigatorComponent {
       return (
         <TouchableOpacity
           style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-          onPress={() => { this.props.fetchFAQs(); }}
+          onPress={this.retryFetching.bind(this)}
         >
           <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
         </TouchableOpacity>
@@ -217,50 +248,50 @@ class FAQ extends NavigatorComponent {
             style={MiumiuTheme.navBackgroundWithSearchBar}
           >
             { !this.state.isSearching &&
-              <View style={NavigatorStyle.titleView}>
-                <Text style={NavigatorStyle.titleText}>
-                  注意事項
-                </Text>
-              </View>
+            <View style={NavigatorStyle.titleView}>
+              <Text style={NavigatorStyle.titleText}>
+                公告事項
+              </Text>
+            </View>
             }
             { Platform.OS === 'ios' &&
-              <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
-                <Animated.View
-                  style={{
-                    ...MiumiuTheme.searchBar,
-                    marginBottom: this.state.searchBarMarginBottom,
-                  }}
-                >
-                  <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
-                  <TextInput
-                    ref="searchBar"
-                    style={{ ...MiumiuTheme.buttonText, flex: 1 }}
-                    placeholderTextColor="rgba(255, 255, 255, 0.65)"
-                    placeholder="查詢問題"
-                    onFocus={this.showSearchBar.bind(this)}
-                    onChangeText={this.searchBarTextChanged.bind(this)}
-                  />
-                </Animated.View>
-              </TouchableWithoutFeedback>
-            }
-            { Platform.OS === 'android' && this.state.isSearching &&
-              <View style={MiumiuTheme.androidSearchBarContainer}>
-                <TouchableOpacity onPress={this.props.showNavigationBar}>
-                  <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
-                </TouchableOpacity>
+            <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
+              <Animated.View
+                style={{
+                  ...MiumiuTheme.searchBar,
+                  marginBottom: this.state.searchBarMarginBottom,
+                }}
+              >
+                <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
                 <TextInput
                   ref="searchBar"
-                  style={MiumiuTheme.androidSearchInput}
+                  style={{ ...MiumiuTheme.buttonText, flex: 1 }}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
-                  placeholder="查詢問題"
+                  placeholder="查詢公告事項"
+                  onFocus={this.showSearchBar.bind(this)}
                   onChangeText={this.searchBarTextChanged.bind(this)}
                 />
-              </View>
+              </Animated.View>
+            </TouchableWithoutFeedback>
+            }
+            { Platform.OS === 'android' && this.state.isSearching &&
+            <View style={MiumiuTheme.androidSearchBarContainer}>
+              <TouchableOpacity onPress={this.props.showNavigationBar}>
+                <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
+              </TouchableOpacity>
+              <TextInput
+                ref="searchBar"
+                style={MiumiuTheme.androidSearchInput}
+                placeholderTextColor="rgba(255, 255, 255, 0.65)"
+                placeholder="查詢公告事項"
+                onChangeText={this.searchBarTextChanged.bind(this)}
+              />
+            </View>
             }
             <TouchableOpacity
               style={{
-                alignSelf: 'flex-end',
-              }}
+                  alignSelf: 'flex-end',
+                }}
               onPress={this.hideSearchBar.bind(this)}
             >
               <Animated.Text
@@ -277,15 +308,17 @@ class FAQ extends NavigatorComponent {
         </Animated.View>
 
         <ListView
-          dataSource={this.state.FAQs}
+          dataSource={this.state.bulletinBoard}
           renderRow={this.renderRowView.bind(this)}
           renderFooter={this.renderFooter.bind(this)}
+          onEndReached={this.onPaginating.bind(this)}
+          onEndReachedThreshold={60}
           enableEmptySections={true}
           onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={this.props.refreshFAQs.bind(this)}
+              onRefresh={this.props.refreshBulletinBoard.bind(this)}
             />
           }
         />
@@ -297,24 +330,33 @@ class FAQ extends NavigatorComponent {
 const styles = {
   listViewRow: {
     ...MiumiuTheme.listViewRow,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 10,
     paddingLeft: 17,
+  },
+  timeTag: {
+    ...MiumiuTheme.contentText,
+    marginTop: 2,
+    fontSize: 12,
   },
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { FAQs } = state;
+  const { bulletinBoard } = state;
+
   return {
     ...ownProps,
-    isFetching: FAQs.isFetching,
-    isRefreshing: FAQs.isRefreshing,
-    FAQs: FAQs.data,
-    error: FAQs.error,
+    isFetching: bulletinBoard.isFetching,
+    isRefreshing: bulletinBoard.isRefreshing,
+    bulletinBoard: bulletinBoard.data,
+    currentPage: bulletinBoard.currentPage,
+    query: bulletinBoard.query,
+    error: bulletinBoard.error,
     isNavigatorShown: state.navigationBar.isShown,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchFAQs, refreshFAQs }
-)(FAQ);
+  { showNavigationBar, hideNavigationBar, fetchBulletinBoard, searchBulletinBoard, refreshBulletinBoard },
+)(BulletinBoard);

@@ -12,6 +12,7 @@ import * as wayBillEpics from './wayBill';
 import * as calculator from './calculator';
 import * as deliveryInfo from './deliveryInfo';
 import * as serviceStore from './serviceStore';
+import * as bulletin from './bulletin';
 import * as FAQ from './FAQ';
 import * as FCM from './FCM';
 
@@ -33,6 +34,10 @@ export default combineEpics(
   serviceStore.fetchServiceStores,
   serviceStore.refreshServiceStores,
   serviceStore.fetchServiceStore,
+  bulletin.fetchBulletinBoard,
+  bulletin.searchBulletinBoard,
+  bulletin.refreshBulletinBoard,
+  bulletin.fetchBulletin,
   FAQ.fetchFAQs,
   FAQ.refreshFAQs,
   FAQ.fetchFAQ,

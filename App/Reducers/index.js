@@ -12,6 +12,8 @@ import deliveryInfo from './deliveryInfo';
 import deliveryInfoList from './deliveryInfoList';
 import serviceStore from './serviceStore';
 import serviceStores from './serviceStores';
+import bulletin from './bulletin';
+import bulletinBoard from './bulletinBoard';
 import FAQ from './FAQ';
 import FAQs from './FAQs';
 import navigationBar from './navigationBar';
@@ -30,6 +32,8 @@ export default combineReducers({
   deliveryInfoList,
   serviceStore,
   serviceStores,
+  bulletin,
+  bulletinBoard,
   FAQ,
   FAQs,
   navigationBar,

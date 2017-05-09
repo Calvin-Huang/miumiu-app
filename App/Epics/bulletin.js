@@ -14,7 +14,7 @@ import { get } from '../Utils/api';
 
 export function fetchBulletinBoard(action$) {
   return action$.ofType(FETCH_BULLETIN_BOARD)
-    .switchMap(async (action) => {
+    .exhaustMap(async (action) => {
       try {
         const response = await get(`board?page=${action.currentPage}`);
 

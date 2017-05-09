@@ -23,6 +23,8 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
+import moment from 'moment';
+import zh_HK from 'moment/locale/zh-hk';
 
 import Bulletin from './Bulletin';
 import { NavigatorComponent } from '../Components';
@@ -30,6 +32,8 @@ import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchBulletinBoard, refreshBulletinBoard } from '../Actions';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
+moment.locale('zh-hk', zh_HK);
 
 class BulletinBoard extends NavigatorComponent {
   static navLeftButton(route, navigator, index, navState) {

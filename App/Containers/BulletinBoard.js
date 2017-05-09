@@ -29,7 +29,14 @@ import zh_HK from 'moment/locale/zh-hk';
 import Bulletin from './Bulletin';
 import { NavigatorComponent } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchBulletinBoard, refreshBulletinBoard } from '../Actions';
+import {
+  showNavigationBar,
+  hideNavigationBar,
+  openSideDrawer,
+  fetchBulletinBoard,
+  searchBulletinBoard,
+  refreshBulletinBoard,
+} from '../Actions';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -121,7 +128,6 @@ class BulletinBoard extends NavigatorComponent {
     ]).start();
 
     this.setState({ isSearching: true });
-    this.filterSearchResult(null);
   }
 
   hideSearchBar() {
@@ -158,13 +164,20 @@ class BulletinBoard extends NavigatorComponent {
     ]).start();
 
     this.setState({ isSearching: false });
-    this.filterSearchResult(null);
+
+    // Search empty string to reset searching.
+    this.props.searchBulletinBoard();
   }
 
   searchBarTextChanged(text) {
-    this.filterSearchResult(text);
+    this.props.searchBulletinBoard(text);
   }
 
+  retryFetching() {
+    if (this.state.isSearching) {
+      this.props.searchBulletinBoard(this.props.query);
+    } else {
+      this.props.fetchBulletinBoard(this.props.currentPage);
     }
   }
 
@@ -202,7 +215,7 @@ class BulletinBoard extends NavigatorComponent {
       return (
         <TouchableOpacity
           style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-          onPress={() => { this.props.fetchBulletinBoard(this.props.currentPage); }}
+          onPress={this.retryFetching.bind(this)}
         >
           <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
         </TouchableOpacity>
@@ -337,6 +350,7 @@ const mapStateToProps = (state, ownProps) => {
     isRefreshing: bulletinBoard.isRefreshing,
     bulletinBoard: bulletinBoard.data,
     currentPage: bulletinBoard.currentPage,
+    query: bulletinBoard.query,
     error: bulletinBoard.error,
     isNavigatorShown: state.navigationBar.isShown,
   };
@@ -344,5 +358,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchBulletinBoard, refreshBulletinBoard },
+  { showNavigationBar, hideNavigationBar, fetchBulletinBoard, searchBulletinBoard, refreshBulletinBoard },
 )(BulletinBoard);

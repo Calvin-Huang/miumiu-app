@@ -6,6 +6,7 @@ import {
   FETCH_BULLETIN_BOARD,
   FETCH_BULLETIN_BOARD_SUCCESS,
   FETCH_BULLETIN_BOARD_FAILED,
+  SEARCH_BULLETIN_BOARD,
   REFRESH_BULLETIN_BOARD,
   REFRESH_BULLETIN_BOARD_SUCCESS,
   REFRESH_BULLETIN_BOARD_FAILED,
@@ -14,6 +15,7 @@ import {
 const initialState = {
   data: [],
   currentPage: 1,
+  query: '',
   isRefreshing: false,
   isFetching: false,
   error: null,
@@ -36,6 +38,7 @@ export default function bulletinBoard(state = initialState, action) {
       const hasNextPage = (perPage * currentPage) < total;
 
       return {
+        ...state,
         data: [ ...state.data, ...humps.camelizeKeys(data) ],
         currentPage,
         isRefreshing: false,
@@ -60,12 +63,22 @@ export default function bulletinBoard(state = initialState, action) {
         isFetching: false,
         error: null,
       };
+    case SEARCH_BULLETIN_BOARD:
+      return {
+        data: [],
+        currentPage: 1,
+        query: action.query,
+        isRefreshing: false,
+        isFetching: true,
+        error: null,
+      };
     case REFRESH_BULLETIN_BOARD_SUCCESS: {
 
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 
       return {
+        ...state,
         data: humps.camelizeKeys(data),
         currentPage,
         isRefreshing: false,
@@ -77,6 +90,7 @@ export default function bulletinBoard(state = initialState, action) {
     }
     case REFRESH_BULLETIN_BOARD_FAILED:
       return {
+        ...state,
         data: [],
         currentPage: 1,
         isRefreshing: false,

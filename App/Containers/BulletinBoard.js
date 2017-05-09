@@ -196,9 +196,14 @@ class BulletinBoard extends NavigatorComponent {
         }
         this.pushToNextComponent(Bulletin, rowData);
       }}>
-        <Text style={MiumiuTheme.listViewText}>
-          { rowData.title }
-        </Text>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          <Text style={MiumiuTheme.listViewText}>
+            { rowData.title }
+          </Text>
+          <Text style={styles.timeTag}>
+            { moment(rowData.createdAt).calendar() }
+          </Text>
+        </View>
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
     );
@@ -322,8 +327,14 @@ class BulletinBoard extends NavigatorComponent {
 const styles = {
   listViewRow: {
     ...MiumiuTheme.listViewRow,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 10,
     paddingLeft: 17,
+  },
+  timeTag: {
+    ...MiumiuTheme.contentText,
+    marginTop: 2,
+    fontSize: 12,
   },
 };
 

@@ -10,6 +10,7 @@ export * from './userActions';
 export * from './wayBillActions';
 export * from './calculatorActions';
 export * from './serviceStoreActions';
+export * from './bulletinActions';
 export * from './FAQActions';
 export * from './deliveryInfoActions';
 export * from './FCMActions';

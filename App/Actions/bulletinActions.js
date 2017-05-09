@@ -4,7 +4,7 @@
 
 import * as actionTypes from '../Constants/actionTypes';
 
-export function fetchBulletinBoard(currentPage) {
+export function fetchBulletinBoard(currentPage = 1) {
   return {
     type: actionTypes.FETCH_BULLETIN_BOARD,
     currentPage,

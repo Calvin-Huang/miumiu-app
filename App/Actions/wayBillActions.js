@@ -4,7 +4,7 @@
 
 import * as Actions from '../Constants/actionTypes';
 
-export function fetchWayBills(currentPage) {
+export function fetchWayBills(currentPage = 1) {
   return {
     type: Actions.REQUESTED_WAYBILLS,
     currentPage,

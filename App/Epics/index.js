@@ -37,6 +37,7 @@ export default combineEpics(
   bulletin.fetchBulletinBoard,
   bulletin.searchBulletinBoard,
   bulletin.refreshBulletinBoard,
+  bulletin.fetchBulletin,
   FAQ.fetchFAQs,
   FAQ.refreshFAQs,
   FAQ.fetchFAQ,

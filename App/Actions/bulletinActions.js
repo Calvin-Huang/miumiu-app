@@ -48,6 +48,28 @@ export function refreshBulletinBoardSuccess(response) {
 
 export function refreshBulletinBoardFailed(error) {
   return {
+    type: actionTypes.REFRESH_WAYBILLS_FAILED,
+    error,
+  }
+}
+
+export function fetchBulletin(id) {
+  return {
+    type: actionTypes.FETCH_BULLETIN,
+    id,
+  }
+}
+
+export function fetchBulletinSuccess(response) {
+  return {
+    type: actionTypes.FETCH_BULLETIN_SUCCESS,
+    response,
+  }
+}
+
+export function fetchBulletinFailed(error) {
+  return {
+    type: actionTypes.FETCH_BULLETIN_FAILED,
     error,
   }
 }

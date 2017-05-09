@@ -36,7 +36,7 @@ export default function bulletinBoard(state = initialState, action) {
       const hasNextPage = (perPage * currentPage) < total;
 
       return {
-        data: [ ...state, ...humps.camelizeKeys(data) ],
+        data: [ ...state.data, ...humps.camelizeKeys(data) ],
         currentPage,
         isRefreshing: false,
 

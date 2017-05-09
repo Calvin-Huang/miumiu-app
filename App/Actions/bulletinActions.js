@@ -26,6 +26,13 @@ export function fetchBulletinBoardFailed(error, atPage) {
   }
 }
 
+export function searchBulletinBoard(query = '') {
+  return {
+    type: actionTypes.SEARCH_BULLETIN_BOARD,
+    query,
+  }
+}
+
 export function refreshBulletinBoard() {
   return {
     type: actionTypes.REFRESH_BULLETIN_BOARD,

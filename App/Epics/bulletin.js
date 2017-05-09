@@ -12,11 +12,11 @@ import {
 
 import { get } from '../Utils/api';
 
-export function fetchBulletinBoard(action$) {
+export function fetchBulletinBoard(action$, store) {
   return action$.ofType(FETCH_BULLETIN_BOARD)
     .exhaustMap(async (action) => {
       try {
-        const response = await get(`board?page=${action.currentPage}`);
+        const response = await get(`board?page=${action.currentPage}&q=${store.getState().bulletinBoard.query}`);
 
         return fetchBulletinBoardSuccess(response);
       } catch (error) {
@@ -25,11 +25,11 @@ export function fetchBulletinBoard(action$) {
     });
 }
 
-export function refreshBulletinBoard(action$) {
+export function refreshBulletinBoard(action$, store) {
   return action$.ofType(REFRESH_BULLETIN_BOARD)
     .switchMap(async (_) => {
       try {
-        const response = await get('board?page=1');
+        const response = await get(`board?page=1&q=${store.getState().bulletinBoard.query}`);
 
         return refreshBulletinBoardSuccess(response);
       } catch (error) {

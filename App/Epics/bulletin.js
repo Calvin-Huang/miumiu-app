@@ -2,8 +2,13 @@
  * Created by calvin.huang on 08/05/2017.
  */
 
-import { FETCH_BULLETIN_BOARD, REFRESH_BULLETIN_BOARD } from '../Constants/actionTypes';
 import {
+  FETCH_BULLETIN_BOARD,
+  REFRESH_BULLETIN_BOARD,
+  SEARCH_BULLETIN_BOARD,
+} from '../Constants/actionTypes';
+import {
+  fetchBulletinBoard as fetchBulletinBoardAction,
   fetchBulletinBoardSuccess,
   fetchBulletinBoardFailed,
   refreshBulletinBoardSuccess,
@@ -22,6 +27,14 @@ export function fetchBulletinBoard(action$, store) {
       } catch (error) {
         return fetchBulletinBoardFailed(error, action.currentPage);
       }
+    });
+}
+
+export function searchBulletinBoard(action$) {
+  return action$.ofType(SEARCH_BULLETIN_BOARD)
+    .throttleTime(200)
+    .map((_) => {
+      return fetchBulletinBoardAction(1);
     });
 }
 

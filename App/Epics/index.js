@@ -35,6 +35,7 @@ export default combineEpics(
   serviceStore.refreshServiceStores,
   serviceStore.fetchServiceStore,
   bulletin.fetchBulletinBoard,
+  bulletin.searchBulletinBoard,
   bulletin.refreshBulletinBoard,
   FAQ.fetchFAQs,
   FAQ.refreshFAQs,

@@ -134,6 +134,10 @@ class Main extends Component {
           });
       }
     }
+
+    if (this.props.badges !== props.badges) {
+      FCM.setBadgeNumber(props.badges.length);
+    }
   }
 
   componentWillUnmount() {
@@ -426,6 +430,7 @@ export default connect(
       currentUser: state.user.currentUser,
       showUserQRCodeModal: state.userQRCodeModal.show,
       needUpdateModal: state.needUpdateModal,
+      badges: state.badges,
     };
   },
   {

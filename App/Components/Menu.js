@@ -32,6 +32,10 @@ export default class Menu extends Component {
         name: PropTypes.string.isRequired,
         component: PropTypes.func.isRequired,
         isSelected: PropTypes.bool.isRequired,
+        badge: PropTypes.shape({
+          prefix: PropTypes.string,
+          count: PropTypes.number,
+        }),
       })
     ).isRequired,
     onItemPress: PropTypes.func.isRequired,
@@ -67,7 +71,7 @@ export default class Menu extends Component {
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
-    const { icon, isSelected } = rowData;
+    const { icon, isSelected, badge } = rowData;
     const selectedColor = '#4285F4';
     return (
       <TouchableOpacity
@@ -84,6 +88,11 @@ export default class Menu extends Component {
 
           </View>
           <Text style={{ ...styles.navigationItemText, color: (isSelected ? selectedColor : 'black') }}>{rowData.name}</Text>
+          { badge && badge.count > 0 &&
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{badge.count}</Text>
+            </View>
+          }
         </View>
       </TouchableOpacity>
     );
@@ -181,6 +190,7 @@ const styles = {
     alignItems: 'center',
   },
   navigationItemText: {
+    flex: 1,
     fontSize: 14,
     marginVertical: 16,
   },
@@ -188,5 +198,18 @@ const styles = {
     position: 'absolute',
     right: 6,
     bottom: 7,
+  },
+  badge: {
+    marginRight: 20,
+    backgroundColor: 'red',
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    textAlign: 'center',
+    color: 'white',
   },
 };

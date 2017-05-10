@@ -250,6 +250,8 @@ class WayBills extends NavigatorComponent {
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
+    const { badges } = this.props;
+
     return (
       <TouchableOpacity style={styles.row} onPress={() => {
           if (Platform.OS === 'ios') {
@@ -265,6 +267,9 @@ class WayBills extends NavigatorComponent {
         </Text>
         { rowData.isUrgent &&
         <IconFasterShipping style={{ marginRight: 14 }} />
+        }
+        { badges.includes(`shipping:${rowData.shippingNo}`) &&
+          <View style={styles.unreadMark} />
         }
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
@@ -533,6 +538,14 @@ const styles = {
     shadowColor: 'black',
     elevation: 4,
   },
+  unreadMark: {
+    width: 10,
+    height: 10,
+    marginLeft: -6,
+    marginRight: 10,
+    borderRadius: 5,
+    backgroundColor: '#4E9ACF',
+  },
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -547,6 +560,7 @@ const mapStateToProps = (state, ownProps) => {
     isFetching: wayBills.isFetching,
     error: wayBills.error,
     isNavigatorShown: state.navigationBar.isShown,
+    badges: state.badges,
   };
 };
 

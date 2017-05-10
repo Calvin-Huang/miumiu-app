@@ -5,6 +5,7 @@
 import 'rxjs';
 import { combineEpics } from 'redux-observable';
 
+import * as badgeEpics from './badge';
 import * as versionEpics from './version';
 import * as userEpics from './user';
 import * as settingEpics from './setting';
@@ -19,6 +20,8 @@ import * as FCM from './FCM';
 // export default combineEpics;
 
 export default combineEpics(
+  badgeEpics.fetchBadges,
+  badgeEpics.removeBadge,
   versionEpics.checkVersion,
   versionEpics.onUpdateHintModalClose,
   settingEpics.fetchContactInfo,

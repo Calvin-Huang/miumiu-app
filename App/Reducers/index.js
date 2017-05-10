@@ -17,14 +17,17 @@ import bulletinBoard from './bulletinBoard';
 import FAQ from './FAQ';
 import FAQs from './FAQs';
 import navigationBar from './navigationBar';
+import navigationItems from './navigationItems';
 import sideDrawer from './sideDrawer';
 import user, { register, resendConfirmCode, requestResetPassword, resendResetPasswordConfirmCode, userQRCodeModal } from './user';
 import { contactInfo } from './setting';
 import FCM from './FCM';
+import badges from './badges';
 import { needUpdateModal } from './version';
 
 export default combineReducers({
   generalRequest,
+  badges,
   wayBill,
   wayBills,
   calculator,
@@ -37,6 +40,7 @@ export default combineReducers({
   FAQ,
   FAQs,
   navigationBar,
+  navigationItems,
   sideDrawer,
   user,
   register,

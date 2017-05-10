@@ -26,7 +26,7 @@ import ServiceStore from './ServiceStore';
 import WebInspector from './WebInspector';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
-import { showUserQRCode, deleteWayBill, refreshWayBills } from '../Actions';
+import { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills } from '../Actions';
 import { DATETIME_FORMAT, DOMAIN } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
@@ -50,6 +50,10 @@ class WayBill extends NavigatorComponent {
     this.state = {
       data: this.props.route.data,
     };
+  }
+
+  componentDidMount() {
+    this.props.removeBadge(`shipping:${this.props.route.data.shippingNo}`);
   }
 
   componentWillReceiveProps(props) {
@@ -247,5 +251,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { showUserQRCode, deleteWayBill, refreshWayBills }
+  { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills }
 )(WayBill);

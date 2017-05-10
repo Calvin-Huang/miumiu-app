@@ -30,6 +30,7 @@ import Bulletin from './Bulletin';
 import { NavigatorComponent } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import {
+  fetchBadges,
   showNavigationBar,
   hideNavigationBar,
   openSideDrawer,
@@ -79,6 +80,7 @@ class BulletinBoard extends NavigatorComponent {
 
   componentDidMount() {
     this.props.fetchBulletinBoard();
+    this.props.fetchBadges();
   }
 
   componentWillUnmount() {
@@ -358,5 +360,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchBulletinBoard, searchBulletinBoard, refreshBulletinBoard },
+  { fetchBadges, showNavigationBar, hideNavigationBar, fetchBulletinBoard, searchBulletinBoard, refreshBulletinBoard },
 )(BulletinBoard);

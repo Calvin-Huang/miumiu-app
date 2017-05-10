@@ -95,7 +95,6 @@ class Main extends Component {
     BackAndroid.addEventListener('hardwareBackPress', this.androidBackHandler);
 
     this.props.fetchCurrentVersionInfo();
-    this.props.fetchBadges();
   }
 
   componentWillReceiveProps(props) {

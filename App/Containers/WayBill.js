@@ -53,7 +53,11 @@ class WayBill extends NavigatorComponent {
   }
 
   componentDidMount() {
-    this.props.removeBadge(`shipping:${this.props.route.data.shippingNo}`);
+    const { badges, route: { data: { shippingNo } } } = this.props;
+    const badge = `shipping:${shippingNo}`;
+    if (badges.includes(badge)) {
+      this.props.removeBadge(badge);
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -241,11 +245,12 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { generalRequest } = state;
+  const { generalRequest, badges } = state;
   return {
     ...ownProps,
     isRequesting: generalRequest.isRequesting,
     error: generalRequest.error,
+    badges,
   };
 }
 

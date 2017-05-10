@@ -21,6 +21,7 @@ import * as FCM from './FCM';
 
 export default combineEpics(
   badgeEpics.fetchBadges,
+  badgeEpics.removeBadge,
   versionEpics.checkVersion,
   versionEpics.onUpdateHintModalClose,
   settingEpics.fetchContactInfo,

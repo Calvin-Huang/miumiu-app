@@ -5,7 +5,7 @@
 import { Component } from 'react';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
-import { NAVIGATION_ITEM_SELECTED } from '../Constants/actionTypes';
+import { NAVIGATION_ITEM_SELECTED, UPDATE_BADGES } from '../Constants/actionTypes';
 
 import WayBills from '../Containers/WayBills';
 import UrgentProcessing from '../Containers/UrgentProcessing';
@@ -28,6 +28,10 @@ const initialState = [
     name: '貨單管理',
     component: WayBills,
     isSelected: true,
+    badge: {
+      prefix: 'shipping',
+      count: 0,
+    },
   }, {
     icon: {
       component: IconFasterShipping,
@@ -36,6 +40,7 @@ const initialState = [
     name: '加急服務',
     component: UrgentProcessing,
     isSelected: false,
+    badge: null,
   }, {
     icon: {
       name: 'md-calculator'
@@ -43,6 +48,7 @@ const initialState = [
     name: '試算運費',
     component: Calculator,
     isSelected: false,
+    badge: null,
   }, {
     icon: {
       component: FontAwesomeIcon,
@@ -52,6 +58,7 @@ const initialState = [
     name: 'QRCode 取貨',
     component: Component,
     isSelected: false,
+    badge: null,
     // }, {
     //   icon: {
     //     name: 'md-lock',
@@ -66,6 +73,7 @@ const initialState = [
     name: '收貨地址',
     component: DeliveryInfoList,
     isSelected: false,
+    badge: null,
   }, {
     icon: {
       name: 'md-home',
@@ -73,6 +81,7 @@ const initialState = [
     name: '門市資訊',
     component: ServiceStores,
     isSelected: false,
+    badge: null,
   }, {
     icon: {
       name: 'md-text',
@@ -80,6 +89,10 @@ const initialState = [
     name: '公告事項',
     component: BulletinBoard,
     isSelected: false,
+    badge: {
+      prefix: 'board',
+      count: 0,
+    },
   }, {
     icon: {
       name: 'md-help-circle',
@@ -87,6 +100,7 @@ const initialState = [
     name: '注意事項',
     component: FAQ,
     isSelected: false,
+    badge: null,
   }, {
     icon: {
       name: 'md-chatboxes',
@@ -94,6 +108,7 @@ const initialState = [
     name: '聯絡我們',
     component: ContactUs,
     isSelected: false,
+    badge: null,
   }, {
     icon: {
       name: 'md-settings',
@@ -101,6 +116,7 @@ const initialState = [
     name: '設定',
     component: Settings,
     isSelected: false,
+    badge: null,
   },
 ]
 
@@ -113,6 +129,25 @@ export default function navigationItems(state = initialState, action) {
 
         return item;
       });
+    case UPDATE_BADGES: {
+      return state
+        .map((item) => {
+          const { badge } = item;
+          const { prefix } = badge || {};
+
+          if (!badge || prefix === 0) {
+            return item;
+          }
+
+          return {
+            ...item,
+            badge: {
+              ...badge,
+              count: action.badges.filter((badge) => badge.startsWith(prefix)).length,
+            },
+          };
+        });
+    }
     default:
       return state;
   }

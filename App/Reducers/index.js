@@ -22,10 +22,12 @@ import sideDrawer from './sideDrawer';
 import user, { register, resendConfirmCode, requestResetPassword, resendResetPasswordConfirmCode, userQRCodeModal } from './user';
 import { contactInfo } from './setting';
 import FCM from './FCM';
+import badges from './badges';
 import { needUpdateModal } from './version';
 
 export default combineReducers({
   generalRequest,
+  badges,
   wayBill,
   wayBills,
   calculator,

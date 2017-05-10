@@ -25,8 +25,9 @@ export function fetchBadges(action$) {
     });
 }
 
-export function removeBadge(action$) {
+export function removeBadge(action$, store) {
   return action$.ofType(ActionTypes.REMOVE_BADGE)
+    .filter((action) => store.getState().badges.includes(action.badge))
     .switchMap((action) => {
       return new Observable(async (observer) => {
         try {

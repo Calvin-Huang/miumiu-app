@@ -10,6 +10,13 @@ export function fetchBadges() {
   }
 }
 
+export function removeBadge(badge) {
+  return {
+    type: actionTypes.REMOVE_BADGE,
+    badge,
+  }
+}
+
 export function updateBadges(badges) {
   return {
     type: actionTypes.UPDATE_BADGES,

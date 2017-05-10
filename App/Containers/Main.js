@@ -252,39 +252,41 @@ class Main extends Component {
     const user = currentUser || {};
 
     return (
-      <Drawer
-        open={!this.props.needUpdateModal.show && this.props.sideDrawerOpened}
-        ref="sideDrawer"
-        type="overlay"
-        content={
-          <Menu
-            navigationItems={this.props.navigationItems}
-            onItemPress={this.navigationItemClicked.bind(this)}
-            userId={user.id}
-          />
-        }
-        tapToClose={true}
-        openDrawerOffset={56}
-        onClose={() => { this.props.closeSideDrawer(); }}
-        onOpenStart={this.fadeInOutOverlay.bind(this, 1)}
-        onCloseStart={this.fadeInOutOverlay.bind(this, 0)}
-      >
-        <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
-        <Navigator
-          ref="navigator"
-          style={styles.container}
-          initialRoute={routes[0]}
-          initialRouteStack={routes}
-          onWillFocus={this.props.resetGeneralRequest}
-          navigationBar={
-            (this.props.showNavigator &&
-              <Navigator.NavigationBar style={{ flex: 1 }} />
-            )
+      <View style={styles.container}>
+        <Drawer
+          open={!this.props.needUpdateModal.show && this.props.sideDrawerOpened}
+          ref="sideDrawer"
+          type="overlay"
+          content={
+            <Menu
+              navigationItems={this.props.navigationItems}
+              onItemPress={this.navigationItemClicked.bind(this)}
+              userId={user.id}
+            />
           }
-        />
-        { this.props.sideDrawerOpened &&
-          <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
-        }
+          tapToClose={true}
+          openDrawerOffset={56}
+          onClose={() => { this.props.closeSideDrawer(); }}
+          onOpenStart={this.fadeInOutOverlay.bind(this, 1)}
+          onCloseStart={this.fadeInOutOverlay.bind(this, 0)}
+        >
+          <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
+          <Navigator
+            ref="navigator"
+            style={styles.container}
+            initialRoute={routes[0]}
+            initialRouteStack={routes}
+            onWillFocus={this.props.resetGeneralRequest}
+            navigationBar={
+              (this.props.showNavigator &&
+                <Navigator.NavigationBar style={{ flex: 1 }} />
+              )
+            }
+          />
+          { this.props.sideDrawerOpened &&
+            <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
+          }
+        </Drawer>
 
         <Modal
           animationType="fade"
@@ -385,7 +387,7 @@ class Main extends Component {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-      </Drawer>
+      </View>
     );
   }
 }

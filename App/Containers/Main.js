@@ -46,6 +46,7 @@ import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
 import { checkFCMSubscribeStatus } from '../Actions/FCMActions';
 import { fetchContactInfo } from '../Actions/settingActions';
+import { fetchBadges } from '../Actions/badgeActions';
 import { fetchCurrentVersionInfo, hideVersionOutdatedHint } from '../Actions/checkVersionActions';
 import { resetGeneralRequest } from '../Actions/generalRequestActions';
 
@@ -94,6 +95,7 @@ class Main extends Component {
     BackAndroid.addEventListener('hardwareBackPress', this.androidBackHandler);
 
     this.props.fetchCurrentVersionInfo();
+    this.props.fetchBadges();
   }
 
   componentWillReceiveProps(props) {
@@ -437,6 +439,7 @@ export default connect(
     showUserQRCode,
     hideUserQRCode,
     fetchContactInfo,
+    fetchBadges,
     fetchCurrentVersionInfo,
     hideVersionOutdatedHint,
     resetGeneralRequest,

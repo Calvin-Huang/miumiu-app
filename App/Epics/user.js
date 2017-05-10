@@ -20,6 +20,7 @@ import {
   userResendResetPasswordConfirmCodeSuccess,
   userResendResetPasswordConfirmCodeFailed,
   userInfoUpdated,
+  fetchBadges,
   checkFCMSubscribeStatus,
   generalRequest,
   generalRequestSuccess,
@@ -39,6 +40,7 @@ export function checkUserSignedIn(action$) {
         if (user) {
           observer.next(userSignInSuccess(user));
           observer.next(checkFCMSubscribeStatus());
+          observer.next(fetchBadges());
         } else {
           observer.next(userSignInFailed(new HttpError(401, '尚未登入')));
         }
@@ -60,6 +62,7 @@ export function userSignIn(action$) {
 
           observer.next(userSignInSuccess(user));
           observer.next(checkFCMSubscribeStatus());
+          observer.next(fetchBadges());
         } catch (error) {
           observer.next(userSignInFailed(error));
         }

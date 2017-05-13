@@ -111,42 +111,47 @@ export default class NotificationMessage extends Component {
 
   render() {
     const { title, content } = this.props;
-    const { pan } = this.state;
-    return (
-      <Animated.View
-        {...this.panResponder.panHandlers}
-        style={{
-          ...pan.getLayout(),
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          paddingTop: Platform.OS === 'ios' ? 26 : 6,
-          paddingBottom: 6,
-          paddingHorizontal: 10,
-          backgroundColor: 'white',
-          opacity: 0.9,
-        }}
-        onLayout={this.onLayout.bind(this)}
-      >
-        { title &&
-          <Text style={MiumiuTheme.titleText}>
-            {title}
-          </Text>
-        }
-        <Text style={MiumiuTheme.contentText}>
-          {content}
-        </Text>
-        <View
+    const { pan, visible } = this.state;
+
+    if (visible) {
+      return (
+        <Animated.View
+          {...this.panResponder.panHandlers}
           style={{
-            width: 40,
-            height: 10,
-            borderRadius: 5,
-            marginTop: 10,
-            marginBottom: 5,
-            backgroundColor: 'gray',
-            alignSelf: 'center',
-          }} />
-      </Animated.View>
-    );
+            ...pan.getLayout(),
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            paddingTop: Platform.OS === 'ios' ? 26 : 6,
+            paddingBottom: 6,
+            paddingHorizontal: 10,
+            backgroundColor: 'white',
+            opacity: 0.9,
+          }}
+          onLayout={this.onLayout.bind(this)}
+        >
+          { title &&
+            <Text style={MiumiuTheme.titleText}>
+              {title}
+            </Text>
+          }
+          <Text style={MiumiuTheme.contentText}>
+            {content}
+          </Text>
+          <View
+            style={{
+              width: 40,
+              height: 10,
+              borderRadius: 5,
+              marginTop: 10,
+              marginBottom: 5,
+              backgroundColor: 'gray',
+              alignSelf: 'center',
+            }} />
+        </Animated.View>
+      );
+    } else {
+      return null;
+    }
   }
 }

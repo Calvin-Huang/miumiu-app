@@ -17,6 +17,17 @@ export default class NotificationMessage extends Component {
   static propTypes = {
     title: PropTypes.string,
     content: PropTypes.string.isRequired,
+    delay: PropTypes.number.isRequired,
+    animationDuration: PropTypes.number.isRequired,
+    visible: PropTypes.bool.isRequired,
+    onShown: PropTypes.func,
+    onHidden: PropTypes.func,
+  };
+
+  static defaultProps = {
+    visible: false,
+    animationDuration: 0.2,
+    delay: 2,
   };
 
   constructor(props) {
@@ -26,6 +37,7 @@ export default class NotificationMessage extends Component {
       pan: new Animated.ValueXY(),
     };
 
+    this.firstTimeRender = true;
     this.height = 0;
     this.panResponder = PanResponder.create({
       onMoveShouldSetResponder: () => true,
@@ -44,17 +56,53 @@ export default class NotificationMessage extends Component {
       },
       onPanResponderRelease: () => {
         const { pan } = this.state;
-        let targetY = 0;
+        pan.flattenOffset();
 
         if (pan.y._value < -(this.height / 3)) {
-          targetY = -this.height;
+          this.hide();
+        } else {
+          this.show();
         }
-
-        Animated
-          .timing(this.state.pan, { toValue: { x: 0, y: targetY }, duration: 200 })
-          .start();
       },
     })
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.visible !== props.visible) {
+      if (props.visible) {
+        this.flash();
+      }
+    }
+  }
+
+  show(onShown = this.props.onShown) {
+    this.setState({ visible: true });
+
+    const { animationDuration } = this.props;
+    Animated
+      .timing(this.state.pan, { toValue: { x: 0, y: 0 }, duration: animationDuration * 1000 })
+      .start(onShown);
+  }
+
+  hide(onHidden = this.props.onHidden) {
+    const { animationDuration } = this.props;
+    Animated
+      .timing(this.state.pan, { toValue: { x: 0, y: -this.height }, duration: animationDuration * 1000 })
+      .start(() => {
+        this.setState({ visible: false });
+        if (onHidden) {
+          onHidden();
+        }
+      });
+  }
+
+  flash(delay = this.props.delay, onHidden = this.props.onHidden) {
+    if (delay) {
+      this.show();
+      setTimeout(() => {
+        this.hide(onHidden);
+      }, delay * 1000);
+    }
   }
 
   onLayout({ nativeEvent: { layout: { x, y, width, height } } }) {

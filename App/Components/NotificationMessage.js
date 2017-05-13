@@ -28,17 +28,30 @@ export default class NotificationMessage extends Component {
 
     this.height = 0;
     this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([
-        null,
-        {
-          dx: this.state.pan.x,
-          dy: this.state.pan.y,
-        },
-      ]),
+      onMoveShouldSetResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: (event, gestureState) => {
+        const { pan } = this.state;
+        pan.setOffset({ x: pan.x._value, y: pan.y._value });
+        pan.setValue({ x: 0, y: 0 });
+      },
+      onPanResponderMove: (event, gestureState) => {
+        if (gestureState.dy < 0) {
+          return Animated.event([ null, {
+            dy: this.state.pan.y,
+          }])(event, gestureState);
+        }
+      },
       onPanResponderRelease: () => {
+        const { pan } = this.state;
+        let targetY = 0;
+
+        if (pan.y._value < -(this.height / 3)) {
+          targetY = -this.height;
+        }
+
         Animated
-          .spring(this.state.pan, { toValue: { x: 0, y: 0 } })
+          .timing(this.state.pan, { toValue: { x: 0, y: targetY }, duration: 200 })
           .start();
       },
     })
@@ -57,7 +70,6 @@ export default class NotificationMessage extends Component {
         style={{
           ...pan.getLayout(),
           position: 'absolute',
-          top: 0,
           left: 0,
           right: 0,
           paddingTop: Platform.OS === 'ios' ? 26 : 6,

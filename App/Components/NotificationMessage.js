@@ -9,6 +9,7 @@ import {
   Animated,
   Platform,
   PanResponder,
+  Dimensions,
 } from 'react-native';
 
 import { MiumiuTheme } from '../Styles';
@@ -34,10 +35,11 @@ export default class NotificationMessage extends Component {
     super(props);
 
     this.state = {
+      visible: props.visible,
       pan: new Animated.ValueXY(),
     };
 
-    this.firstTimeRender = true;
+    this.needGetHeight = true;
     this.height = 0;
     this.panResponder = PanResponder.create({
       onMoveShouldSetResponder: () => true,
@@ -67,6 +69,19 @@ export default class NotificationMessage extends Component {
     })
   }
 
+  componentWillMount() {
+    if (!this.props.visible) {
+      const { height: DeviceHeight } = Dimensions.get('window');
+      const { pan } = this.state;
+
+      // Hide component to definitely out side of screen.
+      pan.setValue({ x: 0, y: -DeviceHeight });
+
+    } else {
+      this.needGetHeight = false;
+    }
+  }
+
   componentWillReceiveProps(props) {
     if (this.props.visible !== props.visible) {
       if (props.visible) {
@@ -78,10 +93,13 @@ export default class NotificationMessage extends Component {
   show(onShown = this.props.onShown) {
     this.setState({ visible: true });
 
-    const { animationDuration } = this.props;
-    Animated
-      .timing(this.state.pan, { toValue: { x: 0, y: 0 }, duration: animationDuration * 1000 })
-      .start(onShown);
+    // First time show without height value will fail to show.
+    if (!this.needGetHeight) {
+      const { animationDuration } = this.props;
+      Animated
+        .timing(this.state.pan, { toValue: { x: 0, y: 0 }, duration: animationDuration * 1000 })
+        .start(onShown);
+    }
   }
 
   hide(onHidden = this.props.onHidden) {
@@ -107,6 +125,18 @@ export default class NotificationMessage extends Component {
 
   onLayout({ nativeEvent: { layout: { x, y, width, height } } }) {
     this.height = height;
+
+    if (this.state.visible && this.needGetHeight) {
+      const { pan } = this.state;
+
+      // Move component to ready to show position.
+      pan.setValue({ x: 0, y: -height });
+
+      this.needGetHeight = false;
+
+      // Show component because first time show without height failed.
+      this.show();
+    }
   }
 
   render() {

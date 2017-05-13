@@ -83,10 +83,8 @@ export default class NotificationMessage extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (this.props.visible !== props.visible) {
-      if (props.visible) {
-        this.flash();
-      }
+    if (props.visible) {
+      this.flash();
     }
   }
 

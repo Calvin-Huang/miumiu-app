@@ -10,6 +10,7 @@ import {
   Platform,
   PanResponder,
   Dimensions,
+  Vibration,
 } from 'react-native';
 
 import { MiumiuTheme } from '../Styles';
@@ -20,6 +21,7 @@ export default class NotificationMessage extends Component {
     content: PropTypes.string.isRequired,
     delay: PropTypes.number.isRequired,
     animationDuration: PropTypes.number.isRequired,
+    vibratePattern: PropTypes.number.isRequired,
     visible: PropTypes.bool.isRequired,
     onShown: PropTypes.func,
     onHidden: PropTypes.func,
@@ -27,6 +29,7 @@ export default class NotificationMessage extends Component {
 
   static defaultProps = {
     visible: false,
+    vibratePattern: 0,
     animationDuration: 0.2,
     delay: 2,
   };
@@ -98,9 +101,13 @@ export default class NotificationMessage extends Component {
   show(onShown = this.props.onShown) {
     this.setState({ visible: true });
 
+    const { vibratePattern, animationDuration } = this.props;
+    if (vibratePattern !== 0) {
+      Vibration.vibrate(vibratePattern);
+    }
+
     // First time show without height value will fail to show.
     if (!this.needGetHeight) {
-      const { animationDuration } = this.props;
       Animated
         .timing(this.state.pan, { toValue: { x: 0, y: 0 }, duration: animationDuration * 1000 })
         .start(onShown);

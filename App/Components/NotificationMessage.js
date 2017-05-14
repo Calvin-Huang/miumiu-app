@@ -48,6 +48,9 @@ export default class NotificationMessage extends Component {
         const { pan } = this.state;
         pan.setOffset({ x: pan.x._value, y: pan.y._value });
         pan.setValue({ x: 0, y: 0 });
+
+        // Stop timer when pan grant and restart timer when release and show.
+        clearTimeout(this.timer);
       },
       onPanResponderMove: (event, gestureState) => {
         if (gestureState.dy < 0) {
@@ -63,7 +66,11 @@ export default class NotificationMessage extends Component {
         if (pan.y._value < -(this.height / 3)) {
           this.hide();
         } else {
-          this.show();
+          if (this.timer) {
+            this.flash();
+          } else {
+            this.show();
+          }
         }
       },
     })
@@ -115,8 +122,13 @@ export default class NotificationMessage extends Component {
   flash(delay = this.props.delay, onHidden = this.props.onHidden) {
     if (delay) {
       this.show();
-      setTimeout(() => {
+
+      // Clear previous timer
+      clearTimeout(this.timer);
+
+      this.timer = setTimeout(() => {
         this.hide(onHidden);
+        this.timer = null;
       }, delay * 1000);
     }
   }

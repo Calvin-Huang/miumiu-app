@@ -28,14 +28,14 @@ import Drawer from 'react-native-drawer';
 import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
-import FCM, { FCMEvent } from 'react-native-fcm';
+import FCM, { FCMEvent, NotificationType, RemoteNotificationResult, WillPresentNotificationResult } from 'react-native-fcm';
 
 import WayBills from '../Containers/WayBills';
 import SignIn from '../Containers/SignIn';
 import RegistrationCompleted from '../Containers/RegistrationCompleted';
 import ResetPasswordCompleted from '../Containers/ResetPasswordCompleted';
 
-import { Menu, Navigator } from '../Components';
+import { NotificationMessage, Menu, Navigator } from '../Components';
 
 import { MiumiuTheme } from '../Styles';
 import { DEEP_LINK_PROTOCOL, APPSTORE_URL, GOOGLEPLAY_URL, APK_DOWNLOAD_URL } from '../Constants/config';
@@ -56,6 +56,8 @@ class Main extends Component {
 
     this.state = {
       overlayOpacityValue: new Animated.Value(0),
+      notification: { title: '', content: '' },
+      hasNotificationMessage: false,
     };
 
     this.handleOpenURL = this.handleOpenURL.bind(this);
@@ -77,6 +79,39 @@ class Main extends Component {
     FCM.requestPermissions();
     this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
       this.props.checkFCMSubscribeStatus();
+    });
+    this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
+      if (Platform.OS === 'ios') {
+        const { aps: { alert: title } } = notification;
+        const { 'google.c.a.c_l': content } = notification;
+
+        switch (notification._notificationType) {
+          //optional
+          //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
+          //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
+          //notif._notificationType is available for iOS platfrom
+          case NotificationType.Remote:
+            notification.finish(RemoteNotificationResult.NewData);
+            break;
+          case NotificationType.NotificationResponse:
+            notification.finish();
+
+            // Handle app start from notification.
+
+
+            break;
+          case NotificationType.WillPresent:
+            notification.finish(WillPresentNotificationResult.WillPresent);
+
+            // Handle notification when app active.
+            this.setState({ notification: { title, content } });
+            this.notificationMessage.flash();
+
+            break;
+          default:
+            break;
+        }
+      }
     });
 
     Linking.getInitialURL()
@@ -143,6 +178,7 @@ class Main extends Component {
     Linking.removeEventListener('url', this.handleOpenURL);
     BackAndroid.removeEventListener('hardwareBackPress', this.androidBackHandler);
     this.refreshTokenListener.remove();
+    this.notificationListener.remove();
   }
 
   handleOpenURL({ url }) {
@@ -287,6 +323,14 @@ class Main extends Component {
             <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
           }
         </Drawer>
+
+        <NotificationMessage
+          ref={(ref) => this.notificationMessage = ref}
+          delay={3}
+          vibratePattern={100}
+          title={this.state.notification.title}
+          content={this.state.notification.content}
+        />
 
         <Modal
           animationType="fade"

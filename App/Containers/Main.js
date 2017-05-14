@@ -326,7 +326,7 @@ class Main extends Component {
 
         <NotificationMessage
           ref={(ref) => this.notificationMessage = ref}
-          delay={3}
+          delay={5}
           vibratePattern={100}
           title={this.state.notification.title}
           content={this.state.notification.content}

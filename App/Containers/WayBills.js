@@ -27,7 +27,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
-import AddWayBill from './AddWayBill';
+import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
@@ -59,13 +59,13 @@ class WayBills extends NavigatorComponent {
             onPress={() => {
               navigator.push({
                 index: route.index + 1,
-                component: AddWayBill,
+                component: UrgentProcessing,
                 transition: Navigator.SceneConfigs.FloatFromBottom,
               });
             }}
           >
-            <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
-              <Icon name="md-add" size={24} color="white" />
+            <View style={{ ...NavigatorStyle.itemButton, marginRight: 14, marginLeft: 7 }}>
+              <IconFasterShipping size={20} color="white" />
             </View>
           </TouchableOpacity>
         }
@@ -316,14 +316,14 @@ class WayBills extends NavigatorComponent {
             resizeMode="center"
             source={this.state.emptyStateImage}
           />
-          <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>目前沒有貨單，快開始使用喵喵代收吧！</Text>
+          <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>一刻也不想多等，想趕快收到貨嗎？</Text>
           <TouchableOpacity
             style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, width: 300 }}
             onPress={() => {
-              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+              this.pushToNextComponent(UrgentProcessing, null, Navigator.SceneConfigs.FloatFromBottom)
             }}
           >
-            <Text style={MiumiuTheme.buttonText}>新增貨單</Text>
+            <Text style={MiumiuTheme.buttonText}>申請加急</Text>
           </TouchableOpacity>
         </View>
       );
@@ -477,10 +477,10 @@ class WayBills extends NavigatorComponent {
             shadowColor="black"
             fab={true}
             onPress={() => {
-              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+              this.pushToNextComponent(UrgentProcessing, null, Navigator.SceneConfigs.FloatFromBottom)
             }}
           >
-            <Icon name="md-add" size={24} color="white" />
+            <IconFasterShipping size={20} color="white" />
           </MKButton>
         }
       </View>

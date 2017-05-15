@@ -82,8 +82,16 @@ class Main extends Component {
     });
     this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
       if (Platform.OS === 'ios') {
-        const { aps: { alert: title } } = notification;
-        const { 'google.c.a.c_l': content } = notification;
+        const { aps: { alert } } = notification;
+        let title = null;
+        let content = null;
+
+        if (typeof alert === 'object') {
+          title = alert.title;
+          content = alert.body;
+        } else {
+          content = alert;
+        }
 
         switch (notification._notificationType) {
           //optional

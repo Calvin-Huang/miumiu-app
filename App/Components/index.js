@@ -1,3 +1,4 @@
+export { default as NotificationMessage } from './NotificationMessage';
 export { default as Menu } from './Menu';
 export { default as Navigator } from './Navigator';
 export { default as NavigatorComponent } from './NavigatorComponent';

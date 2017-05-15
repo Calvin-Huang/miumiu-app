@@ -119,16 +119,6 @@ class Settings extends NavigatorComponent {
             </TouchableOpacity>
             <View style={styles.section}>
               <View style={styles.listViewRow}>
-                <Text style={styles.listViewText}>公告通知推播</Text>
-                <Switch
-                  value={toAll}
-                  onValueChange={(toAll) => {
-                  this.setState({ toAll });
-                  FCMSubscribeStateResult(toAll, toMe);
-                }}
-                />
-              </View>
-              <View style={styles.listViewRow}>
                 <Text style={styles.listViewText}>貨單通知推播</Text>
                 <Switch
                   value={toMe}

@@ -119,7 +119,15 @@ class Main extends Component {
           default:
             break;
         }
+      } else {
+        const { fcm: { action, title, body: content } } = notification;
+        if (!action) {
+          this.setState({ notification: { title, content } });
+          this.notificationMessage.flash();
+        }
       }
+
+      this.props.fetchBadges();
     });
 
     Linking.getInitialURL()

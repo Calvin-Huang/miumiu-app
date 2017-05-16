@@ -331,7 +331,7 @@ class WayBills extends NavigatorComponent {
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, amount } = this.props;
     const user = currentUser || {};
     return (
       <View style={MiumiuTheme.container}>
@@ -423,7 +423,7 @@ class WayBills extends NavigatorComponent {
                 marginLeft: 15,
               }}
             >
-              嗨！{user.name ? `${user.name}，` : ''}你可以先
+              {(amount <= 0) ? `嗨！${user.name ? `${user.name}，` : ''}你可以先` : `已到倉費用總額：$${amount}`}
             </Text>
             <TouchableOpacity
               style={{
@@ -555,6 +555,7 @@ const mapStateToProps = (state, ownProps) => {
     ...ownProps,
     currentUser: state.user.currentUser,
     wayBills: wayBills.data,
+    amount: wayBills.amount,
     currentPage: wayBills.currentPage,
     isRefreshing: wayBills.isRefreshing,
     isFetching: wayBills.isFetching,

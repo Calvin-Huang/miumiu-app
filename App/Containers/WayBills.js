@@ -423,7 +423,7 @@ class WayBills extends NavigatorComponent {
                 marginLeft: 15,
               }}
             >
-              {(amount <= 0) ? `嗨！${user.name ? `${user.name}，` : ''}你可以先` : `待取件費用總額：$${amount}`}
+              {(amount <= 0) ? `嗨！${user.name ? `${user.name}，` : ''}你可以先` : `已到倉費用總額：$${amount}`}
             </Text>
             <TouchableOpacity
               style={{

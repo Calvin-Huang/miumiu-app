@@ -18,40 +18,36 @@ import {
   Animated,
   Easing,
   BackAndroid,
+  Platform,
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
 
 import { connect } from 'react-redux';
 import Drawer from 'react-native-drawer';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import QRCode from 'react-native-qrcode-svg';
 import DeviceBrightness from 'react-native-device-brightness';
 import Color from 'color';
-import FCM from 'react-native-fcm';
+import FCM, { FCMEvent, NotificationType, RemoteNotificationResult, WillPresentNotificationResult } from 'react-native-fcm';
 
-import { IconFasterShipping } from '../Components';
+import WayBills from '../Containers/WayBills';
+import SignIn from '../Containers/SignIn';
+import RegistrationCompleted from '../Containers/RegistrationCompleted';
+import ResetPasswordCompleted from '../Containers/ResetPasswordCompleted';
 
-import WayBills from './WayBills';
-import UrgentProcessing from './UrgentProcessing';
-import Calculator from './Calculator';
-import DeliveryInfoList from './DeliveryInfoList';
-import ServiceStores from './ServiceStores';
-import PickUpPassword from './PickUpPassword';
-import FAQ from './FAQ';
-import ContactUs from './ContactUs';
-import Settings from './Settings';
-import SignIn from './SignIn';
-import RegistrationCompleted from './RegistrationCompleted';
-import ResetPasswordCompleted from './ResetPasswordCompleted';
-import { Menu, Navigator } from '../Components';
+import { NotificationMessage, Menu, Navigator } from '../Components';
+
 import { MiumiuTheme } from '../Styles';
-import { DEEP_LINK_PROTOCOL } from '../Constants/config';
+import { DEEP_LINK_PROTOCOL, APPSTORE_URL, GOOGLEPLAY_URL, APK_DOWNLOAD_URL } from '../Constants/config';
 import { errors as APIErrors } from '../Utils/api';
 import { showNavigationBar } from '../Actions/navigationBarActions';
+import { navigationItemSelected } from '../Actions/navigationItemActions';
 import { openSideDrawer, closeSideDrawer } from '../Actions/sideDrawerActions';
 import { checkUserSignedIn, userSignOut, showUserQRCode, hideUserQRCode } from '../Actions/userActions';
+import { checkFCMSubscribeStatus } from '../Actions/FCMActions';
 import { fetchContactInfo } from '../Actions/settingActions';
+import { fetchBadges } from '../Actions/badgeActions';
+import { fetchCurrentVersionInfo, hideVersionOutdatedHint } from '../Actions/checkVersionActions';
 import { resetGeneralRequest } from '../Actions/generalRequestActions';
 
 class Main extends Component {
@@ -60,82 +56,8 @@ class Main extends Component {
 
     this.state = {
       overlayOpacityValue: new Animated.Value(0),
-      navigationItems: [
-        {
-          icon: {
-            name: 'md-list-box',
-          },
-          name: '貨單管理',
-          component: WayBills,
-          isSelected: true,
-        }, {
-          icon: {
-            component: IconFasterShipping,
-            size: 16,
-          },
-          name: '加急服務',
-          component: UrgentProcessing,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-calculator'
-          },
-          name: '試算運費',
-          component: Calculator,
-          isSelected: false,
-        }, {
-          icon: {
-            component: FontAwesomeIcon,
-            name: 'qrcode',
-            size: 20,
-          },
-          name: 'QRCode 取貨',
-          component: Component,
-          isSelected: false,
-        // }, {
-        //   icon: {
-        //     name: 'md-lock',
-        //   },
-        //   name: '取貨鎖設定',
-        //   component: PickUpPassword,
-        //   isSelected: false,
-        }, {
-          icon: {
-            name: 'md-flag',
-          },
-          name: '收貨地址',
-          component: DeliveryInfoList,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-home',
-          },
-          name: '門市資訊',
-          component: ServiceStores,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-help-circle',
-          },
-          name: '注意事項',
-          component: FAQ,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-chatboxes',
-          },
-          name: '聯絡我們',
-          component: ContactUs,
-          isSelected: false,
-        }, {
-          icon: {
-            name: 'md-settings',
-          },
-          name: '設定',
-          component: Settings,
-          isSelected: false,
-        },
-      ]
+      notification: { title: '', content: '' },
+      hasNotificationMessage: false,
     };
 
     this.handleOpenURL = this.handleOpenURL.bind(this);
@@ -155,6 +77,58 @@ class Main extends Component {
     }
 
     FCM.requestPermissions();
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+      this.props.checkFCMSubscribeStatus();
+    });
+    this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
+      if (Platform.OS === 'ios') {
+        const { aps: { alert } } = notification;
+        let title = null;
+        let content = null;
+
+        if (typeof alert === 'object') {
+          title = alert.title;
+          content = alert.body;
+        } else {
+          content = alert;
+        }
+
+        switch (notification._notificationType) {
+          //optional
+          //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
+          //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
+          //notif._notificationType is available for iOS platfrom
+          case NotificationType.Remote:
+            notification.finish(RemoteNotificationResult.NewData);
+            break;
+          case NotificationType.NotificationResponse:
+            notification.finish();
+
+            // Handle app start from notification.
+
+
+            break;
+          case NotificationType.WillPresent:
+            notification.finish(WillPresentNotificationResult.WillPresent);
+
+            // Handle notification when app active.
+            this.setState({ notification: { title, content } });
+            this.notificationMessage.flash();
+
+            break;
+          default:
+            break;
+        }
+      } else {
+        const { fcm: { action, title, body: content } } = notification;
+        if (!action) {
+          this.setState({ notification: { title, content } });
+          this.notificationMessage.flash();
+        }
+      }
+
+      this.props.fetchBadges();
+    });
 
     Linking.getInitialURL()
       .then((url) => {
@@ -170,6 +144,8 @@ class Main extends Component {
     });
 
     BackAndroid.addEventListener('hardwareBackPress', this.androidBackHandler);
+
+    this.props.fetchCurrentVersionInfo();
   }
 
   componentWillReceiveProps(props) {
@@ -177,13 +153,7 @@ class Main extends Component {
       if (props.currentUser) {
 
         // Reset menu status.
-        this.setState({
-          navigationItems: this.state.navigationItems.map((item, index) => {
-            item.isSelected = (index === 0);
-
-            return item;
-          })
-        });
+        this.props.navigationItemSelected(this.props.navigationItems[0]);
       } else {
         this.refs.navigator.push({
           index: 1,
@@ -214,11 +184,17 @@ class Main extends Component {
           });
       }
     }
+
+    if (this.props.badges !== props.badges) {
+      FCM.setBadgeNumber(props.badges.length);
+    }
   }
 
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL);
     BackAndroid.removeEventListener('hardwareBackPress', this.androidBackHandler);
+    this.refreshTokenListener.remove();
+    this.notificationListener.remove();
   }
 
   handleOpenURL({ url }) {
@@ -307,13 +283,7 @@ class Main extends Component {
     this.props.closeSideDrawer();
 
     if (itemData.component !== Component) {
-      this.setState({
-        navigationItems: this.state.navigationItems.map((item) => {
-          item.isSelected = (item === itemData);
-
-          return item;
-        })
-      });
+      this.props.navigationItemSelected(itemData);
 
       this.refs.navigator.replace({ index: 0, component: itemData.component });
     } else {
@@ -321,91 +291,164 @@ class Main extends Component {
     }
   }
 
+  updateButtonClicked(updateSourceUrl) {
+    Linking.openURL(updateSourceUrl);
+  }
+
   render() {
     const routes = [
       { index: 0, component: WayBills },
     ];
 
-    const { currentUser } = this.props;
+    const { currentUser, amount } = this.props;
     const user = currentUser || {};
 
     return (
-      <Drawer
-        open={this.props.sideDrawerOpened}
-        ref="sideDrawer"
-        type="overlay"
-        content={
-          <Menu
-            navigationItems={this.state.navigationItems}
-            onItemPress={this.navigationItemClicked.bind(this)}
-            userId={user.id}
-          />
-        }
-        tapToClose={true}
-        openDrawerOffset={56}
-        onClose={() => { this.props.closeSideDrawer(); }}
-        onOpenStart={this.fadeInOutOverlay.bind(this, 1)}
-        onCloseStart={this.fadeInOutOverlay.bind(this, 0)}
-      >
-        <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
-        <Navigator
-          ref="navigator"
-          style={styles.container}
-          initialRoute={routes[0]}
-          initialRouteStack={routes}
-          onWillFocus={this.props.resetGeneralRequest}
-          navigationBar={
-            (this.props.showNavigator &&
-              <Navigator.NavigationBar style={{ flex: 1 }} />
-            )
+      <View style={styles.container}>
+        <Drawer
+          open={!this.props.needUpdateModal.show && this.props.sideDrawerOpened}
+          ref="sideDrawer"
+          type="overlay"
+          content={
+            <Menu
+              navigationItems={this.props.navigationItems}
+              onItemPress={this.navigationItemClicked.bind(this)}
+              userId={user.id}
+            />
           }
+          tapToClose={true}
+          openDrawerOffset={56}
+          onClose={() => { this.props.closeSideDrawer(); }}
+          onOpenStart={this.fadeInOutOverlay.bind(this, 1)}
+          onCloseStart={this.fadeInOutOverlay.bind(this, 0)}
+        >
+          <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
+          <Navigator
+            ref="navigator"
+            style={styles.container}
+            initialRoute={routes[0]}
+            initialRouteStack={routes}
+            onWillFocus={this.props.resetGeneralRequest}
+            navigationBar={
+              (this.props.showNavigator &&
+                <Navigator.NavigationBar style={{ flex: 1 }} />
+              )
+            }
+          />
+          { this.props.sideDrawerOpened &&
+            <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
+          }
+        </Drawer>
+
+        <NotificationMessage
+          ref={(ref) => this.notificationMessage = ref}
+          delay={5}
+          vibratePattern={100}
+          title={this.state.notification.title}
+          content={this.state.notification.content}
         />
-        { this.props.sideDrawerOpened &&
-          <Animated.View style={{ ...styles.overlay, opacity: this.state.overlayOpacityValue }} />
-        }
 
         <Modal
           animationType="fade"
           transparent={true}
           visible={this.props.showUserQRCodeModal}
-          onRequestClose={() => { this.props.hideUserQRCode(); }}
+          onRequestClose={this.props.hideUserQRCode.bind(this)}
         >
           <TouchableOpacity
             style={MiumiuTheme.modalContainer}
-            onPress={() => { this.props.hideUserQRCode(); }}
+            onPress={this.props.hideUserQRCode.bind(this)}
           >
-            <TouchableWithoutFeedback>
+            <View style={MiumiuTheme.modalBody}>
+              <View style={styles.qrCode}>
+                <QRCode value={user.account} size={140} />
+              </View>
+              <Text style={styles.qrCodeInfo}>
+                {user.account}
+              </Text>
+              <Text style={styles.pickupInstruction}>
+                {`已到倉費用總額：$${amount}\n`}
+                已提貨單號工作人員會將單號由APP註銷
+              </Text>
+              <View
+                style={{
+                  alignSelf: 'stretch',
+                  borderRadius: MiumiuTheme.button.borderRadius,
+                  backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                }}
+              >
+                <TouchableOpacity
+                  style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
+                  onPress={this.props.hideUserQRCode.bind(this)}
+                >
+                  <Text style={MiumiuTheme.buttonText}>
+                    關閉
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+        
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.needUpdateModal.show}
+          onRequestClose={this.props.needUpdateModal.forceUpdate ? () => {} : this.props.hideVersionOutdatedHint.bind(this)}
+        >
+          <TouchableWithoutFeedback
+            onPress={this.props.needUpdateModal.forceUpdate ? () => {} : this.props.hideVersionOutdatedHint.bind(this)}
+          >
+            <View style={MiumiuTheme.modalContainer}>
               <View style={MiumiuTheme.modalBody}>
-                <View style={styles.qrCode}>
-                  <QRCode value={user.account} size={140} />
+                <View style={MiumiuTheme.modalTitle}>
+                  <Text style={MiumiuTheme.modalTitleText}>
+                    有新版本發佈囉
+                  </Text>
                 </View>
-                <Text style={styles.qrCodeInfo}>
-                  {user.account}
-                </Text>
-                <Text style={styles.pickupInstruction}>
-                  已提貨單號工作人員會將單號由APP註銷
-                </Text>
+                <View style={MiumiuTheme.modalContent}>
+                  <Text style={MiumiuTheme.modalContentText}>
+                    最新的版本是 {this.props.needUpdateModal.versionName} 版{"\n"}使用最新的版本獲取最棒的使用體驗吧！
+                  </Text>
+                </View>
                 <View
                   style={{
                     alignSelf: 'stretch',
-                     borderRadius: MiumiuTheme.button.borderRadius,
-                     backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                    borderRadius: MiumiuTheme.button.borderRadius,
+                    backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2)
                   }}
                 >
                   <TouchableOpacity
-                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
-                    onPress={() => { this.props.hideUserQRCode(); }}
+                    style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary }}
+                    onPress={this.updateButtonClicked.bind(this, Platform.OS === 'ios' ? APPSTORE_URL : GOOGLEPLAY_URL)}
                   >
                     <Text style={MiumiuTheme.buttonText}>
-                      關閉
+                      前往 {Platform.OS === 'ios' ? 'AppStore' : 'GooglePlay'}
                     </Text>
                   </TouchableOpacity>
                 </View>
+                { Platform.OS === 'android' &&
+                  <TouchableOpacity
+                    style={MiumiuTheme.button}
+                    onPress={this.updateButtonClicked.bind(this, APK_DOWNLOAD_URL)}
+                  >
+                    <Text style={{ ...MiumiuTheme.contentText, textDecorationLine: 'underline' }}>
+                      下載 apk
+                    </Text>
+                  </TouchableOpacity>
+                }
+                { !this.props.needUpdateModal.forceUpdate &&
+                  <TouchableOpacity
+                    style={{ ...MiumiuTheme.button }}
+                    onPress={this.props.hideVersionOutdatedHint.bind(this)}
+                  >
+                    <Text style={MiumiuTheme.contentText}>下次再說</Text>
+                  </TouchableOpacity>
+                }
               </View>
-            </TouchableWithoutFeedback>
-          </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
         </Modal>
-      </Drawer>
+      </View>
     );
   }
 }
@@ -430,12 +473,13 @@ const styles = {
     fontSize: 16,
     fontWeight: 'bold',
     color: MiumiuTheme.titleText.color,
-    marginBottom: 10
+    marginBottom: 10,
   },
   pickupInstruction: {
     fontSize: 12,
     color: MiumiuTheme.titleText.color,
-    marginBottom: 34
+    marginBottom: 34,
+    textAlign: 'center',
   },
 };
 
@@ -444,20 +488,29 @@ export default connect(
     return {
       ...ownProps,
       showNavigator: state.navigationBar.isShown,
+      navigationItems: state.navigationItems,
       sideDrawerOpened: state.sideDrawer.isOpened,
       currentUser: state.user.currentUser,
       showUserQRCodeModal: state.userQRCodeModal.show,
+      needUpdateModal: state.needUpdateModal,
+      badges: state.badges,
+      amount: state.wayBills.amount,
     };
   },
   {
     showNavigationBar,
+    navigationItemSelected,
     openSideDrawer,
     closeSideDrawer,
     checkUserSignedIn,
+    checkFCMSubscribeStatus,
     userSignOut,
     showUserQRCode,
     hideUserQRCode,
     fetchContactInfo,
+    fetchBadges,
+    fetchCurrentVersionInfo,
+    hideVersionOutdatedHint,
     resetGeneralRequest,
   },
 )(Main);

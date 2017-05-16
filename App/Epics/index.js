@@ -5,18 +5,25 @@
 import 'rxjs';
 import { combineEpics } from 'redux-observable';
 
+import * as badgeEpics from './badge';
+import * as versionEpics from './version';
 import * as userEpics from './user';
 import * as settingEpics from './setting';
 import * as wayBillEpics from './wayBill';
 import * as calculator from './calculator';
 import * as deliveryInfo from './deliveryInfo';
 import * as serviceStore from './serviceStore';
+import * as bulletin from './bulletin';
 import * as FAQ from './FAQ';
 import * as FCM from './FCM';
 
 // export default combineEpics;
 
 export default combineEpics(
+  badgeEpics.fetchBadges,
+  badgeEpics.removeBadge,
+  versionEpics.checkVersion,
+  versionEpics.onUpdateHintModalClose,
   settingEpics.fetchContactInfo,
   wayBillEpics.fetchWayBills,
   wayBillEpics.refreshingWayBills,
@@ -30,6 +37,10 @@ export default combineEpics(
   serviceStore.fetchServiceStores,
   serviceStore.refreshServiceStores,
   serviceStore.fetchServiceStore,
+  bulletin.fetchBulletinBoard,
+  bulletin.searchBulletinBoard,
+  bulletin.refreshBulletinBoard,
+  bulletin.fetchBulletin,
   FAQ.fetchFAQs,
   FAQ.refreshFAQs,
   FAQ.fetchFAQ,

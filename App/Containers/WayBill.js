@@ -26,7 +26,7 @@ import ServiceStore from './ServiceStore';
 import WebInspector from './WebInspector';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 import { WayBillState, stateInfoMapping } from '../Constants/states';
-import { showUserQRCode, deleteWayBill, refreshWayBills } from '../Actions';
+import { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills } from '../Actions';
 import { DATETIME_FORMAT, DOMAIN } from '../Constants/config';
 
 class WayBill extends NavigatorComponent {
@@ -50,6 +50,10 @@ class WayBill extends NavigatorComponent {
     this.state = {
       data: this.props.route.data,
     };
+  }
+
+  componentDidMount() {
+    this.props.removeBadge(`shipping:${this.props.route.data.shippingNo}`);
   }
 
   componentWillReceiveProps(props) {
@@ -158,12 +162,12 @@ class WayBill extends NavigatorComponent {
             </Text>
           </View>
           <TouchableOpacity onPress={this.openStockFeeReference.bind(this)}>
-            <Text style={{ ...MiumiuTheme.contextText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
+            <Text style={{ ...MiumiuTheme.contentText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
           </TouchableOpacity>
           { data.locationId && data.status === WayBillState.ARRIVED &&
             <TouchableOpacity onPress={this.checkServiceStoreButtonTapped.bind(this)}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ ...MiumiuTheme.contextText, textDecorationLine: 'none' }}>{data.locationName}</Text>
+                <Text style={{ ...MiumiuTheme.contentText, textDecorationLine: 'none' }}>{data.locationName}</Text>
                 <Icon name="md-information-circle" size={14} color="gray" style={{ marginLeft: 5, marginTop: 4 }} />
               </View>
             </TouchableOpacity>
@@ -247,5 +251,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { showUserQRCode, deleteWayBill, refreshWayBills }
+  { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills }
 )(WayBill);

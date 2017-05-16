@@ -27,7 +27,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 
 import WayBill from './WayBill';
-import AddWayBill from './AddWayBill';
+import UrgentProcessing from './UrgentProcessing';
 import Calculator from './Calculator';
 import { NavigatorComponent, WayBillStateView, IconFasterShipping } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
@@ -59,13 +59,13 @@ class WayBills extends NavigatorComponent {
             onPress={() => {
               navigator.push({
                 index: route.index + 1,
-                component: AddWayBill,
+                component: UrgentProcessing,
                 transition: Navigator.SceneConfigs.FloatFromBottom,
               });
             }}
           >
-            <View style={{ ...NavigatorStyle.itemButton, marginRight: 9, marginLeft: 7 }}>
-              <Icon name="md-add" size={24} color="white" />
+            <View style={{ ...NavigatorStyle.itemButton, marginRight: 14, marginLeft: 7 }}>
+              <IconFasterShipping size={20} color="white" />
             </View>
           </TouchableOpacity>
         }
@@ -105,8 +105,6 @@ class WayBills extends NavigatorComponent {
     super(props);
 
     this.state = {
-      showNavButton: true,
-      showTitle: true,
       navBarStretchValue: new Animated.Value(104),
       searchBarMarginBottom: new Animated.Value(9),
       cancelButtonMarginRight: new Animated.Value(-45),
@@ -252,6 +250,8 @@ class WayBills extends NavigatorComponent {
   }
 
   renderRowView(rowData, sectionID, rowID, highlightRow) {
+    const { badges } = this.props;
+
     return (
       <TouchableOpacity style={styles.row} onPress={() => {
           if (Platform.OS === 'ios') {
@@ -267,6 +267,9 @@ class WayBills extends NavigatorComponent {
         </Text>
         { rowData.isUrgent &&
         <IconFasterShipping style={{ marginRight: 14 }} />
+        }
+        { badges.includes(`shipping:${rowData.shippingNo}`) &&
+          <View style={styles.unreadMark} />
         }
         <Icon style={MiumiuTheme.listViewForwardIndicator} name="ios-arrow-forward" size={22} color="#D8D8D8" />
       </TouchableOpacity>
@@ -313,14 +316,14 @@ class WayBills extends NavigatorComponent {
             resizeMode="center"
             source={this.state.emptyStateImage}
           />
-          <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>目前沒有貨單，快開始使用喵喵代收吧！</Text>
+          <Text style={{ ...MiumiuTheme.sectionText, textAlign: 'center' }}>一刻也不想多等，想趕快收到貨嗎？</Text>
           <TouchableOpacity
             style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, width: 300 }}
             onPress={() => {
-              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+              this.pushToNextComponent(UrgentProcessing, null, Navigator.SceneConfigs.FloatFromBottom)
             }}
           >
-            <Text style={MiumiuTheme.buttonText}>新增貨單</Text>
+            <Text style={MiumiuTheme.buttonText}>申請加急</Text>
           </TouchableOpacity>
         </View>
       );
@@ -328,7 +331,7 @@ class WayBills extends NavigatorComponent {
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, amount } = this.props;
     const user = currentUser || {};
     return (
       <View style={MiumiuTheme.container}>
@@ -420,7 +423,7 @@ class WayBills extends NavigatorComponent {
                 marginLeft: 15,
               }}
             >
-              嗨！{user.name ? `${user.name}，` : ''}你可以先
+              {(amount <= 0) ? `嗨！${user.name ? `${user.name}，` : ''}你可以先` : `已到倉費用總額：$${amount}`}
             </Text>
             <TouchableOpacity
               style={{
@@ -474,10 +477,10 @@ class WayBills extends NavigatorComponent {
             shadowColor="black"
             fab={true}
             onPress={() => {
-              this.pushToNextComponent(AddWayBill, null, Navigator.SceneConfigs.FloatFromBottom)
+              this.pushToNextComponent(UrgentProcessing, null, Navigator.SceneConfigs.FloatFromBottom)
             }}
           >
-            <Icon name="md-add" size={24} color="white" />
+            <IconFasterShipping size={20} color="white" />
           </MKButton>
         }
       </View>
@@ -535,6 +538,14 @@ const styles = {
     shadowColor: 'black',
     elevation: 4,
   },
+  unreadMark: {
+    width: 10,
+    height: 10,
+    marginLeft: -6,
+    marginRight: 10,
+    borderRadius: 5,
+    backgroundColor: '#4E9ACF',
+  },
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -544,11 +555,13 @@ const mapStateToProps = (state, ownProps) => {
     ...ownProps,
     currentUser: state.user.currentUser,
     wayBills: wayBills.data,
+    amount: wayBills.amount,
     currentPage: wayBills.currentPage,
     isRefreshing: wayBills.isRefreshing,
     isFetching: wayBills.isFetching,
     error: wayBills.error,
     isNavigatorShown: state.navigationBar.isShown,
+    badges: state.badges,
   };
 };
 

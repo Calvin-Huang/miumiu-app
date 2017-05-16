@@ -21,6 +21,7 @@ const initialState = {
   isRefreshing: false,
   isFetching: false,
   error: null,
+  amount: 0,
 };
 
 export default function wayBills(state = initialState, action) {
@@ -41,14 +42,25 @@ export default function wayBills(state = initialState, action) {
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 
+      const allData = [ ...state.data, ...humps.camelizeKeys(data.filter(filterCondition)) ];
+      const amount = allData
+        .reduce((accumulator, currentValue) => {
+          if (currentValue.status === WayBillState.ARRIVED) {
+            return accumulator + currentValue.fee + currentValue.stockFee;
+          }
+
+          return accumulator;
+        }, 0);
+
       return {
-        data: [ ...state.data, ...humps.camelizeKeys(data.filter(filterCondition)) ],
+        data: allData,
         currentPage,
         isRefreshing: false,
 
         // TRUE when need to fetch next page for infinity scroll.
         isFetching: hasNextPage,
         error: null,
+        amount,
       };
     }
     case RECEIVED_WAYBILLS_FAILED:
@@ -71,14 +83,25 @@ export default function wayBills(state = initialState, action) {
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 
+      const allData = humps.camelizeKeys(data.filter(filterCondition));
+      const amount = allData
+        .reduce((accumulator, currentValue) => {
+          if (currentValue.status === WayBillState.ARRIVED) {
+            return accumulator + currentValue.fee + currentValue.stockFee;
+          }
+
+          return accumulator;
+        }, 0);
+
       return {
-        data: humps.camelizeKeys(data.filter(filterCondition)),
+        data: allData,
         currentPage,
         isRefreshing: false,
 
         // TRUE when need to fetch next page for infinity scroll.
         isFetching: hasNextPage,
         error: null,
+        amount,
       };
     }
     case REFRESH_WAYBILLS_FAILED:

@@ -105,8 +105,8 @@ android {
         applicationId "org.capslock.miumiu"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 120
-        versionName "1.2.0"
+        versionCode 121
+        versionName "1.2.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

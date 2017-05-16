@@ -300,7 +300,7 @@ class Main extends Component {
       { index: 0, component: WayBills },
     ];
 
-    const { currentUser } = this.props;
+    const { currentUser, amount } = this.props;
     const user = currentUser || {};
 
     return (
@@ -366,6 +366,7 @@ class Main extends Component {
                 {user.account}
               </Text>
               <Text style={styles.pickupInstruction}>
+                {`已到倉費用總額：$${amount}\n`}
                 已提貨單號工作人員會將單號由APP註銷
               </Text>
               <View
@@ -472,12 +473,13 @@ const styles = {
     fontSize: 16,
     fontWeight: 'bold',
     color: MiumiuTheme.titleText.color,
-    marginBottom: 10
+    marginBottom: 10,
   },
   pickupInstruction: {
     fontSize: 12,
     color: MiumiuTheme.titleText.color,
-    marginBottom: 34
+    marginBottom: 34,
+    textAlign: 'center',
   },
 };
 
@@ -492,6 +494,7 @@ export default connect(
       showUserQRCodeModal: state.userQRCodeModal.show,
       needUpdateModal: state.needUpdateModal,
       badges: state.badges,
+      amount: state.wayBills.amount,
     };
   },
   {

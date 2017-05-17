@@ -14,7 +14,7 @@ import DeliveryInfoList from '../Containers/DeliveryInfoList';
 import ServiceStores from '../Containers/ServiceStores';
 import PickUpPassword from '../Containers/PickUpPassword';
 import BulletinBoard from '../Containers/BulletinBoard';
-import FAQ from './FAQ';
+import FAQ from '../Containers/FAQ';
 import ContactUs from '../Containers/ContactUs';
 import Settings from '../Containers/Settings';
 

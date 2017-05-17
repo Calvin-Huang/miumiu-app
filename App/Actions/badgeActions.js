@@ -7,19 +7,19 @@ import * as actionTypes from '../Constants/actionTypes';
 export function fetchBadges() {
   return {
     type: actionTypes.FETCH_BADGES,
-  }
+  };
 }
 
 export function removeBadge(badge) {
   return {
     type: actionTypes.REMOVE_BADGE,
     badge,
-  }
+  };
 }
 
 export function updateBadges(badges) {
   return {
     type: actionTypes.UPDATE_BADGES,
     badges,
-  }
+  };
 }

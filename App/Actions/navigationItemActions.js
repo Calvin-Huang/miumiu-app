@@ -8,5 +8,7 @@ export function navigationItemSelected(item) {
   return {
     type: actionTypes.NAVIGATION_ITEM_SELECTED,
     selectedItem: item,
-  }
+  };
 }
+
+export default navigationItemSelected;

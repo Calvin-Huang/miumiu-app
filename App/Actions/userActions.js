@@ -13,8 +13,8 @@ export function checkUserSignedIn() {
 export function userSignIn(account, password) {
   return {
     type: ActionTypes.USER_SIGN_IN,
-    account: account,
-    password: password,
+    account,
+    password,
   };
 }
 
@@ -134,7 +134,7 @@ export function userInfoUpdated(user) {
   return {
     type: ActionTypes.USER_INFO_UPDATED,
     user,
-  }
+  };
 }
 
 export function userSignOut() {

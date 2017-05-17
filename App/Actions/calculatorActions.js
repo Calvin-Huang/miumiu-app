@@ -18,5 +18,5 @@ export function calculateFeeDone(response) {
   return {
     type: ActionTypes.CALCULATE_FEE_DONE,
     response,
-  }
+  };
 }

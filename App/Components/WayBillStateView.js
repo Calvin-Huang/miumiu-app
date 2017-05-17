@@ -12,29 +12,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { WayBillState, stateInfoMapping } from '../Constants/states';
 
-export default class WayBillStateView extends Component {
-  static propTypes = {
-    state: PropTypes.number.isRequired,
-  }
-
-  static defaultProps = {
-    state: WayBillState.CONFIRMING,
-  }
-
-  render() {
-    const { icon, title, iconColor } = stateInfoMapping[this.props.state] || {};
-
-    return (
-      <View style={{...this.props.style, ...styles.container}}>
-        <Icon name={icon} size={24} color={iconColor} />
-        <Text style={styles.text}>
-          {title}
-        </Text>
-      </View>
-    )
-  }
-}
-
 const styles = {
   container: {
     flex: 0,
@@ -49,3 +26,28 @@ const styles = {
     fontWeight: 'bold',
   },
 };
+
+export default class WayBillStateView extends Component {
+  static propTypes = {
+    style: PropTypes.shape(),
+    state: PropTypes.number.isRequired,
+  }
+
+  static defaultProps = {
+    style: null,
+    state: WayBillState.CONFIRMING,
+  }
+
+  render() {
+    const { icon, title, iconColor } = stateInfoMapping[this.props.state] || {};
+
+    return (
+      <View style={{ ...this.props.style, ...styles.container }}>
+        <Icon name={icon} size={24} color={iconColor} />
+        <Text style={styles.text}>
+          {title}
+        </Text>
+      </View>
+    );
+  }
+}

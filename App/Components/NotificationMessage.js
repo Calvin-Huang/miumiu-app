@@ -28,10 +28,13 @@ export default class NotificationMessage extends Component {
   };
 
   static defaultProps = {
+    title: '',
     visible: false,
     vibratePattern: 0,
     animationDuration: 0.2,
     delay: 2,
+    onShown: null,
+    onHidden: null,
   };
 
   constructor(props) {
@@ -47,7 +50,8 @@ export default class NotificationMessage extends Component {
     this.panResponder = PanResponder.create({
       onMoveShouldSetResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (event, gestureState) => {
+      onPanResponderGrant: () => {
+        /* eslint no-underscore-dangle: [2, { "allow": ["_value"] }] */
         const { pan } = this.state;
         pan.setOffset({ x: pan.x._value, y: pan.y._value });
         pan.setValue({ x: 0, y: 0 });
@@ -57,10 +61,12 @@ export default class NotificationMessage extends Component {
       },
       onPanResponderMove: (event, gestureState) => {
         if (gestureState.dy < 0) {
-          return Animated.event([ null, {
+          return Animated.event([null, {
             dy: this.state.pan.y,
           }])(event, gestureState);
         }
+
+        return null;
       },
       onPanResponderRelease: () => {
         const { pan } = this.state;
@@ -68,15 +74,15 @@ export default class NotificationMessage extends Component {
 
         if (pan.y._value < -(this.height / 3)) {
           this.hide();
+        } else if (this.timer) {
+          this.flash();
         } else {
-          if (this.timer) {
-            this.flash();
-          } else {
-            this.show();
-          }
+          this.show();
         }
       },
-    })
+    });
+
+    this.onLayout = this.onLayout.bind(this);
   }
 
   componentWillMount() {
@@ -86,7 +92,6 @@ export default class NotificationMessage extends Component {
 
       // Hide component to definitely out side of screen.
       pan.setValue({ x: 0, y: -DeviceHeight });
-
     } else {
       this.needGetHeight = false;
     }
@@ -95,6 +100,22 @@ export default class NotificationMessage extends Component {
   componentWillReceiveProps(props) {
     if (props.visible) {
       this.flash();
+    }
+  }
+
+  onLayout({ nativeEvent: { layout: { height } } }) {
+    this.height = height;
+
+    if (this.state.visible && this.needGetHeight) {
+      const { pan } = this.state;
+
+      // Move component to ready to show position.
+      pan.setValue({ x: 0, y: -height });
+
+      this.needGetHeight = false;
+
+      // Show component because first time show without height failed.
+      this.show();
     }
   }
 
@@ -117,7 +138,10 @@ export default class NotificationMessage extends Component {
   hide(onHidden = this.props.onHidden) {
     const { animationDuration } = this.props;
     Animated
-      .timing(this.state.pan, { toValue: { x: 0, y: -this.height }, duration: animationDuration * 1000 })
+      .timing(
+        this.state.pan,
+        { toValue: { x: 0, y: -this.height }, duration: animationDuration * 1000 },
+      )
       .start(() => {
         this.setState({ visible: false });
         if (onHidden) {
@@ -140,22 +164,6 @@ export default class NotificationMessage extends Component {
     }
   }
 
-  onLayout({ nativeEvent: { layout: { x, y, width, height } } }) {
-    this.height = height;
-
-    if (this.state.visible && this.needGetHeight) {
-      const { pan } = this.state;
-
-      // Move component to ready to show position.
-      pan.setValue({ x: 0, y: -height });
-
-      this.needGetHeight = false;
-
-      // Show component because first time show without height failed.
-      this.show();
-    }
-  }
-
   render() {
     const { title, content } = this.props;
     const { pan, visible } = this.state;
@@ -175,7 +183,7 @@ export default class NotificationMessage extends Component {
             backgroundColor: 'white',
             opacity: 0.9,
           }}
-          onLayout={this.onLayout.bind(this)}
+          onLayout={this.onLayout}
         >
           { title &&
             <Text style={MiumiuTheme.titleText}>
@@ -194,11 +202,11 @@ export default class NotificationMessage extends Component {
               marginBottom: 5,
               backgroundColor: 'gray',
               alignSelf: 'center',
-            }} />
+            }}
+          />
         </Animated.View>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 }

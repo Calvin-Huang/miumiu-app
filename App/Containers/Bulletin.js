@@ -2,7 +2,7 @@
  * Created by calvin.huang on 08/05/2017.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -19,20 +19,22 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Component
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { fetchBulletin } from '../Actions/bulletinActions';
 
-class Bulletin extends NavigatorComponent {
-  constructor(props) {
-    super(props);
-  }
+const styles = {
+  body: {
+    flex: 1,
+    marginTop: 27,
+    paddingVertical: 13,
+    paddingHorizontal: 17,
+    backgroundColor: 'white',
+  },
+};
 
+class Bulletin extends NavigatorComponent {
   componentWillMount() {
     const { bulletin } = this.props;
     if (!bulletin || !bulletin.content) {
       this.props.fetchBulletin(this.props.route.data.id);
     }
-  }
-
-  onLinkPress(url) {
-    Linking.openURL(url);
   }
 
   render() {
@@ -66,7 +68,7 @@ class Bulletin extends NavigatorComponent {
             { !isFetching && !error &&
             <HtmlRender
               value={content}
-              onLinkPress={this.onLinkPress.bind(this)}
+              onLinkPress={url => Linking.openURL(url)}
             />
             }
           </View>
@@ -76,20 +78,10 @@ class Bulletin extends NavigatorComponent {
   }
 }
 
-const styles = {
-  body: {
-    flex: 1,
-    marginTop: 27,
-    paddingVertical: 13,
-    paddingHorizontal: 17,
-    backgroundColor: 'white',
-  },
-}
-
 const mapStateToProps = (state, ownProps) => {
   const { bulletin, bulletinBoard } = state;
   const { data } = ownProps.route;
-  const bulletinInfo = bulletinBoard.data.find((object) => object.id === data.id);
+  const bulletinInfo = bulletinBoard.data.find(object => object.id === data.id);
 
   return {
     ...ownProps,
@@ -101,5 +93,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { fetchBulletin }
+  { fetchBulletin },
 )(Bulletin);

@@ -95,7 +95,6 @@ class ConfirmRegistrationCode extends NavigatorComponent {
 
     this.resendRegistrationConfirmCode();
 
-    this.codeFieldTextChanged = this.codeFieldTextChanged.bind(this);
     this.resendRegistrationConfirmCode = this.resendRegistrationConfirmCode.bind(this);
     this.submitConfirmCode = this.submitConfirmCode.bind(this);
   }

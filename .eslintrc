@@ -5,7 +5,8 @@
   "extends": "airbnb",
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/prefer-stateless-function": [0, { "ignorePureComponents": true }]
+    "react/prefer-stateless-function": [0, { "ignorePureComponents": true }],
+    "max-len": ["error", 120]
   },
 
   // Fix react-native-linear-gradient import not found module.

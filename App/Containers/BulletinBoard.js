@@ -2,18 +2,16 @@
  * Created by calvin.huang on 08/05/2017.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   ListView,
   TextInput,
-  Image,
   ActivityIndicator,
   RefreshControl,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Navigator,
   Animated,
   Easing,
   Platform,
@@ -24,7 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 import moment from 'moment';
-import zh_HK from 'moment/locale/zh-hk';
+import zh_TW from 'moment/locale/zh-tw';
 
 import Bulletin from './Bulletin';
 import { NavigatorComponent } from '../Components';
@@ -38,15 +36,30 @@ import {
   searchBulletinBoard,
   refreshBulletinBoard,
 } from '../Actions';
+import store from '../storeInstance';
+
+const styles = {
+  listViewRow: {
+    ...MiumiuTheme.listViewRow,
+    paddingTop: 16,
+    paddingBottom: 10,
+    paddingLeft: 17,
+  },
+  timeTag: {
+    ...MiumiuTheme.contentText,
+    marginTop: 2,
+    fontSize: 12,
+  },
+};
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-moment.locale('zh-hk', zh_HK);
+moment.locale('zh-hk', zh_TW);
 
 class BulletinBoard extends NavigatorComponent {
-  static navLeftButton(route, navigator, index, navState) {
+  static navLeftButton() {
     return (
-      <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()) }}>
+      <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
         <View style={NavigatorStyle.itemButton}>
           <Icon name="md-menu" size={24} color="white" />
         </View>
@@ -54,7 +67,7 @@ class BulletinBoard extends NavigatorComponent {
     );
   }
 
-  static navRightButton(route, navigator, index, navState) {
+  static navRightButton() {
     if (Platform.OS === 'android') {
       return (
         <TouchableOpacity onPress={() => { store.dispatch(hideNavigationBar()); }}>
@@ -64,6 +77,8 @@ class BulletinBoard extends NavigatorComponent {
         </TouchableOpacity>
       );
     }
+
+    return null;
   }
 
   constructor(props) {
@@ -75,7 +90,15 @@ class BulletinBoard extends NavigatorComponent {
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
       bulletinBoard: dataSource.cloneWithRows(props.bulletinBoard),
-    }
+    };
+
+    this.retryFetching = this.retryFetching.bind(this);
+    this.showSearchBar = this.showSearchBar.bind(this);
+    this.hideSearchBar = this.hideSearchBar.bind(this);
+    this.searchBarTextChanged = this.searchBarTextChanged.bind(this);
+    this.renderRowView = this.renderRowView.bind(this);
+    this.renderFooter = this.renderFooter.bind(this);
+    this.onPaginating = this.onPaginating.bind(this);
   }
 
   componentDidMount() {
@@ -109,7 +132,7 @@ class BulletinBoard extends NavigatorComponent {
           toValue: 64,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.searchBarMarginBottom,
@@ -117,7 +140,7 @@ class BulletinBoard extends NavigatorComponent {
           toValue: 49,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.cancelButtonMarginRight,
@@ -125,8 +148,8 @@ class BulletinBoard extends NavigatorComponent {
           toValue: 10,
           duration: 250,
           easing: Easing.linear,
-        }
-      )
+        },
+      ),
     ]).start();
 
     this.setState({ isSearching: true });
@@ -136,7 +159,7 @@ class BulletinBoard extends NavigatorComponent {
     dismissKeyboard();
 
     this.props.showNavigationBar();
-    this.refs.searchBar.setNativeProps({ text: '' });
+    this.searchBar.setNativeProps({ text: '' });
 
     Animated.parallel([
       Animated.timing(
@@ -145,7 +168,7 @@ class BulletinBoard extends NavigatorComponent {
           toValue: 104,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.searchBarMarginBottom,
@@ -153,7 +176,7 @@ class BulletinBoard extends NavigatorComponent {
           toValue: 9,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.cancelButtonMarginRight,
@@ -161,8 +184,8 @@ class BulletinBoard extends NavigatorComponent {
           toValue: -45,
           duration: 250,
           easing: Easing.linear,
-        }
-      )
+        },
+      ),
     ]).start();
 
     this.setState({ isSearching: false });
@@ -189,16 +212,18 @@ class BulletinBoard extends NavigatorComponent {
     }
   }
 
-  renderRowView(rowData, sectionID, rowID, highlightRow) {
+  renderRowView(rowData) {
     return (
-      <TouchableOpacity style={styles.listViewRow} onPress={() => {
-        if (Platform.OS === 'ios') {
-          this.hideSearchBar();
-        } else {
-          this.props.showNavigationBar();
-        }
-        this.pushToNextComponent(Bulletin, rowData);
-      }}>
+      <TouchableOpacity
+        style={styles.listViewRow} onPress={() => {
+          if (Platform.OS === 'ios') {
+            this.hideSearchBar();
+          } else {
+            this.props.showNavigationBar();
+          }
+          this.pushToNextComponent(Bulletin, rowData);
+        }}
+      >
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <Text style={MiumiuTheme.listViewText}>
             { rowData.title }
@@ -217,27 +242,27 @@ class BulletinBoard extends NavigatorComponent {
       return (
         <TouchableOpacity
           style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary, margin: 10 }}
-          onPress={this.retryFetching.bind(this)}
+          onPress={this.retryFetching}
         >
           <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
         </TouchableOpacity>
       );
-
     } else if (this.props.isFetching) {
       return (
         <View style={MiumiuTheme.paginationView}>
           <ActivityIndicator />
         </View>
       );
-
     }
+
+    return null;
   }
 
   render() {
     return (
       <View style={MiumiuTheme.container}>
         <Animated.View
-          removeClippedSubviews={true}
+          removeClippedSubviews
           style={{
             height: (Platform.OS === 'android' ? 56 : this.state.navBarStretchValue),
             overflow: 'hidden',
@@ -257,7 +282,7 @@ class BulletinBoard extends NavigatorComponent {
             </View>
             }
             { Platform.OS === 'ios' &&
-            <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
+            <TouchableWithoutFeedback onPress={() => { this.searchBar.focus(); }}>
               <Animated.View
                 style={{
                   ...MiumiuTheme.searchBar,
@@ -266,12 +291,12 @@ class BulletinBoard extends NavigatorComponent {
               >
                 <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
                 <TextInput
-                  ref="searchBar"
+                  ref={(ref) => { this.searchBar = ref; }}
                   style={{ ...MiumiuTheme.buttonText, flex: 1 }}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="查詢公告事項"
-                  onFocus={this.showSearchBar.bind(this)}
-                  onChangeText={this.searchBarTextChanged.bind(this)}
+                  onFocus={this.showSearchBar}
+                  onChangeText={this.searchBarTextChanged}
                 />
               </Animated.View>
             </TouchableWithoutFeedback>
@@ -282,19 +307,19 @@ class BulletinBoard extends NavigatorComponent {
                 <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
               </TouchableOpacity>
               <TextInput
-                ref="searchBar"
+                ref={(ref) => { this.searchBar = ref; }}
                 style={MiumiuTheme.androidSearchInput}
                 placeholderTextColor="rgba(255, 255, 255, 0.65)"
                 placeholder="查詢公告事項"
-                onChangeText={this.searchBarTextChanged.bind(this)}
+                onChangeText={this.searchBarTextChanged}
               />
             </View>
             }
             <TouchableOpacity
               style={{
-                  alignSelf: 'flex-end',
-                }}
-              onPress={this.hideSearchBar.bind(this)}
+                alignSelf: 'flex-end',
+              }}
+              onPress={this.hideSearchBar}
             >
               <Animated.Text
                 style={{
@@ -311,16 +336,16 @@ class BulletinBoard extends NavigatorComponent {
 
         <ListView
           dataSource={this.state.bulletinBoard}
-          renderRow={this.renderRowView.bind(this)}
-          renderFooter={this.renderFooter.bind(this)}
-          onEndReached={this.onPaginating.bind(this)}
+          renderRow={this.renderRowView}
+          renderFooter={this.renderFooter}
+          onEndReached={this.onPaginating}
           onEndReachedThreshold={60}
-          enableEmptySections={true}
+          enableEmptySections
           onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={this.props.refreshBulletinBoard.bind(this)}
+              onRefresh={() => this.props.refreshBulletinBoard()}
             />
           }
         />
@@ -328,20 +353,6 @@ class BulletinBoard extends NavigatorComponent {
     );
   }
 }
-
-const styles = {
-  listViewRow: {
-    ...MiumiuTheme.listViewRow,
-    paddingTop: 16,
-    paddingBottom: 10,
-    paddingLeft: 17,
-  },
-  timeTag: {
-    ...MiumiuTheme.contentText,
-    marginTop: 2,
-    fontSize: 12,
-  },
-};
 
 const mapStateToProps = (state, ownProps) => {
   const { bulletinBoard } = state;
@@ -360,5 +371,12 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { fetchBadges, showNavigationBar, hideNavigationBar, fetchBulletinBoard, searchBulletinBoard, refreshBulletinBoard },
+  {
+    fetchBadges,
+    showNavigationBar,
+    hideNavigationBar,
+    fetchBulletinBoard,
+    searchBulletinBoard,
+    refreshBulletinBoard,
+  },
 )(BulletinBoard);

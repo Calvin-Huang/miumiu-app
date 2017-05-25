@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import dismissKeyboard from 'dismissKeyboard';
 import moment from 'moment';
-import zh_TW from 'moment/locale/zh-tw';
+import zhHK from 'moment/locale/zh-hk';
 
 import Bulletin from './Bulletin';
 import { NavigatorComponent } from '../Components';
@@ -54,7 +54,7 @@ const styles = {
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-moment.locale('zh-hk', zh_TW);
+moment.locale('zh-hk', zhHK);
 
 class BulletinBoard extends NavigatorComponent {
   static navLeftButton() {

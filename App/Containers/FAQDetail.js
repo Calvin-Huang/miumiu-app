@@ -2,7 +2,7 @@
  * Created by Calvin Huang on 3/9/17.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -19,20 +19,22 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Component
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { fetchFAQ } from '../Actions/FAQActions';
 
-class FAQDetail extends NavigatorComponent {
-  constructor(props) {
-    super(props);
-  }
+const styles = {
+  body: {
+    flex: 1,
+    marginTop: 27,
+    paddingVertical: 13,
+    paddingHorizontal: 17,
+    backgroundColor: 'white',
+  },
+};
 
+class FAQDetail extends NavigatorComponent {
   componentWillMount() {
     const { FAQ } = this.props;
     if (!FAQ || !FAQ.content) {
       this.props.fetchFAQ(this.props.route.data.id);
     }
-  }
-
-  onLinkPress(url) {
-    Linking.openURL(url);
   }
 
   render() {
@@ -66,7 +68,7 @@ class FAQDetail extends NavigatorComponent {
             { !isFetching && !error &&
               <HtmlRender
                 value={content}
-                onLinkPress={this.onLinkPress.bind(this)}
+                onLinkPress={url => Linking.openURL(url)}
               />
             }
           </View>
@@ -76,20 +78,10 @@ class FAQDetail extends NavigatorComponent {
   }
 }
 
-const styles = {
-  body: {
-    flex: 1,
-    marginTop: 27,
-    paddingVertical: 13,
-    paddingHorizontal: 17,
-    backgroundColor: 'white',
-  },
-}
-
 const mapStateToProps = (state, ownProps) => {
   const { FAQ, FAQs } = state;
   const { data } = ownProps.route;
-  const faq = FAQs.data.find((object) => object.id === data.id);
+  const faq = FAQs.data.find(object => object.id === data.id);
 
   return {
     ...ownProps,
@@ -101,5 +93,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { fetchFAQ }
+  { fetchFAQ },
 )(FAQDetail);

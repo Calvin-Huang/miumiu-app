@@ -2,14 +2,13 @@
  * Created by Calvin Huang on 3/4/17.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   ActivityIndicator,
-  Alert,
   Navigator,
 } from 'react-native';
 
@@ -26,6 +25,51 @@ import { generalRequestFailed, userRegister } from '../Actions';
 import WebInspector from './WebInspector';
 import { DOMAIN } from '../Constants/config';
 
+const styles = {
+  container: {
+    flex: 1,
+  },
+  body: {
+    marginTop: 74,
+  },
+  inlineFieldGroup: {
+    flexDirection: 'row',
+    paddingTop: 4.5,
+    paddingBottom: 0,
+  },
+  registerHintText: {
+    fontSize: 14,
+    color: 'white',
+    marginBottom: 14,
+    textAlign: 'center',
+  },
+  serviceTermGroup: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  serviceTermCheckboxText: {
+    fontSize: 14,
+    color: 'white',
+  },
+  serviceTermButtonText: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: 'white',
+    textDecorationLine: 'underline',
+  },
+  roundButtonBackground: {
+    borderRadius: 22,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+};
+
 class Register extends NavigatorComponent {
   constructor(props) {
     super(props);
@@ -35,7 +79,10 @@ class Register extends NavigatorComponent {
       name: null,
       password: null,
       passwordConfirmation: null,
-    }
+    };
+
+    this.openServiceTerm = this.openServiceTerm.bind(this);
+    this.submitRegistration = this.submitRegistration.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -86,55 +133,55 @@ class Register extends NavigatorComponent {
               <MKTextField
                 autoCapitalize="none"
                 keyboardType="email-address"
-                floatingLabelEnabled={true}
+                floatingLabelEnabled
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
                 highlightColor="#D8D8D8"
                 placeholder="手機號碼"
                 placeholderTextColor="#9E9E9E"
                 style={styles.textField}
-                onChangeText={(account) => { this.setState({ account }); }}
+                onChangeText={(text) => { this.setState({ account: text }); }}
                 value={account}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
-                floatingLabelEnabled={true}
+                floatingLabelEnabled
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
                 highlightColor="#D8D8D8"
                 placeholder="名稱"
                 placeholderTextColor="#9E9E9E"
                 style={styles.textField}
-                onChangeText={(name) => { this.setState({ name }); }}
+                onChangeText={(text) => { this.setState({ name: text }); }}
                 value={name}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
-                password={true}
-                floatingLabelEnabled={true}
+                password
+                floatingLabelEnabled
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
                 highlightColor="#D8D8D8"
                 placeholder="密碼"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
-                onChangeText={(password) => { this.setState({ password }); }}
+                onChangeText={(text) => { this.setState({ password: text }); }}
                 value={password}
               />
             </View>
             <View style={MiumiuTheme.textFieldGroup}>
               <MKTextField
-                password={true}
-                floatingLabelEnabled={true}
+                password
+                floatingLabelEnabled
                 textInputStyle={{ height: 31 }}
                 underlineSize={1}
                 highlightColor="#D8D8D8"
                 placeholder="再次確認密碼"
                 placeholderTextColor="#9E9E9E"
                 style={{ backgroundColor: 'white' }}
-                onChangeText={(passwordConfirmation) => { this.setState({ passwordConfirmation }); }}
+                onChangeText={(text) => { this.setState({ passwordConfirmation: text }); }}
                 value={passwordConfirmation}
               />
             </View>
@@ -159,14 +206,14 @@ class Register extends NavigatorComponent {
               >
                 <Text style={styles.serviceTermCheckboxText}>註冊喵喵代收同時您已經同意了我們的</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.openServiceTerm.bind(this)}>
+              <TouchableOpacity onPress={this.openServiceTerm}>
                 <Text style={styles.serviceTermButtonText}>服務條款</Text>
               </TouchableOpacity>
             </View>
           </View>
           <TouchableOpacity
             style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.roundButton }}
-            onPress={this.submitRegistration.bind(this)}
+            onPress={this.submitRegistration}
           >
             <LinearGradient
               start={{ x: 0.485544682, y: 1.44908902 }} end={{ x: 0.485544682, y: -0.811377672 }}
@@ -187,51 +234,6 @@ class Register extends NavigatorComponent {
   }
 }
 
-const styles = {
-  container: {
-    flex: 1,
-  },
-  body: {
-    marginTop: 74,
-  },
-  inlineFieldGroup: {
-    flexDirection: 'row',
-    paddingTop: 4.5,
-    paddingBottom: 0,
-  },
-  registerHintText: {
-    fontSize: 14,
-    color: 'white',
-    marginBottom: 14,
-    textAlign: 'center',
-  },
-  serviceTermGroup: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
-  serviceTermCheckboxText: {
-    fontSize: 14,
-    color: 'white',
-  },
-  serviceTermButtonText: {
-    marginLeft: 10,
-    fontSize: 14,
-    color: 'white',
-    textDecorationLine: 'underline',
-  },
-  roundButtonBackground: {
-    borderRadius: 22,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-}
-
 const mapStateToProps = (state, ownProps) => {
   const { register, generalRequest } = state;
   return {
@@ -240,9 +242,9 @@ const mapStateToProps = (state, ownProps) => {
     isRequesting: generalRequest.isRequesting,
     error: generalRequest.error,
   };
-}
+};
 
 export default connect(
   mapStateToProps,
-  { generalRequestFailed, userRegister }
+  { generalRequestFailed, userRegister },
 )(Register);

@@ -99,6 +99,7 @@ class BulletinBoard extends NavigatorComponent {
     this.renderRowView = this.renderRowView.bind(this);
     this.renderFooter = this.renderFooter.bind(this);
     this.onPaginating = this.onPaginating.bind(this);
+    this.refreshBulletinBoard = props.refreshBulletinBoard.bind(this);
   }
 
   componentDidMount() {
@@ -345,7 +346,7 @@ class BulletinBoard extends NavigatorComponent {
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={() => this.props.refreshBulletinBoard()}
+              onRefresh={this.refreshBulletinBoard}
             />
           }
         />

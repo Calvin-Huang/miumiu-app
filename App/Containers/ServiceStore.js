@@ -2,7 +2,7 @@
  * Created by calvin.huang on 26/03/2017.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Dimensions,
   View,
@@ -11,7 +11,6 @@ import {
   Text,
   Modal,
   ActivityIndicator,
-  KeyboardAvoidingView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Clipboard,
@@ -30,22 +29,48 @@ import { NavigatorComponent, MiumiuThemeNavigatorBackground, HUD, PhotoView } fr
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
 import { fetchServiceStore } from '../Actions';
 
+const styles = {
+  body: {
+    flex: 1,
+  },
+  inlineFieldGroup: {
+    flexDirection: 'row',
+  },
+  textInputTouchReceiver: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  photoViewContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  dismissButton: {
+    position: 'absolute',
+    top: 29,
+    right: 21,
+  },
+};
+
 class ServiceStore extends NavigatorComponent {
-  static navRightButton(route, navigator, index, navState) {
+  static navRightButton(route, navigator) {
     if (route.index > 1) {
       return (
-        <TouchableOpacity onPress={() => {
-          dismissKeyboard();
-          navigator.pop();
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            dismissKeyboard();
+            navigator.pop();
+          }}
+        >
           <Text style={NavigatorStyle.itemTextButton}>
             關閉
           </Text>
         </TouchableOpacity>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
   constructor(props) {
@@ -59,9 +84,11 @@ class ServiceStore extends NavigatorComponent {
 
     this.state = {
       width: 0,
-      width: 0,
+      height: 0,
       showPhotoView: false,
     };
+
+    this.phoneCall = this.phoneCall.bind(this);
   }
 
   componentWillMount() {
@@ -89,7 +116,7 @@ class ServiceStore extends NavigatorComponent {
     if (copyString) {
       Clipboard.setString(copyString);
 
-      this.refs.HUD.flash(2);
+      this.HUD.flash(2);
     }
   }
 
@@ -138,8 +165,8 @@ class ServiceStore extends NavigatorComponent {
                   >
                     <View style={MiumiuTheme.fixMKTextFieldStyleError}>
                       <MKTextField
-                        floatingLabelEnabled={true}
-                        multiline={true}
+                        floatingLabelEnabled
+                        multiline
                         textInputStyle={{ height: 50 }}
                         underlineSize={1}
                         highlightColor="#9E9E9E"
@@ -148,7 +175,7 @@ class ServiceStore extends NavigatorComponent {
                         style={{ backgroundColor: 'white' }}
                         value={address}
                       />
-                      <TouchableWithoutFeedback onPress={this.copyText.bind(this, 'address')}>
+                      <TouchableWithoutFeedback onPress={() => this.copyText('address')}>
                         <View style={styles.textInputTouchReceiver} />
                       </TouchableWithoutFeedback>
                     </View>
@@ -158,7 +185,7 @@ class ServiceStore extends NavigatorComponent {
                   >
                     <View style={MiumiuTheme.fixMKTextFieldStyleError}>
                       <MKTextField
-                        floatingLabelEnabled={true}
+                        floatingLabelEnabled
                         textInputStyle={{ height: 31 }}
                         underlineSize={1}
                         highlightColor="#9E9E9E"
@@ -167,7 +194,7 @@ class ServiceStore extends NavigatorComponent {
                         style={{ backgroundColor: 'white' }}
                         value={phone}
                       />
-                      <TouchableWithoutFeedback onPress={this.phoneCall.bind(this)}>
+                      <TouchableWithoutFeedback onPress={this.phoneCall}>
                         <View style={styles.textInputTouchReceiver} />
                       </TouchableWithoutFeedback>
                     </View>
@@ -177,8 +204,8 @@ class ServiceStore extends NavigatorComponent {
                       <Image
                         style={{
                           marginTop: 10,
-                          width: width,
-                          height: height,
+                          width,
+                          height,
                           flex: 1,
                         }}
                         source={{ uri: imageUrl }}
@@ -194,15 +221,20 @@ class ServiceStore extends NavigatorComponent {
               </TouchableWithoutFeedback>
             </ScrollView>
           }
-          <HUD ref="HUD" type="success" message="已複製到剪貼簿" />
+          <HUD ref={(ref) => { this.HUD = ref; }} type="success" message="已複製到剪貼簿" />
           { imageUrl &&
-            <Modal visible={showPhotoView} animationType="fade" transparent={true} onRequestClose={() => this.setState({ showPhotoView: false })}>
+            <Modal
+              visible={showPhotoView}
+              animationType="fade"
+              transparent
+              onRequestClose={() => this.setState({ showPhotoView: false })}
+            >
               <View style={styles.photoViewContainer}>
                 <PhotoView
                   minimumZoomScale={1}
                   maximumZoomScale={3}
                   androidScaleType="center"
-                  style={{ width: width, height: width }}
+                  style={{ width, height: width }}
                   source={{ uri: imageUrl }}
                 />
                 <TouchableWithoutFeedback onPress={() => this.setState({ showPhotoView: false })}>
@@ -217,35 +249,10 @@ class ServiceStore extends NavigatorComponent {
   }
 }
 
-const styles = {
-  body: {
-    flex: 1,
-  },
-  inlineFieldGroup: {
-    flexDirection: 'row',
-  },
-  textInputTouchReceiver: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-  photoViewContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)'
-  },
-  dismissButton: {
-    position: 'absolute',
-    top: 29,
-    right: 21,
-  },
-};
-
 const mapStateToProps = (state, ownProps) => {
   const { serviceStore, serviceStores } = state;
   const { data } = ownProps.route;
-  const store = serviceStores.data.find((object) => object.id === data.id);
+  const store = serviceStores.data.find(object => object.id === data.id);
   return {
     ...ownProps,
     isFetching: serviceStore.isFetching,
@@ -256,5 +263,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { fetchServiceStore }
+  { fetchServiceStore },
 )(ServiceStore);

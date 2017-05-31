@@ -140,7 +140,7 @@ class ConfirmRegistrationCode extends NavigatorComponent {
   }
 
   codeFieldTextChanged(codeFieldNumber, text) {
-    const nextCodeField = this.refs[`codeField${codeFieldNumber + 1}`];
+    const nextCodeField = this[`codeField${codeFieldNumber + 1}`];
 
     const codes = this.state.codes;
     codes[codeFieldNumber] = text;
@@ -213,33 +213,33 @@ class ConfirmRegistrationCode extends NavigatorComponent {
             { !isAccountTypeEmail &&
               <View style={styles.codeFieldGroup}>
                 <TextInput
-                  ref={(ref) => { this.refs.codeField1 = ref; }}
+                  ref={(ref) => { this.codeField1 = ref; }}
                   keyboardType="numeric"
                   maxLength={1}
                   style={styles.codeField}
                   autoFocus
-                  onChangeText={(text) => { this.codeFieldTextChanged(1, text); }}
+                  onChangeText={text => this.codeFieldTextChanged(1, text)}
                 />
                 <TextInput
-                  ref={(ref) => { this.refs.codeField2 = ref; }}
+                  ref={(ref) => { this.codeField2 = ref; }}
                   keyboardType="numeric"
                   maxLength={1}
                   style={styles.codeField}
-                  onChangeText={(text) => { this.codeFieldTextChanged(2, text); }}
+                  onChangeText={text => this.codeFieldTextChanged(2, text)}
                 />
                 <TextInput
-                  ref={(ref) => { this.refs.codeField3 = ref; }}
+                  ref={(ref) => { this.codeField3 = ref; }}
                   keyboardType="numeric"
                   maxLength={1}
                   style={styles.codeField}
-                  onChangeText={(text) => { this.codeFieldTextChanged(3, text); }}
+                  onChangeText={text => this.codeFieldTextChanged(3, text)}
                 />
                 <TextInput
-                  ref={(ref) => { this.refs.codeField4 = ref; }}
+                  ref={(ref) => { this.codeField4 = ref; }}
                   keyboardType="numeric"
                   maxLength={1}
                   style={styles.codeField}
-                  onChangeText={(text) => { this.codeFieldTextChanged(4, text); }}
+                  onChangeText={text => this.codeFieldTextChanged(4, text)}
                 />
               </View>
             }

@@ -9,139 +9,15 @@ import {
   ListView,
   TouchableOpacity,
   TouchableHighlight,
-  TouchableWithoutFeedback,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Color from 'color';
 
-import { MiumiuTheme } from '../Styles';
+import CatPaws from '../../assets/images/cat-paws.png';
+import Cardboard1 from '../../assets/images/cardboard1.png';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
-export default class Menu extends Component {
-  static propTypes = {
-    navigationItems: PropTypes.arrayOf(
-      PropTypes.shape({
-        icon: PropTypes.shape({
-          component: PropTypes.func,
-          name: PropTypes.string,
-          size: PropTypes.number,
-          color: PropTypes.string,
-        }).isRequired,
-        name: PropTypes.string.isRequired,
-        component: PropTypes.func.isRequired,
-        isSelected: PropTypes.bool.isRequired,
-        badge: PropTypes.shape({
-          prefix: PropTypes.string,
-          count: PropTypes.number,
-        }),
-      })
-    ).isRequired,
-    onItemPress: PropTypes.func.isRequired,
-  }
-
-  static defaultPropTypes = {
-    navigationItems: [],
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      coverBackgroundColor: '#616161',
-      navigationItems: dataSource.cloneWithRows(props.navigationItems),
-      userInfo: {
-        width: 0,
-        height: 0,
-      },
-    };
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({
-      navigationItems: dataSource.cloneWithRows(props.navigationItems),
-    })
-  }
-
-  // Calculate size manually because aspectRatio not work.
-  onLayout(event) {
-    const { nativeEvent: { layout: { x, y, width, height } } } = event;
-    this.setState({ userInfo: { width, height: (width * 162 / 304) } });
-  }
-
-  renderRowView(rowData, sectionID, rowID, highlightRow) {
-    const { icon, isSelected, badge } = rowData;
-    const selectedColor = '#4285F4';
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.onItemPress(rowData);
-        }}
-      >
-        <View style={styles.navigationItem}>
-          <View style={styles.navigationItemIcon}>
-            { icon.component ?
-              <icon.component name={icon.name} size={icon.size || 20} color={icon.color || (isSelected ? selectedColor : '#757575')} /> :
-              <Icon name={icon.name} size={icon.size || 20} color={icon.color || (isSelected ? selectedColor : '#757575')} />
-            }
-
-          </View>
-          <Text style={{ ...styles.navigationItemText, color: (isSelected ? selectedColor : 'black') }}>{rowData.name}</Text>
-          { badge && badge.count > 0 &&
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{badge.count}</Text>
-            </View>
-          }
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  render() {
-    const { userId } = this.props;
-    const { userInfo } = this.state;
-    return (
-      <View
-        style={styles.container}
-        onLayout={this.onLayout.bind(this)}
-      >
-        <TouchableHighlight
-          underlayColor={Color(this.state.coverBackgroundColor).lighten(0.2)}
-          onPress={() => { }}
-        >
-          <View
-            style={{
-              width: userInfo.width,
-              height: userInfo.height,
-              backgroundColor: this.state.coverBackgroundColor,
-            }}
-          >
-            <Image resizeMode="contain" style={styles.catPawsBackground} source={require('../../assets/images/cat-paws.png')} />
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                style={styles.avatar}
-                onPress={() => { }}
-              >
-                <Image resizeMode="contain" style={{ flex: 1 }} source={require('../../assets/images/cardboard1.png')} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.moreInfoButton}>
-              <Text style={styles.moreInfoButtonText}>會員編號 {userId}</Text>
-            </View>
-          </View>
-        </TouchableHighlight>
-        <ListView
-          style={styles.navigationItems}
-          dataSource={this.state.navigationItems}
-          renderRow={this.renderRowView.bind(this)}
-        >
-
-        </ListView>
-      </View>
-    );
-  }
-}
 
 const styles = {
   container: {
@@ -213,3 +89,130 @@ const styles = {
     color: 'white',
   },
 };
+
+export default class Menu extends Component {
+  static propTypes = {
+    userId: PropTypes.string,
+    navigationItems: PropTypes.arrayOf(
+      PropTypes.shape({
+        icon: PropTypes.shape({
+          component: PropTypes.func,
+          name: PropTypes.string,
+          size: PropTypes.number,
+          color: PropTypes.string,
+        }).isRequired,
+        name: PropTypes.string.isRequired,
+        component: PropTypes.func.isRequired,
+        isSelected: PropTypes.bool.isRequired,
+        badge: PropTypes.shape({
+          prefix: PropTypes.string,
+          count: PropTypes.number,
+        }),
+      }),
+    ).isRequired,
+    onItemPress: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    userId: '',
+    navigationItems: [],
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      coverBackgroundColor: '#616161',
+      navigationItems: dataSource.cloneWithRows(props.navigationItems),
+      userInfo: {
+        width: 0,
+        height: 0,
+      },
+    };
+
+    this.onLayout = this.onLayout.bind(this);
+    this.renderRowView = this.renderRowView.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      navigationItems: dataSource.cloneWithRows(props.navigationItems),
+    });
+  }
+
+  // Calculate size manually because aspectRatio not work.
+  onLayout(event) {
+    const { nativeEvent: { layout: { width } } } = event;
+    this.setState({ userInfo: { width, height: ((width * 162) / 304) } });
+  }
+
+  renderRowView(rowData) {
+    const { icon, isSelected, badge } = rowData;
+    const selectedColor = '#4285F4';
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.props.onItemPress(rowData);
+        }}
+      >
+        <View style={styles.navigationItem}>
+          <View style={styles.navigationItemIcon}>
+            { icon.component ?
+              <icon.component name={icon.name} size={icon.size || 20} color={icon.color || (isSelected ? selectedColor : '#757575')} /> :
+              <Icon name={icon.name} size={icon.size || 20} color={icon.color || (isSelected ? selectedColor : '#757575')} />
+            }
+
+          </View>
+          <Text style={{ ...styles.navigationItemText, color: (isSelected ? selectedColor : 'black') }}>{rowData.name}</Text>
+          { badge && badge.count > 0 &&
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{badge.count}</Text>
+            </View>
+          }
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  render() {
+    const { userId } = this.props;
+    const { userInfo } = this.state;
+    return (
+      <View
+        style={styles.container}
+        onLayout={this.onLayout}
+      >
+        <TouchableHighlight
+          underlayColor={Color(this.state.coverBackgroundColor).lighten(0.2)}
+          onPress={() => { }}
+        >
+          <View
+            style={{
+              width: userInfo.width,
+              height: userInfo.height,
+              backgroundColor: this.state.coverBackgroundColor,
+            }}
+          >
+            <Image resizeMode="contain" style={styles.catPawsBackground} source={CatPaws} />
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                style={styles.avatar}
+                onPress={() => { }}
+              >
+                <Image resizeMode="contain" style={{ flex: 1 }} source={Cardboard1} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.moreInfoButton}>
+              <Text style={styles.moreInfoButtonText}>會員編號 {userId}</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+        <ListView
+          style={styles.navigationItems}
+          dataSource={this.state.navigationItems}
+          renderRow={this.renderRowView}
+        />
+      </View>
+    );
+  }
+}

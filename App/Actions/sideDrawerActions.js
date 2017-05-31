@@ -13,11 +13,11 @@ export function openSideDrawer() {
 export function closeSideDrawer() {
   return {
     type: ActionTypes.CLOSE_SIDE_DRAWER,
-  }
+  };
 }
 
 export function toggleSideDrawer(open = false) {
   return {
     type: open ? ActionTypes.OPEN_SIDE_DRAWER : ActionTypes.CLOSE_SIDE_DRAWER,
-  }
+  };
 }

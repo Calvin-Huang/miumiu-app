@@ -4,7 +4,6 @@
 
 import React, { PropTypes, Component } from 'react';
 import {
-  View,
   TouchableOpacity,
   Navigator,
   Platform,
@@ -18,12 +17,13 @@ import { NavigatorStyle } from '../Styles';
 
 export default class NavigatorComponent extends Component {
   static propTypes = {
-    navigator: PropTypes.object.isRequired,
-    route: PropTypes.object.isRequired,
-  }
+    navigator: PropTypes.shape().isRequired,
+    route: PropTypes.shape().isRequired,
+  };
 
-  // You can override navLeftButton/navRightButton to provide different nav button in various components.
-  static navLeftButton(route, navigator, index, navState) {
+  // You can override navLeftButton/navRightButton to provide
+  // different nav button in various components.
+  static navLeftButton(route, navigator) {
     if (route.transition === Navigator.SceneConfigs.PushFromRight) {
       return (
         <TouchableOpacity onPress={() => { dismissKeyboard(); navigator.pop(); }}>
@@ -35,16 +35,15 @@ export default class NavigatorComponent extends Component {
           />
         </TouchableOpacity>
       );
-    } else {
-      return null;
     }
-  }
-
-  static navRightButton(route, navigator, index, navState) {
     return null;
   }
 
-  static title(route, navigator, index, navState) {
+  static navRightButton() {
+    return null;
+  }
+
+  static title() {
     return null;
   }
 
@@ -62,9 +61,9 @@ export default class NavigatorComponent extends Component {
   pushToNextComponent(component, data = {}, transition = Navigator.SceneConfigs.PushFromRight) {
     this.props.navigator.push({
       index: this.props.route.index + 1,
-      component: component,
-      data: data,
-      transition: transition,
+      component,
+      data,
+      transition,
     });
   }
 }

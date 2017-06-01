@@ -6,7 +6,7 @@
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/prefer-stateless-function": [0, { "ignorePureComponents": true }],
-    "max-len": ["error", 120, { "ignoreTemplateLiterals": true }]
+    "max-len": ["error", 120, { "ignoreTemplateLiterals": true, "ignoreComments": true }]
   },
 
   // Fix react-native-linear-gradient import not found module.

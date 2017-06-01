@@ -83,7 +83,7 @@ class Main extends Component {
     showNavigator: PropTypes.bool,
     sideDrawerOpened: PropTypes.bool,
     currentUser: PropTypes.shape(),
-    badges: PropTypes.arrayOf(PropTypes.shape()),
+    badges: PropTypes.arrayOf(PropTypes.string),
     amount: PropTypes.number.isRequired,
     needUpdateModal: PropTypes.shape({
       show: PropTypes.bool.isRequired,

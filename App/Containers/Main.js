@@ -2,14 +2,11 @@
  * Created by Calvin Huang on 2/24/17.
  */
 
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
   StatusBar,
   View,
   Text,
-  Image,
   Modal,
   Linking,
   AsyncStorage,
@@ -50,7 +47,59 @@ import { fetchBadges } from '../Actions/badgeActions';
 import { fetchCurrentVersionInfo, hideVersionOutdatedHint } from '../Actions/checkVersionActions';
 import { resetGeneralRequest } from '../Actions/generalRequestActions';
 
+const styles = {
+  container: {
+    flex: 1,
+  },
+  overlay: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  qrCode: {
+    marginTop: 30,
+    marginBottom: 18,
+  },
+  qrCodeInfo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 10,
+  },
+  pickupInstruction: {
+    fontSize: 12,
+    color: MiumiuTheme.titleText.color,
+    marginBottom: 34,
+    textAlign: 'center',
+  },
+};
+
 class Main extends Component {
+  static propTypes = {
+    navigationItems: Menu.propTypes.navigationItems,
+    showNavigator: PropTypes.bool,
+    sideDrawerOpened: PropTypes.bool,
+    currentUser: PropTypes.shape(),
+    badges: PropTypes.arrayOf(PropTypes.shape()),
+    amount: PropTypes.number.isRequired,
+    needUpdateModal: PropTypes.shape({
+      show: PropTypes.bool.isRequired,
+      versionName: PropTypes.string.isRequired,
+      forceUpdate: PropTypes.bool.isRequired,
+    }).isRequired,
+  };
+
+  static defaultProps = {
+    navigationItems: [],
+    showNavigator: true,
+    sideDrawerOpened: false,
+    currentUser: null,
+    badges: [],
+  };
+
   constructor(props) {
     super(props);
 
@@ -62,22 +111,24 @@ class Main extends Component {
 
     this.handleOpenURL = this.handleOpenURL.bind(this);
     this.androidBackHandler = this.androidBackHandler.bind(this);
+    this.navigationItemClicked = this.navigationItemClicked.bind(this);
+    this.hideUserQRCode = props.hideUserQRCode.bind(this);
+    this.hideVersionOutdatedHint = props.hideVersionOutdatedHint.bind(this);
   }
 
   componentDidMount() {
-    if (this.props.currentUser === null) {
-      this.refs.navigator.push({
+    if (this.props.currentUser) {
+      this.props.checkUserSignedIn();
+    } else {
+      this.navigator.push({
         index: 1,
         component: SignIn,
         transition: Navigator.SceneConfigs.FloatFromBottom,
       });
-
-    } else {
-      this.props.checkUserSignedIn();
     }
 
     FCM.requestPermissions();
-    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, () => {
       this.props.checkFCMSubscribeStatus();
     });
     this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
@@ -93,11 +144,12 @@ class Main extends Component {
           content = alert;
         }
 
+        /* eslint no-underscore-dangle: ["error", { "allow": ["_notificationType"] }] */
         switch (notification._notificationType) {
-          //optional
-          //iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
-          //This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
-          //notif._notificationType is available for iOS platfrom
+          // optional
+          // iOS requires developers to call completionHandler to end notification process. If you do not call it your background remote notifications could be throttled, to read more about it see the above documentation link.
+          // This library handles it for you automatically with default behavior (for remote notification, finish with NoData; for WillPresent, finish depend on "show_in_foreground"). However if you want to return different result, follow the following code to override
+          // notif._notificationType is available for iOS platfrom
           case NotificationType.Remote:
             notification.finish(RemoteNotificationResult.NewData);
             break;
@@ -151,11 +203,10 @@ class Main extends Component {
   componentWillReceiveProps(props) {
     if (this.props.currentUser !== props.currentUser) {
       if (props.currentUser) {
-
         // Reset menu status.
         this.props.navigationItemSelected(this.props.navigationItems[0]);
       } else {
-        this.refs.navigator.push({
+        this.navigator.push({
           index: 1,
           component: SignIn,
           transition: Navigator.SceneConfigs.FloatFromBottom,
@@ -171,7 +222,6 @@ class Main extends Component {
 
     if (this.props.showUserQRCodeModal !== props.showUserQRCodeModal) {
       if (props.showUserQRCodeModal) {
-
         DeviceBrightness.getBrightnessLevel()
           .then((brightnessLevel) => {
             AsyncStorage.setItem('brightnessLevel', `${brightnessLevel}`);
@@ -208,26 +258,23 @@ class Main extends Component {
       .split('&')
       .map((query) => {
         const p = query.split('=');
-        let object = {};
+        const object = {};
         object[p[0]] = p[1];
         return object;
       })
-      .reduce((result, object) => {
-        return {
-          ...result,
-          ...object,
-        };
-      });
-    let componentMap = {};
+      .reduce((result, object) => ({
+        ...result,
+        ...object,
+      }));
+    const componentMap = {};
     componentMap[`${DEEP_LINK_PROTOCOL}://register/complete`] = RegistrationCompleted;
     componentMap[`${DEEP_LINK_PROTOCOL}://forgot/complete`] = ResetPasswordCompleted;
 
     if (componentMap[domain]) {
       const { token } = queries;
       if (token) {
-
         // Disable swipe back gesture.
-        this.refs.navigator.immediatelyResetRouteStack([
+        this.navigator.immediatelyResetRouteStack([
           {
             index: 0,
             component: WayBills,
@@ -236,34 +283,29 @@ class Main extends Component {
             component: componentMap[domain],
             data: { token },
             transition: { ...Navigator.SceneConfigs.FloatFromBottom, gestures: {} },
-          }
+          },
         ]);
       }
     }
   }
 
   androidBackHandler() {
-    const { navigator } = this.refs;
-    const { sideDrawerOpened, showNavigator, closeSideDrawer, showNavigationBar } = this.props;
+    const { navigator } = this;
+    const { sideDrawerOpened, showNavigator } = this.props;
     if (sideDrawerOpened) {
-      closeSideDrawer();
+      this.props.closeSideDrawer();
       return true;
-
     } else if (!showNavigator) {
-      showNavigationBar();
+      this.props.showNavigationBar();
       return true;
-
     } else if (navigator.getCurrentRoutes().length > 1) {
-
       const currentRoute = navigator.getCurrentRoutes()[navigator.getCurrentRoutes().length - 1];
 
       if (currentRoute.component.displayName === 'Connect(SignIn)') {
         return false;
-
-      } else {
-        navigator.pop();
-        return true;
       }
+      navigator.pop();
+      return true;
     }
     return false;
   }
@@ -274,8 +316,8 @@ class Main extends Component {
       {
         toValue: opacity,
         duration: 250,
-        easing: Easing.linear
-      }
+        easing: Easing.linear,
+      },
     ).start();
   }
 
@@ -285,14 +327,10 @@ class Main extends Component {
     if (itemData.component !== Component) {
       this.props.navigationItemSelected(itemData);
 
-      this.refs.navigator.replace({ index: 0, component: itemData.component });
+      this.navigator.replace({ index: 0, component: itemData.component });
     } else {
       this.props.showUserQRCode();
     }
-  }
-
-  updateButtonClicked(updateSourceUrl) {
-    Linking.openURL(updateSourceUrl);
   }
 
   render() {
@@ -307,24 +345,23 @@ class Main extends Component {
       <View style={styles.container}>
         <Drawer
           open={!this.props.needUpdateModal.show && this.props.sideDrawerOpened}
-          ref="sideDrawer"
           type="overlay"
           content={
             <Menu
               navigationItems={this.props.navigationItems}
-              onItemPress={this.navigationItemClicked.bind(this)}
+              onItemPress={this.navigationItemClicked}
               userId={user.id}
             />
           }
-          tapToClose={true}
+          tapToClose
           openDrawerOffset={56}
           onClose={() => { this.props.closeSideDrawer(); }}
-          onOpenStart={this.fadeInOutOverlay.bind(this, 1)}
-          onCloseStart={this.fadeInOutOverlay.bind(this, 0)}
+          onOpenStart={() => this.fadeInOutOverlay(1)}
+          onCloseStart={() => this.fadeInOutOverlay(0)}
         >
           <StatusBar barStyle="light-content" backgroundColor="#3D73BA" />
           <Navigator
-            ref="navigator"
+            ref={(ref) => { this.navigator = ref; }}
             style={styles.container}
             initialRoute={routes[0]}
             initialRouteStack={routes}
@@ -341,7 +378,7 @@ class Main extends Component {
         </Drawer>
 
         <NotificationMessage
-          ref={(ref) => this.notificationMessage = ref}
+          ref={(ref) => { this.notificationMessage = ref; }}
           delay={5}
           vibratePattern={100}
           title={this.state.notification.title}
@@ -350,13 +387,13 @@ class Main extends Component {
 
         <Modal
           animationType="fade"
-          transparent={true}
+          transparent
           visible={this.props.showUserQRCodeModal}
-          onRequestClose={this.props.hideUserQRCode.bind(this)}
+          onRequestClose={this.hideUserQRCode}
         >
           <TouchableOpacity
             style={MiumiuTheme.modalContainer}
-            onPress={this.props.hideUserQRCode.bind(this)}
+            onPress={this.hideUserQRCode}
           >
             <View style={MiumiuTheme.modalBody}>
               <View style={styles.qrCode}>
@@ -373,12 +410,12 @@ class Main extends Component {
                 style={{
                   alignSelf: 'stretch',
                   borderRadius: MiumiuTheme.button.borderRadius,
-                  backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2)
+                  backgroundColor: Color(MiumiuTheme.buttonDefault.backgroundColor).lighten(0.2),
                 }}
               >
                 <TouchableOpacity
                   style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonDefault }}
-                  onPress={this.props.hideUserQRCode.bind(this)}
+                  onPress={this.hideUserQRCode}
                 >
                   <Text style={MiumiuTheme.buttonText}>
                     關閉
@@ -388,15 +425,15 @@ class Main extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        
+
         <Modal
           animationType="fade"
-          transparent={true}
+          transparent
           visible={this.props.needUpdateModal.show}
-          onRequestClose={this.props.needUpdateModal.forceUpdate ? () => {} : this.props.hideVersionOutdatedHint.bind(this)}
+          onRequestClose={this.props.needUpdateModal.forceUpdate ? () => {} : this.hideVersionOutdatedHint}
         >
           <TouchableWithoutFeedback
-            onPress={this.props.needUpdateModal.forceUpdate ? () => {} : this.props.hideVersionOutdatedHint.bind(this)}
+            onPress={this.props.needUpdateModal.forceUpdate ? () => {} : this.hideVersionOutdatedHint}
           >
             <View style={MiumiuTheme.modalContainer}>
               <View style={MiumiuTheme.modalBody}>
@@ -407,19 +444,19 @@ class Main extends Component {
                 </View>
                 <View style={MiumiuTheme.modalContent}>
                   <Text style={MiumiuTheme.modalContentText}>
-                    最新的版本是 {this.props.needUpdateModal.versionName} 版{"\n"}使用最新的版本獲取最棒的使用體驗吧！
+                    最新的版本是 {this.props.needUpdateModal.versionName} 版{'\n'}使用最新的版本獲取最棒的使用體驗吧！
                   </Text>
                 </View>
                 <View
                   style={{
                     alignSelf: 'stretch',
                     borderRadius: MiumiuTheme.button.borderRadius,
-                    backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2)
+                    backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2),
                   }}
                 >
                   <TouchableOpacity
                     style={{ ...MiumiuTheme.button, ...MiumiuTheme.buttonPrimary }}
-                    onPress={this.updateButtonClicked.bind(this, Platform.OS === 'ios' ? APPSTORE_URL : GOOGLEPLAY_URL)}
+                    onPress={() => Linking.openURL(Platform.OS === 'ios' ? APPSTORE_URL : GOOGLEPLAY_URL)}
                   >
                     <Text style={MiumiuTheme.buttonText}>
                       前往 {Platform.OS === 'ios' ? 'AppStore' : 'GooglePlay'}
@@ -429,7 +466,7 @@ class Main extends Component {
                 { Platform.OS === 'android' &&
                   <TouchableOpacity
                     style={MiumiuTheme.button}
-                    onPress={this.updateButtonClicked.bind(this, APK_DOWNLOAD_URL)}
+                    onPress={() => this.updateButtonClicked(APK_DOWNLOAD_URL)}
                   >
                     <Text style={{ ...MiumiuTheme.contentText, textDecorationLine: 'underline' }}>
                       下載 apk
@@ -439,7 +476,7 @@ class Main extends Component {
                 { !this.props.needUpdateModal.forceUpdate &&
                   <TouchableOpacity
                     style={{ ...MiumiuTheme.button }}
-                    onPress={this.props.hideVersionOutdatedHint.bind(this)}
+                    onPress={this.hideVersionOutdatedHint}
                   >
                     <Text style={MiumiuTheme.contentText}>下次再說</Text>
                   </TouchableOpacity>
@@ -453,50 +490,20 @@ class Main extends Component {
   }
 }
 
-const styles = {
-  container: {
-    flex: 1,
-  },
-  overlay: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-  qrCode: {
-    marginTop: 30,
-    marginBottom: 18,
-  },
-  qrCodeInfo: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: MiumiuTheme.titleText.color,
-    marginBottom: 10,
-  },
-  pickupInstruction: {
-    fontSize: 12,
-    color: MiumiuTheme.titleText.color,
-    marginBottom: 34,
-    textAlign: 'center',
-  },
-};
+const mapStateToProps = (state, ownProps) => ({
+  ...ownProps,
+  showNavigator: state.navigationBar.isShown,
+  navigationItems: state.navigationItems,
+  sideDrawerOpened: state.sideDrawer.isOpened,
+  currentUser: state.user.currentUser,
+  showUserQRCodeModal: state.userQRCodeModal.show,
+  needUpdateModal: state.needUpdateModal,
+  badges: state.badges,
+  amount: state.wayBills.amount,
+});
 
 export default connect(
-  (state, ownProps) => {
-    return {
-      ...ownProps,
-      showNavigator: state.navigationBar.isShown,
-      navigationItems: state.navigationItems,
-      sideDrawerOpened: state.sideDrawer.isOpened,
-      currentUser: state.user.currentUser,
-      showUserQRCodeModal: state.userQRCodeModal.show,
-      needUpdateModal: state.needUpdateModal,
-      badges: state.badges,
-      amount: state.wayBills.amount,
-    };
-  },
+  mapStateToProps,
   {
     showNavigationBar,
     navigationItemSelected,

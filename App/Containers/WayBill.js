@@ -1,13 +1,11 @@
 /**
  * Created by Calvin Huang on 2/6/17.
  */
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Navigator,
   Alert,
 } from 'react-native';
@@ -29,8 +27,44 @@ import { WayBillState, stateInfoMapping } from '../Constants/states';
 import { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills } from '../Actions';
 import { DATETIME_FORMAT, DOMAIN } from '../Constants/config';
 
+const styles = {
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionIcon: {
+    marginLeft: 18,
+    marginRight: 10,
+    marginTop: 13,
+    marginBottom: 9,
+  },
+  sectionText: {
+    fontSize: 14,
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
+  listViewRow: {
+    ...MiumiuTheme.listViewRow,
+    paddingVertical: 16,
+    paddingHorizontal: 17,
+  },
+  infoFieldValueText: {
+    ...MiumiuTheme.listViewText,
+    flex: 1,
+    textAlign: 'right',
+  },
+  guideLinkLabel: {
+    fontWeight: 'bold',
+    padding: 10,
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+  },
+  body: {
+    flex: 1,
+  },
+};
+
 class WayBill extends NavigatorComponent {
-  static navRightButton({ data: { hex, status } }, navigator, index, navState) {
+  static navRightButton({ data: { hex, status } }) {
     if (status === WayBillState.CONFIRMING) {
       return (
         <TouchableOpacity onPress={() => { store.dispatch(deleteWayBill(hex)); }}>
@@ -39,9 +73,8 @@ class WayBill extends NavigatorComponent {
           </Text>
         </TouchableOpacity>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
   constructor(props) {
@@ -50,6 +83,9 @@ class WayBill extends NavigatorComponent {
     this.state = {
       data: this.props.route.data,
     };
+
+    this.openStockFeeReference = this.openStockFeeReference.bind(this);
+    this.checkServiceStoreButtonTapped = this.checkServiceStoreButtonTapped.bind(this);
   }
 
   componentDidMount() {
@@ -64,12 +100,10 @@ class WayBill extends NavigatorComponent {
 
     if (this.props.isRequesting !== props.isRequesting) {
       if (!props.isRequesting) {
-
         if (!props.error) {
           this.props.refreshWayBills();
           this.props.navigator.pop();
         } else {
-
           // Wait HUD disappear.
           setTimeout(() => {
             Alert.alert(
@@ -88,16 +122,16 @@ class WayBill extends NavigatorComponent {
   }
 
   openStockFeeReference() {
-    this.pushToNextComponent(WebInspector, { title: '倉儲費用計算表', uri: `${DOMAIN}/stock_fees`}, Navigator.SceneConfigs.FloatFromBottom);
+    this.pushToNextComponent(WebInspector, { title: '倉儲費用計算表', uri: `${DOMAIN}/stock_fees` }, Navigator.SceneConfigs.FloatFromBottom);
   }
 
   render() {
     const { data } = this.state;
     const { isRequesting } = this.props;
-    const { icon, iconColor, title } = stateInfoMapping[data.status] || {};
+    const { icon, iconColor } = stateInfoMapping[data.status] || {};
 
-    const sectionTitle = ((data) => {
-      switch (data.status) {
+    const sectionTitle = ((_data) => {
+      switch (_data.status) {
         case WayBillState.CONFIRMING:
           return '待確認訂單，您可以申請加急服務';
         case WayBillState.SHIPPING:
@@ -112,6 +146,8 @@ class WayBill extends NavigatorComponent {
               已到 <Text style={{ ...styles.sectionText, color: 'black' }}>{data.locationName || '-'}</Text> 集貨中心，請儘速提領
             </Text>
           );
+        default:
+          return null;
       }
     })(data);
 
@@ -161,11 +197,11 @@ class WayBill extends NavigatorComponent {
               {data.stockFee ? `$${data.stockFee}` : '-'}
             </Text>
           </View>
-          <TouchableOpacity onPress={this.openStockFeeReference.bind(this)}>
+          <TouchableOpacity onPress={this.openStockFeeReference}>
             <Text style={{ ...MiumiuTheme.contentText, ...styles.guideLinkLabel, marginTop: 10 }}>完整的倉儲費用計算表</Text>
           </TouchableOpacity>
           { data.locationId && data.status === WayBillState.ARRIVED &&
-            <TouchableOpacity onPress={this.checkServiceStoreButtonTapped.bind(this)}>
+            <TouchableOpacity onPress={this.checkServiceStoreButtonTapped}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ ...MiumiuTheme.contentText, textDecorationLine: 'none' }}>{data.locationName}</Text>
                 <Icon name="md-information-circle" size={14} color="gray" style={{ marginLeft: 5, marginTop: 4 }} />
@@ -174,11 +210,13 @@ class WayBill extends NavigatorComponent {
           }
         </View>
         { data.status === WayBillState.CONFIRMING &&
-          <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2), }}>
+          <View style={{ backgroundColor: Color(MiumiuTheme.buttonPrimary.backgroundColor).lighten(0.2) }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonPrimary }}
               disabled={data.isUrgent}
-              onPress={() => { this.pushToNextComponent(UrgentProcessing, data, Navigator.SceneConfigs.FloatFromBottom); } }
+              onPress={() => {
+                this.pushToNextComponent(UrgentProcessing, data, Navigator.SceneConfigs.FloatFromBottom);
+              }}
             >
               <IconFasterShipping style={MiumiuTheme.actionButtonIcon} iconColor="white" tintColor="white" />
               <Text style={{ ...MiumiuTheme.actionButtonText, opacity: !data.isUrgent ? 1 : 0.7 }}>
@@ -189,7 +227,7 @@ class WayBill extends NavigatorComponent {
         }
 
         { data.status === WayBillState.ARRIVED &&
-          <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2), }}>
+          <View style={{ backgroundColor: Color(MiumiuTheme.buttonWarning.backgroundColor).lighten(0.2) }}>
             <TouchableOpacity
               style={{ ...MiumiuTheme.actionButton, ...MiumiuTheme.buttonWarning }}
               onPress={() => { this.props.showUserQRCode(); }}
@@ -200,45 +238,9 @@ class WayBill extends NavigatorComponent {
         }
         <HUD visible={this.isCurrentRoute && isRequesting} type="progress" message="更新中" />
       </View>
-    )
+    );
   }
 }
-
-const styles = {
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  sectionIcon: {
-    marginLeft: 18,
-    marginRight: 10,
-    marginTop: 13,
-    marginBottom: 9,
-  },
-  sectionText: {
-    fontSize: 14,
-    color: 'rgba(0, 0, 0, 0.54)',
-  },
-  listViewRow: {
-    ...MiumiuTheme.listViewRow,
-    paddingVertical: 16,
-    paddingHorizontal: 17,
-  },
-  infoFieldValueText: {
-    ...MiumiuTheme.listViewText,
-    flex: 1,
-    textAlign: 'right',
-  },
-  guideLinkLabel: {
-    fontWeight: 'bold',
-    padding: 10,
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-  },
-  body: {
-    flex: 1,
-  },
-};
 
 const mapStateToProps = (state, ownProps) => {
   const { generalRequest } = state;
@@ -247,9 +249,9 @@ const mapStateToProps = (state, ownProps) => {
     isRequesting: generalRequest.isRequesting,
     error: generalRequest.error,
   };
-}
+};
 
 export default connect(
   mapStateToProps,
-  { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills }
+  { removeBadge, showUserQRCode, deleteWayBill, refreshWayBills },
 )(WayBill);

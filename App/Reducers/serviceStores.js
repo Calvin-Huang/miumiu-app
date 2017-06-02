@@ -2,6 +2,8 @@
  * Created by calvin.huang on 26/03/2017.
  */
 
+import humps from 'humps';
+
 import {
   FETCH_SERVICE_STORES,
   FETCH_SERVICE_STORES_SUCCESS,
@@ -10,8 +12,6 @@ import {
   REFRESH_SERVICE_STORES_SUCCESS,
   FETCH_SERVICE_STORE_SUCCESS,
 } from '../Constants/actionTypes';
-
-import humps from 'humps';
 
 const initialState = {
   isFetching: false,

@@ -2,6 +2,8 @@
  * Created by Calvin Huang on 2/24/17.
  */
 
+import humps from 'humps';
+
 import {
   REQUESTED_WAYBILLS,
   RECEIVED_WAYBILLS_SUCCESS,
@@ -10,8 +12,6 @@ import {
   REFRESH_WAYBILLS_SUCCESS,
   REFRESH_WAYBILLS_FAILED,
 } from '../Constants/actionTypes';
-
-import humps from 'humps';
 
 import { WayBillState } from '../Constants/states';
 
@@ -25,9 +25,9 @@ const initialState = {
 };
 
 export default function wayBills(state = initialState, action) {
-  const filterCondition = (wayBill) => {
-    return wayBill.status !== WayBillState.PICKED_UP && wayBill.status !== WayBillState.UNKNOWN_OWNER
-  } ;
+  const filterCondition = wayBill => (
+    wayBill.status !== WayBillState.PICKED_UP && wayBill.status !== WayBillState.UNKNOWN_OWNER
+  );
 
   switch (action.type) {
     case REQUESTED_WAYBILLS:
@@ -38,11 +38,10 @@ export default function wayBills(state = initialState, action) {
         error: null,
       };
     case RECEIVED_WAYBILLS_SUCCESS: {
-
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 
-      const allData = [ ...state.data, ...humps.camelizeKeys(data.filter(filterCondition)) ];
+      const allData = [...state.data, ...humps.camelizeKeys(data.filter(filterCondition))];
       const amount = allData
         .reduce((accumulator, currentValue) => {
           if (currentValue.status === WayBillState.ARRIVED) {
@@ -79,7 +78,6 @@ export default function wayBills(state = initialState, action) {
         error: null,
       };
     case REFRESH_WAYBILLS_SUCCESS: {
-
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 

@@ -2,15 +2,11 @@
  * Created by Calvin Huang on 3/4/17.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  TextInput,
-  ActivityIndicator,
-  Navigator,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
 
@@ -26,18 +22,59 @@ import { userSignIn, userSignInSuccess } from '../Actions';
 import { setAuthenticationToken, currentUser } from '../Utils/authentication';
 import store from '../storeInstance';
 
+const styles = {
+  container: {
+    flex: 1,
+  },
+  body: {
+    flex: 1,
+    marginTop: 64,
+    alignItems: 'center',
+  },
+  statusIcon: {
+    marginTop: 40,
+  },
+  roundButtonBackground: {
+    borderRadius: 22,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  heroText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: 'white',
+    marginVertical: 30,
+    lineHeight: 28,
+  },
+  transparentButton: {
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.25)',
+  },
+};
+
 class RegistrationCompleted extends NavigatorComponent {
-  static navLeftButton(route, navigator, index, navState) {
+  static navLeftButton(route) {
     return (
-      <TouchableOpacity onPress={() => {
+      <TouchableOpacity
+        onPress={() => {
           const { account, password } = route.data;
           store.dispatch(userSignIn(account, password));
-        }}>
+        }}
+      >
         <View style={NavigatorStyle.itemButton}>
           <Icon name="md-close" size={24} color="white" />
         </View>
       </TouchableOpacity>
     );
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.signIn = this.signIn.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -47,7 +84,6 @@ class RegistrationCompleted extends NavigatorComponent {
     }
 
     if (props.errorMessage && this.props.errorMessage !== props.errorMessage) {
-
       // Wait animation done or alert will interrupt flow.
       setTimeout(() => {
         Alert.alert(
@@ -88,7 +124,7 @@ class RegistrationCompleted extends NavigatorComponent {
         </View>
         <TouchableOpacity
           style={{ ...MiumiuTheme.actionButton, ...styles.transparentButton }}
-          onPress={this.signIn.bind(this)}
+          onPress={this.signIn}
         >
           <Text style={{ ...MiumiuTheme.actionButtonText, ...MiumiuTheme.textShadow }}>
             好的！
@@ -98,39 +134,6 @@ class RegistrationCompleted extends NavigatorComponent {
       </LinearGradient>
     );
   }
-}
-
-const styles = {
-  container: {
-    flex: 1,
-  },
-  body: {
-    flex: 1,
-    marginTop: 64,
-    alignItems: 'center',
-  },
-  statusIcon: {
-    marginTop: 40,
-  },
-  roundButtonBackground: {
-    borderRadius: 22,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-  heroText: {
-    fontSize: 20,
-    textAlign: 'center',
-    color: 'white',
-    marginVertical: 30,
-    lineHeight: 28,
-  },
-  transparentButton: {
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.25)',
-  },
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -146,5 +149,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { userSignIn, userSignInSuccess }
+  { userSignIn, userSignInSuccess },
 )(RegistrationCompleted);

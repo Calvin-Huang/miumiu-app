@@ -22,16 +22,13 @@ export default function wayBill(state = initialState, action) {
         },
         error: null,
       };
-    case ADD_WAYBILL_SUCCESS:
-      const wayBill = humps.camelizeKeys(action.response);
-
+    case ADD_WAYBILL_SUCCESS: {
       return {
         isRequesting: false,
-        data: {
-          ...wayBill,
-        },
+        data: humps.camelizeKeys(action.response),
         error: null,
       };
+    }
     case ADD_WAYBILL_FAILED:
       return {
         ...state,

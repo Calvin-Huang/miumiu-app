@@ -27,3 +27,5 @@ export function needUpdateModal(state = initialState, action) {
       return state;
   }
 }
+
+export default needUpdateModal;

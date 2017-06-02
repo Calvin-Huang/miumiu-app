@@ -2,6 +2,8 @@
  * Created by calvin.huang on 26/03/2017.
  */
 
+import humps from 'humps';
+
 import {
   FETCH_SERVICE_STORES,
   FETCH_SERVICE_STORES_SUCCESS,
@@ -10,8 +12,6 @@ import {
   REFRESH_SERVICE_STORES_SUCCESS,
   FETCH_SERVICE_STORE_SUCCESS,
 } from '../Constants/actionTypes';
-
-import humps from 'humps';
 
 const initialState = {
   isFetching: false,
@@ -57,11 +57,11 @@ export default function serviceStores(state = initialState, action) {
         data: action.response,
         error: null,
       };
-    case FETCH_SERVICE_STORE_SUCCESS:
+    case FETCH_SERVICE_STORE_SUCCESS: {
       const { data } = state;
       const { response } = action;
 
-      const serviceStore = data.find((eachData) => eachData.id === response.id);
+      const serviceStore = data.find(eachData => eachData.id === response.id);
 
       if (serviceStore) {
         data[data.indexOf(serviceStore)] = { ...serviceStore, ...humps.camelizeKeys(response) };
@@ -73,6 +73,7 @@ export default function serviceStores(state = initialState, action) {
         ...state,
         data,
       };
+    }
     default:
       return state;
   }

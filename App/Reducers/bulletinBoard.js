@@ -2,6 +2,8 @@
  * Created by calvin.huang on 08/05/2017.
  */
 
+import humps from 'humps';
+
 import {
   FETCH_BULLETIN_BOARD,
   FETCH_BULLETIN_BOARD_SUCCESS,
@@ -22,8 +24,6 @@ const initialState = {
   error: null,
 };
 
-import humps from 'humps';
-
 export default function bulletinBoard(state = initialState, action) {
   switch (action.type) {
     case FETCH_BULLETIN_BOARD:
@@ -34,13 +34,12 @@ export default function bulletinBoard(state = initialState, action) {
         error: null,
       };
     case FETCH_BULLETIN_BOARD_SUCCESS: {
-
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 
       return {
         ...state,
-        data: [ ...state.data, ...humps.camelizeKeys(data) ],
+        data: [...state.data, ...humps.camelizeKeys(data)],
         currentPage,
         isRefreshing: false,
 
@@ -74,7 +73,6 @@ export default function bulletinBoard(state = initialState, action) {
         error: null,
       };
     case REFRESH_BULLETIN_BOARD_SUCCESS: {
-
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;
 
@@ -98,11 +96,11 @@ export default function bulletinBoard(state = initialState, action) {
         isFetching: false,
         error: action.error,
       };
-    case FETCH_BULLETIN_SUCCESS:
+    case FETCH_BULLETIN_SUCCESS: {
       const { data } = state;
       const { response } = action;
 
-      const bulletin = data.find((eachData) => eachData.id === response.id);
+      const bulletin = data.find(eachData => eachData.id === response.id);
 
       data[data.indexOf(bulletin)] = { ...bulletin, ...response };
 
@@ -110,7 +108,8 @@ export default function bulletinBoard(state = initialState, action) {
         ...state,
         data,
       };
+    }
     default:
       return state;
-  };
+  }
 }

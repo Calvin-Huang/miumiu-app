@@ -22,7 +22,7 @@ export function contactInfo(state = initialState, action) {
         isRequesting: true,
         error: null,
       };
-    case FETCH_CONTACT_INFO_SUCCESS:
+    case FETCH_CONTACT_INFO_SUCCESS: {
       const { wechat, mobile, email } = action.response.contact;
       return {
         isRequesting: false,
@@ -33,6 +33,7 @@ export function contactInfo(state = initialState, action) {
         },
         error: null,
       };
+    }
     case FETCH_CONTACT_INFO_FAILED:
       return {
         ...state,
@@ -43,3 +44,5 @@ export function contactInfo(state = initialState, action) {
       return state;
   }
 }
+
+export default contactInfo;

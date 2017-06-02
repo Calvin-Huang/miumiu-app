@@ -5,10 +5,10 @@
 import { AsyncStorage } from 'react-native';
 import jwtDecode from 'jwt-decode';
 
-import { AUTHENTICATION_TOKEN_KEY, JWT_SECRET } from '../Constants/config';
-import { JWTExpiredError } from './errors';
-
 import moment from 'moment';
+
+import { AUTHENTICATION_TOKEN_KEY } from '../Constants/config';
+import { JWTExpiredError } from './errors';
 
 export function setAuthenticationToken(token) {
   return AsyncStorage.setItem(AUTHENTICATION_TOKEN_KEY, token);
@@ -34,9 +34,8 @@ export async function currentUser() {
 
   if (jwtToken) {
     return jwtDecode(jwtToken);
-  } else {
-    return null;
   }
+  return null;
 }
 
 export async function signOut() {

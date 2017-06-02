@@ -30,7 +30,7 @@ const initialState = {
   result: {
     signedIn: null,
     error: null,
-  }
+  },
 };
 
 export default function user(state = initialState, action) {
@@ -49,9 +49,9 @@ export default function user(state = initialState, action) {
         result: {
           signedIn: true,
           error: null,
-        }
+        },
       };
-    case USER_SIGN_IN_FAILED:
+    case USER_SIGN_IN_FAILED: {
       const { timestamp } = action.error;
 
       return {
@@ -61,8 +61,9 @@ export default function user(state = initialState, action) {
         result: {
           signedIn: false,
           error: (timestamp ? null : action.error),
-        }
+        },
       };
+    }
     case USER_SIGN_OUT:
       return {
         ...initialState,
@@ -85,7 +86,7 @@ export function register(state = { timestamp: null }, action) {
     case USER_REGISTER_SUCCESS:
       return {
         timestamp: action.response.timestamp,
-      }
+      };
     default:
       return state;
   }
@@ -121,7 +122,7 @@ export function requestResetPassword(state = { timestamp: null }, action) {
     case USER_REQUEST_RESET_PASSWORD_SUCCESS:
       return {
         timestamp: action.response.timestamp,
-      }
+      };
     default:
       return state;
   }
@@ -152,7 +153,7 @@ export function resendResetPasswordConfirmCode(state = { isRequesting: false, ti
   }
 }
 
-export function userQRCodeModal(state = { show: false } , action) {
+export function userQRCodeModal(state = { show: false }, action) {
   switch (action.type) {
     case SHOW_USER_QRCODE:
       return {

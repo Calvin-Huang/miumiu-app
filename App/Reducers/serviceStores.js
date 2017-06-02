@@ -57,11 +57,11 @@ export default function serviceStores(state = initialState, action) {
         data: action.response,
         error: null,
       };
-    case FETCH_SERVICE_STORE_SUCCESS:
+    case FETCH_SERVICE_STORE_SUCCESS: {
       const { data } = state;
       const { response } = action;
 
-      const serviceStore = data.find((eachData) => eachData.id === response.id);
+      const serviceStore = data.find(eachData => eachData.id === response.id);
 
       if (serviceStore) {
         data[data.indexOf(serviceStore)] = { ...serviceStore, ...humps.camelizeKeys(response) };
@@ -73,6 +73,7 @@ export default function serviceStores(state = initialState, action) {
         ...state,
         data,
       };
+    }
     default:
       return state;
   }

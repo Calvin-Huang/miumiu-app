@@ -2,6 +2,8 @@
  * Created by calvin.huang on 26/03/2017.
  */
 
+import humps from 'humps';
+
 import {
   FETCH_DELIVERY_INFO_LIST,
   FETCH_DELIVERY_INFO_LIST_SUCCESS,
@@ -10,8 +12,6 @@ import {
   REFRESH_DELIVERY_INFO_LIST_SUCCESS,
   FETCH_DELIVERY_INFO_SUCCESS,
 } from '../Constants/actionTypes';
-
-import humps from 'humps';
 
 const initialState = {
   isFetching: false,
@@ -57,11 +57,11 @@ export default function deliveryInfoList(state = initialState, action) {
         data: action.response,
         error: null,
       };
-    case FETCH_DELIVERY_INFO_SUCCESS:
+    case FETCH_DELIVERY_INFO_SUCCESS: {
       const { data } = state;
       const { response } = action;
 
-      const deliveryInfo = data.find((eachData) => eachData.id === response.id);
+      const deliveryInfo = data.find(eachData => eachData.id === response.id);
 
       if (deliveryInfo) {
         data[data.indexOf(deliveryInfo)] = { ...deliveryInfo, ...humps.camelizeKeys(response) };
@@ -73,6 +73,7 @@ export default function deliveryInfoList(state = initialState, action) {
         ...state,
         data,
       };
+    }
     default:
       return state;
   }

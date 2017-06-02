@@ -25,13 +25,13 @@ const sharedStyle = {
     fontSize: 14,
     lineHeight: 20,
   },
-}
+};
 
-export default style = {
+export const style = {
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#EFEFF4'
+    backgroundColor: '#EFEFF4',
   },
   titleText: sharedStyle.titleText,
   contentText: sharedStyle.contentText,
@@ -210,10 +210,6 @@ export default style = {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  fixMKTextFieldStyleError: {
-    flex: 1,
-    flexDirection: 'column',
-  },
   paginationView: {
     height: 60,
     justifyContent: 'center',
@@ -232,3 +228,5 @@ export default style = {
     color: 'white',
   },
 };
+
+export default style;

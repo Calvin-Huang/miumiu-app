@@ -55,11 +55,11 @@ export default function FAQs(state = initialState, action) {
         data: action.response,
         error: null,
       };
-    case FETCH_FAQ_SUCCESS:
+    case FETCH_FAQ_SUCCESS: {
       const { data } = state;
       const { response } = action;
 
-      const faq = data.find((eachData) => eachData.id === response.id);
+      const faq = data.find(eachData => eachData.id === response.id);
 
       data[data.indexOf(faq)] = { ...faq, ...response };
 
@@ -67,6 +67,7 @@ export default function FAQs(state = initialState, action) {
         ...state,
         data,
       };
+    }
     default:
       return state;
   }

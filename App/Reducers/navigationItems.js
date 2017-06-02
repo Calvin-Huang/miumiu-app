@@ -12,7 +12,7 @@ import UrgentProcessing from '../Containers/UrgentProcessing';
 import Calculator from '../Containers/Calculator';
 import DeliveryInfoList from '../Containers/DeliveryInfoList';
 import ServiceStores from '../Containers/ServiceStores';
-import PickUpPassword from '../Containers/PickUpPassword';
+// import PickUpPassword from '../Containers/PickUpPassword';
 import BulletinBoard from '../Containers/BulletinBoard';
 import FAQ from '../Containers/FAQ';
 import ContactUs from '../Containers/ContactUs';
@@ -43,7 +43,7 @@ const initialState = [
     badge: null,
   }, {
     icon: {
-      name: 'md-calculator'
+      name: 'md-calculator',
     },
     name: '試算運費',
     component: Calculator,
@@ -118,17 +118,18 @@ const initialState = [
     isSelected: false,
     badge: null,
   },
-]
+];
 
 export default function navigationItems(state = initialState, action) {
   switch (action.type) {
     case NAVIGATION_ITEM_SELECTED:
 
-      return state.map((item) => {
-        item.isSelected = (item === action.selectedItem);
-
-        return item;
-      });
+      return state.map(
+        item => ({
+          ...item,
+          isSelected: (item === action.selectedItem),
+        }),
+      );
     case UPDATE_BADGES: {
       return state
         .map((item) => {
@@ -143,7 +144,7 @@ export default function navigationItems(state = initialState, action) {
             ...item,
             badge: {
               ...badge,
-              count: action.badges.filter((badge) => badge.startsWith(prefix)).length,
+              count: action.badges.filter(_badge => _badge.startsWith(prefix)).length,
             },
           };
         });

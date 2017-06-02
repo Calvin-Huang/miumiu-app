@@ -2,7 +2,7 @@
  * Created by Calvin Huang on 3/7/17.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -25,12 +25,28 @@ import dismissKeyboard from 'dismissKeyboard';
 import { NavigatorComponent } from '../Components';
 import DeliveryInfo from './DeliveryInfo';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
-import { showNavigationBar, hideNavigationBar, openSideDrawer, fetchServiceStores, refreshServiceStores } from '../Actions';
+import {
+  showNavigationBar,
+  hideNavigationBar,
+  openSideDrawer,
+  fetchServiceStores,
+  refreshServiceStores,
+} from '../Actions';
+
+import store from '../storeInstance';
 
 const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
+const styles = {
+  listViewRow: {
+    ...MiumiuTheme.listViewRow,
+    paddingVertical: 16,
+    paddingLeft: 17,
+  },
+};
+
 class DeliveryInfoList extends NavigatorComponent {
-  static navLeftButton(route, navigator, index, navState) {
+  static navLeftButton() {
     return (
       <TouchableOpacity onPress={() => { store.dispatch(openSideDrawer()); }}>
         <View style={NavigatorStyle.itemButton}>
@@ -40,7 +56,7 @@ class DeliveryInfoList extends NavigatorComponent {
     );
   }
 
-  static navRightButton(route, navigator, index, navState) {
+  static navRightButton() {
     if (Platform.OS === 'android') {
       return (
         <TouchableOpacity onPress={() => { store.dispatch(hideNavigationBar()); }}>
@@ -50,6 +66,8 @@ class DeliveryInfoList extends NavigatorComponent {
         </TouchableOpacity>
       );
     }
+
+    return null;
   }
 
   constructor(props) {
@@ -61,7 +79,12 @@ class DeliveryInfoList extends NavigatorComponent {
       cancelButtonMarginRight: new Animated.Value(-45),
       isSearching: false,
       stores: dataSource.cloneWithRows(props.stores),
-    }
+    };
+
+    this.showSearchBar = this.showSearchBar.bind(this);
+    this.hideSearchBar = this.hideSearchBar.bind(this);
+    this.renderRowView = this.renderRowView.bind(this);
+    this.renderFooter = this.renderFooter.bind(this);
   }
 
   componentDidMount() {
@@ -94,7 +117,7 @@ class DeliveryInfoList extends NavigatorComponent {
           toValue: 64,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.searchBarMarginBottom,
@@ -102,7 +125,7 @@ class DeliveryInfoList extends NavigatorComponent {
           toValue: 49,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.cancelButtonMarginRight,
@@ -110,8 +133,8 @@ class DeliveryInfoList extends NavigatorComponent {
           toValue: 10,
           duration: 250,
           easing: Easing.linear,
-        }
-      )
+        },
+      ),
     ]).start();
 
     this.setState({ isSearching: true });
@@ -122,7 +145,7 @@ class DeliveryInfoList extends NavigatorComponent {
     dismissKeyboard();
 
     this.props.showNavigationBar();
-    this.refs.searchBar.setNativeProps({ text: '' });
+    this.searchBar.setNativeProps({ text: '' });
 
     Animated.parallel([
       Animated.timing(
@@ -131,7 +154,7 @@ class DeliveryInfoList extends NavigatorComponent {
           toValue: 104,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.searchBarMarginBottom,
@@ -139,7 +162,7 @@ class DeliveryInfoList extends NavigatorComponent {
           toValue: 9,
           duration: 250,
           easing: Easing.linear,
-        }
+        },
       ),
       Animated.timing(
         this.state.cancelButtonMarginRight,
@@ -147,8 +170,8 @@ class DeliveryInfoList extends NavigatorComponent {
           toValue: -45,
           duration: 250,
           easing: Easing.linear,
-        }
-      )
+        },
+      ),
     ]).start();
 
     this.setState({ isSearching: false });
@@ -169,22 +192,24 @@ class DeliveryInfoList extends NavigatorComponent {
     } else if (isSearching) {
       this.setState({
         stores: dataSource.cloneWithRows(
-          stores.filter(({ name, address }) => (name || '').includes(term) || (address || '').includes(term))
+          stores.filter(({ name, address }) => (name || '').includes(term) || (address || '').includes(term)),
         ),
       });
     }
   }
 
-  renderRowView(rowData, sectionID, rowID, highlightRow) {
+  renderRowView(rowData) {
     return (
-      <TouchableOpacity style={styles.listViewRow} onPress={() => {
-        if (Platform.OS === 'ios') {
-          this.hideSearchBar();
-        } else {
-          this.props.showNavigationBar();
-        }
-        this.pushToNextComponent(DeliveryInfo, rowData);
-      }}>
+      <TouchableOpacity
+        style={styles.listViewRow} onPress={() => {
+          if (Platform.OS === 'ios') {
+            this.hideSearchBar();
+          } else {
+            this.props.showNavigationBar();
+          }
+          this.pushToNextComponent(DeliveryInfo, rowData);
+        }}
+      >
         <Text style={MiumiuTheme.listViewText}>
           { rowData.name }
         </Text>
@@ -203,22 +228,22 @@ class DeliveryInfoList extends NavigatorComponent {
           <Text style={MiumiuTheme.buttonText}>↻ 讀取失敗，重試一次</Text>
         </TouchableOpacity>
       );
-
     } else if (this.props.isFetching) {
       return (
         <View style={MiumiuTheme.paginationView}>
           <ActivityIndicator />
         </View>
       );
-
     }
+
+    return null;
   }
 
   render() {
     return (
       <View style={MiumiuTheme.container}>
         <Animated.View
-          removeClippedSubviews={true}
+          removeClippedSubviews
           style={{
             height: (Platform.OS === 'android' ? 56 : this.state.navBarStretchValue),
             overflow: 'hidden',
@@ -238,21 +263,26 @@ class DeliveryInfoList extends NavigatorComponent {
               </View>
             }
             { Platform.OS === 'ios' &&
-              <TouchableWithoutFeedback onPress={() => { this.refs.searchBar.focus(); }}>
+              <TouchableWithoutFeedback onPress={() => { this.searchBar.focus(); }}>
                 <Animated.View
                   style={{
                     ...MiumiuTheme.searchBar,
                     marginBottom: this.state.searchBarMarginBottom,
                   }}
                 >
-                  <Icon name="ios-search" size={18} color="rgba(255, 255, 255, 0.65)" style={MiumiuTheme.searchBarIcon} />
+                  <Icon
+                    name="ios-search"
+                    size={18}
+                    color="rgba(255, 255, 255, 0.65)"
+                    style={MiumiuTheme.searchBarIcon}
+                  />
                   <TextInput
-                    ref="searchBar"
+                    ref={(ref) => { this.searchBar = ref; }}
                     style={{ ...MiumiuTheme.buttonText, flex: 1 }}
                     placeholderTextColor="rgba(255, 255, 255, 0.65)"
                     placeholder="查詢離你最近的據點"
-                    onFocus={this.showSearchBar.bind(this)}
-                    onChangeText={this.searchBarTextChanged.bind(this)}
+                    onFocus={this.showSearchBar}
+                    onChangeText={text => this.searchBarTextChanged(text)}
                   />
                 </Animated.View>
               </TouchableWithoutFeedback>
@@ -263,11 +293,11 @@ class DeliveryInfoList extends NavigatorComponent {
                   <Icon name="md-arrow-back" size={24} color="#FFFFFF" />
                 </TouchableOpacity>
                 <TextInput
-                  ref="searchBar"
+                  ref={(ref) => { this.searchBar = ref; }}
                   style={MiumiuTheme.androidSearchInput}
                   placeholderTextColor="rgba(255, 255, 255, 0.65)"
                   placeholder="查詢離你最近的據點"
-                  onChangeText={this.searchBarTextChanged.bind(this)}
+                  onChangeText={text => this.searchBarTextChanged(text)}
                 />
               </View>
             }
@@ -275,7 +305,7 @@ class DeliveryInfoList extends NavigatorComponent {
               style={{
                 alignSelf: 'flex-end',
               }}
-              onPress={this.hideSearchBar.bind(this)}
+              onPress={this.hideSearchBar}
             >
               <Animated.Text
                 style={{
@@ -292,14 +322,14 @@ class DeliveryInfoList extends NavigatorComponent {
 
         <ListView
           dataSource={this.state.stores}
-          renderRow={this.renderRowView.bind(this)}
-          renderFooter={this.renderFooter.bind(this)}
-          enableEmptySections={true}
+          renderRow={this.renderRowView}
+          renderFooter={this.renderFooter}
+          enableEmptySections
           onScroll={() => { dismissKeyboard(); }}
           refreshControl={
             <RefreshControl
               refreshing={this.props.isRefreshing}
-              onRefresh={this.props.refreshServiceStores.bind(this)}
+              onRefresh={() => this.props.refreshServiceStores()}
             />
           }
         />
@@ -307,14 +337,6 @@ class DeliveryInfoList extends NavigatorComponent {
     );
   }
 }
-
-const styles = {
-  listViewRow: {
-    ...MiumiuTheme.listViewRow,
-    paddingVertical: 16,
-    paddingLeft: 17,
-  },
-};
 
 const mapStateToProps = (state, ownProps) => {
   const { serviceStores: stores } = state;
@@ -330,5 +352,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { showNavigationBar, hideNavigationBar, fetchServiceStores, refreshServiceStores }
+  { showNavigationBar, hideNavigationBar, fetchServiceStores, refreshServiceStores },
 )(DeliveryInfoList);

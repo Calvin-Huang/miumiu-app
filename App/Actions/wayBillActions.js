@@ -8,14 +8,14 @@ export function fetchWayBills(currentPage = 1) {
   return {
     type: Actions.REQUESTED_WAYBILLS,
     currentPage,
-  }
+  };
 }
 
 export function fetchWayBillsSuccess(response) {
   return {
     type: Actions.RECEIVED_WAYBILLS_SUCCESS,
     response,
-  }
+  };
 }
 
 export function fetchWayBillsFailed(error, atPage) {
@@ -23,55 +23,55 @@ export function fetchWayBillsFailed(error, atPage) {
     type: Actions.RECEIVED_WAYBILLS_FAILED,
     error,
     atPage,
-  }
+  };
 }
 
 export function refreshWayBills() {
   return {
     type: Actions.START_REFRESHING_WAYBILLS,
-  }
+  };
 }
 
 export function refreshWayBillsSuccess(response) {
   return {
     type: Actions.REFRESH_WAYBILLS_SUCCESS,
     response,
-  }
+  };
 }
 
 export function refreshWayBillsFailed(error) {
   return {
     type: Actions.REFRESH_WAYBILLS_FAILED,
     error,
-  }
+  };
 }
 
 export function addWayBill(shippingNo) {
   return {
     type: Actions.ADD_WAYBILL,
     shippingNo,
-  }
+  };
 }
 
 export function addWayBillSuccess(response) {
   return {
     type: Actions.ADD_WAYBILL_SUCCESS,
     response,
-  }
+  };
 }
 
 export function addWayBillFailed(error) {
   return {
     type: Actions.ADD_WAYBILL_FAILED,
     error,
-  }
+  };
 }
 
 export function deleteWayBill(hex) {
   return {
     type: Actions.DELETE_WAYBILL,
     hex,
-  }
+  };
 }
 
 export function urgentWayBill(shippingNo, logistic) {
@@ -79,5 +79,5 @@ export function urgentWayBill(shippingNo, logistic) {
     type: Actions.URGENT_WAYBILL,
     shippingNo,
     logistic,
-  }
+  };
 }

@@ -12,6 +12,14 @@ import NavigatorNavigationBar from 'NavigatorNavigationBar';
 
 import { NavigatorComponent } from './';
 
+const styles = {
+  navBarContentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+};
+
 NavigatorNavigationBar.defaultProps = {
   ...NavigatorNavigationBar.defaultProps,
   routeMapper: {
@@ -23,9 +31,8 @@ NavigatorNavigationBar.defaultProps = {
             {component.navLeftButton(route, navigator, index, navState)}
           </View>
         );
-      } else {
-        return null;
       }
+      return null;
     },
     RightButton: (route, navigator, index, navState) => {
       const component = route.component.WrappedComponent || route.component;
@@ -35,9 +42,8 @@ NavigatorNavigationBar.defaultProps = {
             {component.navRightButton(route, navigator, index, navState)}
           </View>
         );
-      } else {
-        return null;
       }
+      return null;
     },
     Title: (route, navigator, index, navState) => {
       const component = route.component.WrappedComponent || route.component;
@@ -47,36 +53,27 @@ NavigatorNavigationBar.defaultProps = {
             {component.title(route, navigator, index, navState)}
           </View>
         );
-      } else {
-        return null;
       }
+      return null;
     },
-  }
+  },
 };
 
 Navigator.defaultProps = {
   ...Navigator.defaultProps,
   renderScene: (route, navigator) => {
-    if (route.component.WrappedComponent && (route.component.WrappedComponent.prototype instanceof NavigatorComponent)
-      || route.component.prototype instanceof NavigatorComponent) {
-      return <route.component route={route} navigator={navigator} />;
-    } else {
-      throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');
-
-      return null;
+    let prototype = route.component.prototype;
+    if (route.component.WrappedComponent) {
+      prototype = route.component.WrappedComponent.prototype;
     }
-  },
-  configureScene: (route, routeStack) => {
-    return route.transition || Navigator.SceneConfigs.PushFromRight;
-  },
-};
 
-const styles = {
-  navBarContentContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    if (prototype instanceof NavigatorComponent) {
+      return <route.component route={route} navigator={navigator} />;
+    }
+
+    throw new Error('⚠️ Component must inherited NavigatorComponent ⚠️');
   },
+  configureScene: route => route.transition || Navigator.SceneConfigs.PushFromRight,
 };
 
 export default Navigator;

@@ -19,5 +19,5 @@ export function hideNavigationBar() {
 export function toggleNavigationBar(open = false) {
   return {
     type: open ? ActionTypes.SHOW_NAVIGATION_BAR : ActionTypes.HIDE_NAVIGATION_BAR,
-  }
+  };
 }

@@ -2,11 +2,10 @@
  * Created by calvin.huang on 29/03/2017.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  Navigator,
   TouchableOpacity,
   WebView,
   Platform,
@@ -17,37 +16,45 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { NavigatorStyle, MiumiuTheme } from '../Styles';
 
+const styles = {
+  body: {
+    flex: 1,
+  },
+};
+
 export default class WebInspector extends NavigatorComponent {
-  static navLeftButton(route, navigator, index, navState) {
+  static navLeftButton(route, navigator) {
     if (Platform.OS === 'android') {
       return (
-        <TouchableOpacity onPress={() => {
-          navigator.pop();
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigator.pop();
+          }}
+        >
           <View style={NavigatorStyle.itemButton}>
             <Icon name="md-close" size={24} color="white" />
           </View>
         </TouchableOpacity>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
-  static navRightButton(route, navigator, index, navState) {
+  static navRightButton(route, navigator) {
     if (Platform.OS === 'ios') {
       return (
-        <TouchableOpacity onPress={() => {
-          navigator.pop();
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigator.pop();
+          }}
+        >
           <Text style={NavigatorStyle.itemTextButton}>
             關閉
           </Text>
         </TouchableOpacity>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
   render() {
@@ -61,14 +68,8 @@ export default class WebInspector extends NavigatorComponent {
             </Text>
           </View>
         </MiumiuThemeNavigatorBackground>
-        <WebView style={styles.body} source={{ uri: uri }} />
+        <WebView style={styles.body} source={{ uri }} />
       </View>
     );
   }
 }
-
-const styles = {
-  body: {
-    flex: 1,
-  },
-};

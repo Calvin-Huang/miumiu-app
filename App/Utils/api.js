@@ -5,15 +5,16 @@
 // Reference to pepperoni-app-kit
 // https://github.com/futurice/pepperoni-app-kit
 
+/* eslint no-console: 0 */
+
 import { Observable } from 'rxjs';
 
+import EventEmitter from 'event-emitter';
 import HttpError from 'standard-http-error';
 
 import { TIMEOUT, BASE_URL, REFRESH_TOKEN_PATH, API_DEV_MODE } from '../Constants/config';
 import { getAuthenticationToken, setAuthenticationToken } from './authentication';
 import { JWTExpiredError } from './errors';
-
-import EventEmitter from 'event-emitter';
 
 /**
  * All API errors are emitted on this channel for interested listeners.
@@ -21,6 +22,109 @@ import EventEmitter from 'event-emitter';
 export const errors = new EventEmitter();
 
 const suppressRedBox = API_DEV_MODE;
+
+function timeout(promise, ms) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error('Request Timeout'));
+    }, ms);
+
+    promise
+      .then(
+        (response) => {
+          clearTimeout(timer);
+          resolve(response);
+        },
+        (error) => {
+          clearTimeout(timer);
+          reject(error);
+        },
+      );
+  });
+}
+
+export function url(path) {
+  return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
+}
+
+async function getErrorMessageSafely(response) {
+  try {
+    const message = await response.text();
+
+    if (!message) {
+      return '';
+    }
+
+    // In miumiu project, all error structure is: { error: [message] }
+    const { error } = JSON.parse(message);
+
+    return error || message;
+  } catch (error) {
+    /* eslint no-underscore-dangle: ["error", { "allow": ["_bodyInit"] }] */
+    return response._bodyInit;
+  }
+}
+
+function getRequestHeaders(body, token) {
+  const headers = body
+    ? { Accept: 'application/json', 'Content-Type': 'application/json' }
+    : { Accept: 'application/json' };
+
+  if (token) {
+    return {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
+  return headers;
+}
+
+// Throw HttpError when status code bigger then 400.
+async function handleResponse(response) {
+  const { status, headers } = response;
+  if (status >= 400) {
+    const message = await getErrorMessageSafely(response);
+    const error = new HttpError(status, message);
+
+    errors.emit(`${status}`, error);
+
+    throw error;
+  }
+
+  const responseBody = await response.text();
+  const responseJSON = JSON.parse((!responseBody || responseBody === '') ? '{}' : responseBody);
+
+  // Store Authorization to AsyncStorage
+  const { token } = responseJSON;
+  if (token) {
+    let oldJwtToken;
+
+    try {
+      oldJwtToken = await getAuthenticationToken();
+    } catch (error) {
+      // Retrieve expired token.
+      if (error instanceof JWTExpiredError) {
+        oldJwtToken = error.jwtToken;
+      }
+    }
+
+    if (typeof token !== 'string') {
+      throw new Error('Response Token is not string');
+    }
+
+    // Only retrieved token different to old one needs be stored.
+    if (oldJwtToken !== token) {
+      setAuthenticationToken(token);
+    }
+  }
+
+  return {
+    status,
+    headers,
+    body: responseJSON,
+  };
+}
 
 async function JWTToken() {
   try {
@@ -54,49 +158,21 @@ async function JWTToken() {
 
           observable.next(newToken);
           observable.complete();
-
-        } catch (error) {
-
+        } catch (refreshError) {
           if (suppressRedBox) {
             console.log('❌  Refresh expired token failed ❌');
-            console.log(error);
+            console.log(refreshError);
           }
 
-          errors.emit('JWTRefresh', error);
+          errors.emit('JWTRefresh', refreshError);
 
-          observable.error(error);
+          observable.error(refreshError);
           observable.complete();
         }
       });
-    } else {
-      return Observable.throw(error);
     }
+    return Observable.throw(error);
   }
-};
-
-export async function get(path, body) {
-  let pathQuery = path;
-  if (body) {
-    pathQuery += `?${Object.keys(body).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`).join('&')}`;
-  }
-
-  return bodyOf(request('GET', pathQuery, null));
-}
-
-export async function post(path, body) {
-  return bodyOf(request('POST', path, body));
-}
-
-export async function put(path, body) {
-  return bodyOf(request('PUT', path, body));
-}
-
-export async function del(path) {
-  return bodyOf(request('DELETE', path));
-}
-
-export function url(path) {
-  return (path.indexOf('/') === 0) ? `${BASE_URL}${path}` : `${BASE_URL}/${path}`;
 }
 
 async function request(method, path, body) {
@@ -104,7 +180,7 @@ async function request(method, path, body) {
 
   const observable = await JWTToken();
 
-  const response = new Promise((resolve, reject) => {
+  const rxResponse = new Promise((resolve, reject) => {
     observable.subscribe(
         async (token) => {
           const headers = getRequestHeaders(body, token);
@@ -133,113 +209,33 @@ async function request(method, path, body) {
         (error) => {
           reject(error);
         },
-      )
-    });
+      );
+  });
 
-  return handleResponse(await response);
-}
-
-function getRequestHeaders(body, token) {
-  const headers = body
-    ? { Accept: 'application/json', 'Content-Type': 'application/json' }
-    : { Accept: 'application/json' };
-
-  if (token) {
-    return {
-      ...headers,
-      'Authorization': `Bearer ${token}`,
-    };
-  }
-
-  return headers;
-}
-
-// Throw HttpError when status code bigger then 400.
-async function handleResponse(response) {
-  const { status, headers } = response;
-  if (status >= 400) {
-    const message = await getErrorMessageSafely(response);
-    const error = new HttpError(status, message);
-
-    errors.emit(`${status}`, error);
-
-    throw error;
-  }
-
-  const responseBody = await response.text();
-  const responseJSON = JSON.parse((!responseBody || responseBody === '') ? '{}' : responseBody);
-
-  // Store Authorization to AsyncStorage
-  const { token } = responseJSON;
-  if (token) {
-    let oldJwtToken;
-
-    try {
-      oldJwtToken = await getAuthenticationToken();
-    } catch (error) {
-
-      // Retrieve expired token.
-      if (error instanceof JWTExpiredError) {
-        oldJwtToken = error.jwtToken;
-      }
-    }
-
-    if (typeof token !== 'string') {
-      throw new Error('Response Token is not string');
-    }
-
-    // Only retrieved token different to old one needs be stored.
-    if (oldJwtToken !== token) {
-      setAuthenticationToken(token);
-    }
-  }
-
-  return {
-    status,
-    headers,
-    body: responseJSON,
-  };
-}
-
-async function getErrorMessageSafely(response) {
-  try {
-    const message = await response.text();
-
-    if (!message) {
-      return '';
-    }
-
-    // In miumiu project, all error structure is: { error: [message] }
-    const { error } = JSON.parse(message);
-
-    return error || message;
-
-  } catch (error) {
-    return response._bodyInit;
-  }
+  return handleResponse(await rxResponse);
 }
 
 async function bodyOf(requestPromise) {
-  const { body } = await requestPromise;
-  return body;
+  return (await requestPromise).body;
 }
 
-function timeout(promise, ms) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error('Request Timeout'));
-    }, ms);
+export async function get(path, body) {
+  let pathQuery = path;
+  if (body) {
+    pathQuery += `?${Object.keys(body).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`).join('&')}`;
+  }
 
-    promise
-      .then(
-        (response) => {
-          clearTimeout(timer);
-          resolve(response);
-        },
-        (error) => {
-          clearTimeout(timer);
-          reject(error);
-        }
-      )
-  })
+  return bodyOf(request('GET', pathQuery, null));
+}
+
+export async function post(path, body) {
+  return bodyOf(request('POST', path, body));
+}
+
+export async function put(path, body) {
+  return bodyOf(request('PUT', path, body));
+}
+
+export async function del(path) {
+  return bodyOf(request('DELETE', path));
 }

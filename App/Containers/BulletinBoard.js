@@ -103,7 +103,7 @@ class BulletinBoard extends NavigatorComponent {
   }
 
   componentDidMount() {
-    this.props.fetchBulletinBoard();
+    this.props.searchBulletinBoard();
     this.props.fetchBadges();
   }
 

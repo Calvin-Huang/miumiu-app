@@ -17,6 +17,7 @@ import HtmlRender from 'react-native-html-render';
 
 import { NavigatorComponent, MiumiuThemeNavigatorBackground } from '../Components';
 import { MiumiuTheme, NavigatorStyle } from '../Styles';
+import { hideNavigationBar } from '../Actions/navigationBarActions';
 import { fetchBulletin } from '../Actions/bulletinActions';
 
 const styles = {
@@ -34,6 +35,12 @@ class Bulletin extends NavigatorComponent {
     const { bulletin } = this.props;
     if (!bulletin || !bulletin.content) {
       this.props.fetchBulletin(this.props.route.data.id);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.isSearching) {
+      this.props.hideNavigationBar();
     }
   }
 
@@ -86,6 +93,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     isFetching: bulletin.isFetching,
+    isSearching: bulletinBoard.isSearching,
     error: bulletin.error,
     bulletin: bulletinInfo,
   };
@@ -93,5 +101,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { fetchBulletin },
+  { hideNavigationBar, fetchBulletin },
 )(Bulletin);

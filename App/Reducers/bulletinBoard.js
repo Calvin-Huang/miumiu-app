@@ -8,6 +8,8 @@ import {
   FETCH_BULLETIN_BOARD,
   FETCH_BULLETIN_BOARD_SUCCESS,
   FETCH_BULLETIN_BOARD_FAILED,
+  START_BULLETIN_BOARD_SEARCH_MODE,
+  STOP_BULLETIN_BOARD_SEARCH_MODE,
   SEARCH_BULLETIN_BOARD,
   REFRESH_BULLETIN_BOARD,
   REFRESH_BULLETIN_BOARD_SUCCESS,
@@ -21,6 +23,7 @@ const initialState = {
   query: '',
   isRefreshing: false,
   isFetching: false,
+  isSearching: false,
   error: null,
 };
 
@@ -63,15 +66,29 @@ export default function bulletinBoard(state = initialState, action) {
         isFetching: false,
         error: null,
       };
-    case SEARCH_BULLETIN_BOARD:
+    case START_BULLETIN_BOARD_SEARCH_MODE:
+      return {
+        ...state,
+        isSearching: true,
+      };
+    case STOP_BULLETIN_BOARD_SEARCH_MODE:
+      return {
+        ...state,
+        isSearching: false,
+      };
+    case SEARCH_BULLETIN_BOARD: {
+      const { searchMode } = action;
+
       return {
         data: [],
         currentPage: 1,
         query: action.query,
         isRefreshing: false,
         isFetching: true,
+        isSearching: (searchMode === null || searchMode === undefined) ? state.isSearching : searchMode,
         error: null,
       };
+    }
     case REFRESH_BULLETIN_BOARD_SUCCESS: {
       const { data, per_page: perPage, current_page: currentPage, total } = action.response;
       const hasNextPage = (perPage * currentPage) < total;

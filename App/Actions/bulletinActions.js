@@ -26,10 +26,29 @@ export function fetchBulletinBoardFailed(error, atPage) {
   };
 }
 
-export function searchBulletinBoard(query = '') {
+export function startBulletinBoardSearchMode() {
+  return {
+    type: actionTypes.START_BULLETIN_BOARD_SEARCH_MODE,
+  };
+}
+
+export function stopBulletinBoardSearchMode() {
+  return {
+    type: actionTypes.STOP_BULLETIN_BOARD_SEARCH_MODE,
+  };
+}
+
+export function setBulletinBoardSearchMode(isSearching) {
+  return {
+    type: isSearching ? actionTypes.START_BULLETIN_BOARD_SEARCH_MODE : actionTypes.STOP_BULLETIN_BOARD_SEARCH_MODE,
+  };
+}
+
+export function searchBulletinBoard({ query = '', searchMode } = {}) {
   return {
     type: actionTypes.SEARCH_BULLETIN_BOARD,
     query,
+    searchMode,
   };
 }
 

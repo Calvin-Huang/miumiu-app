@@ -33,6 +33,7 @@ import {
   hideNavigationBar,
   openSideDrawer,
   fetchBulletinBoard,
+  setBulletinBoardSearchMode,
   searchBulletinBoard,
   refreshBulletinBoard,
 } from '../Actions';
@@ -103,6 +104,7 @@ class BulletinBoard extends NavigatorComponent {
   }
 
   componentDidMount() {
+    // Set empty query when initializing the container.
     this.props.searchBulletinBoard();
     this.props.fetchBadges();
   }
@@ -118,7 +120,7 @@ class BulletinBoard extends NavigatorComponent {
 
     if (Platform.OS === 'android') {
       if (this.props.isNavigatorShown !== props.isNavigatorShown) {
-        this.setState({ isSearching: !props.isNavigatorShown });
+        this.props.setBulletinBoardSearchMode(!props.isNavigatorShown);
       }
     }
   }
@@ -153,7 +155,7 @@ class BulletinBoard extends NavigatorComponent {
       ),
     ]).start();
 
-    this.setState({ isSearching: true });
+    this.props.setBulletinBoardSearchMode(true);
   }
 
   hideSearchBar() {
@@ -189,19 +191,17 @@ class BulletinBoard extends NavigatorComponent {
       ),
     ]).start();
 
-    this.setState({ isSearching: false });
-
     // Search empty string to reset searching.
-    this.props.searchBulletinBoard();
+    this.props.searchBulletinBoard({ searchMode: false });
   }
 
   searchBarTextChanged(text) {
-    this.props.searchBulletinBoard(text);
+    this.props.searchBulletinBoard({ query: text });
   }
 
   retryFetching() {
-    if (this.state.isSearching) {
-      this.props.searchBulletinBoard(this.props.query);
+    if (this.props.isSearching) {
+      this.props.searchBulletinBoard({ query: this.props.query });
     } else {
       this.props.fetchBulletinBoard(this.props.currentPage);
     }
@@ -217,12 +217,8 @@ class BulletinBoard extends NavigatorComponent {
     return (
       <TouchableOpacity
         style={styles.listViewRow} onPress={() => {
-          if (this.state.isSearching) {
-            if (Platform.OS === 'ios') {
-              this.hideSearchBar();
-            } else {
-              this.props.showNavigationBar();
-            }
+          if (this.props.isSearching) {
+            this.props.showNavigationBar();
           }
           this.pushToNextComponent(Bulletin, rowData);
         }}
@@ -277,7 +273,7 @@ class BulletinBoard extends NavigatorComponent {
             colors={['#57C9EB', '#55BCE3', '#4E9ACF', '#487ABD']}
             style={MiumiuTheme.navBackgroundWithSearchBar}
           >
-            { !this.state.isSearching &&
+            { !this.props.isSearching &&
             <View style={NavigatorStyle.titleView}>
               <Text style={NavigatorStyle.titleText}>
                 公告事項
@@ -364,6 +360,7 @@ const mapStateToProps = (state, ownProps) => {
     ...ownProps,
     isFetching: bulletinBoard.isFetching,
     isRefreshing: bulletinBoard.isRefreshing,
+    isSearching: bulletinBoard.isSearching,
     bulletinBoard: bulletinBoard.data,
     currentPage: bulletinBoard.currentPage,
     query: bulletinBoard.query,
@@ -379,6 +376,7 @@ export default connect(
     showNavigationBar,
     hideNavigationBar,
     fetchBulletinBoard,
+    setBulletinBoardSearchMode,
     searchBulletinBoard,
     refreshBulletinBoard,
   },

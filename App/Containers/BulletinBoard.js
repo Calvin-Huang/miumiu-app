@@ -217,10 +217,12 @@ class BulletinBoard extends NavigatorComponent {
     return (
       <TouchableOpacity
         style={styles.listViewRow} onPress={() => {
-          if (Platform.OS === 'ios') {
-            this.hideSearchBar();
-          } else {
-            this.props.showNavigationBar();
+          if (this.state.isSearching) {
+            if (Platform.OS === 'ios') {
+              this.hideSearchBar();
+            } else {
+              this.props.showNavigationBar();
+            }
           }
           this.pushToNextComponent(Bulletin, rowData);
         }}
